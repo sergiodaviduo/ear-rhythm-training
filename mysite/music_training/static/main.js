@@ -49,19 +49,36 @@ function tonejsLoop() {
 }
 
 function note_randomizer(notes) {
-    let note = { time: 0, note: "C4", velocity: 0.9 }
+    const note = { time: 0, note: "C4", velocity: 0.9 }
+    let noteClone = Object.assign({}, note)
+    let timeGroup = []
     let noteGroup = []
+    let time = ""
     let random4th = 0
     let random16th = 0
+
+    let count = 0
 
     for (let i = 0; i < notes; i++) {
         do {
             random4th = Math.floor(Math.random() * 3)
             random16th = Math.floor(Math.random() * 3)
-            note.time = "0:" + random4th + ":" + random16th
-        } while (noteGroup.includes(note))
-        noteGroup.push()
+            time = "0:" + random4th + ":" + random16th
+            noteClone.time = time
+            count++
+            console.log('count:' + count)
+            if (count > 20) {
+                break
+            }
+
+        } while (timeGroup.includes(time))
+        timeGroup.push(time)
+        noteGroup.push(noteClone)
+        noteClone = Object.assign({}, note)
     }
+
+    console.log(noteGroup)
+    console.log(timeGroup)
 
     return noteGroup
 }
@@ -82,7 +99,7 @@ function tonejsPart() {
     const part = new Tone.Part(((time, value) => {
             // the value is an object which contains both the note and the velocity
             synth.triggerAttackRelease(value.note, "16n", time, value.velocity);
-        }), static_notes()).start(0);
+        }), note_randomizer(4)).start(0);
 
     //without this, can't start loop again after stopping
     part.loop = true;
