@@ -30,11 +30,13 @@ synth.set({
 effect.connect(reverb);
 reverb.connect(Tone.Destination);
 
-Tone.Transport.bpm.value = 150
+Tone.Transport.bpm.value = 120
 
 Tone.start()
 
 const AMinorScale = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+
+const AllNotes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 let currentNote = 0;
 
@@ -48,7 +50,21 @@ function tonejsLoop() {
     }, "4n").start(0);
 }
 
-function note_randomizer(notes) {
+// creates a number of notes within one measure at random rhythmic times, all the same pitch
+// can be up to 15 notes, as division in Tone.js only goes to 16ths
+// returns an array understood by Tone.js
+//example array returned with four notes requested:
+//[
+//    { time: "0:0:0", note: "C4", velocity: 0.9 },
+//    { time: "0:2:0", note: "C4", velocity: 0.9 },
+//    { time: "0:3:1", note: "C4", velocity: 0.9 },
+//    { time: "0:3:3", note: "C4", velocity: 0.9 }
+//]
+function noteRandomizer(notes) {
+    if (notes > 15) {
+        notes = 15
+    }
+
     const note = { time: 0, note: "C4", velocity: 0.9 }
     let noteClone = Object.assign({}, note)
     let timeGroup = []
@@ -59,8 +75,8 @@ function note_randomizer(notes) {
 
     for (let i = 0; i < notes; i++) {
         do {
-            random4th = Math.floor(Math.random() * 3)
-            random16th = Math.floor(Math.random() * 3)
+            random4th = Math.floor(Math.random() * 4)
+            random16th = Math.floor(Math.random() * 4)
             time = "0:" + random4th + ":" + random16th
 
         } while (timeGroup.includes(time))
@@ -75,9 +91,25 @@ function note_randomizer(notes) {
         noteClone = {...note}
     }
 
-    console.log(noteGroup)
-    console.log(timeGroup)
+    return noteGroup
+}
 
+// extends the randomizer to make long strings of random notes
+function randomizerExtender(notes, measures) {
+    let noteGroup = []
+    let currGroup = 0
+    let currNote = 0
+    let time = ""
+
+    for (let i = 0; i < measures; i++) {
+        currGroup = noteRandomizer(notes)
+        for (const note in currGroup) {
+            currNote = {...currGroup[note]}
+            currNote.time = currNote.time.replace('0:', i+':')
+            noteGroup.push(currNote)
+        }
+    }
+    console.log(noteGroup)
     return noteGroup
 }
 
@@ -94,13 +126,13 @@ function static_notes() {
 function tonejsPart() {
     const synth = new Tone.Synth().toDestination();
     // use an array of objects as long as the object has a "time" attribute
-    const part = new Tone.Part(((time, value) => {
-            // the value is an object which contains both the note and the velocity
-            synth.triggerAttackRelease(value.note, "16n", time, value.velocity, 1);
-        }), note_randomizer(4)).start(0);
 
-    //without this, can't start loop again after stopping
-    part.loop = true;
+    let part = new Tone.Part(((time, value) => {
+        // the value is an object which contains both the note and the velocity
+        synth.triggerAttackRelease(value.note, "16n", time, value.velocity, 1);
+    }), randomizerExtender(7,16)).start(0);
+
+    //part.loop = true;
 }
 
 function tonejsDrums() {
@@ -123,8 +155,9 @@ async function waitForInput() {
     let ready = await Tone.start()
     console.log('audio is ready')
 }
-
+console.log(Tone.Transport.state)
 document.getElementById("play-button").addEventListener("click", event => {
+    console.log(Tone.Transport.state)
     waitForInput()
     Tone.Transport.toggle()
  });
