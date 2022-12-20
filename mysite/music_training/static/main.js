@@ -57,24 +57,22 @@ function note_randomizer(notes) {
     let random4th = 0
     let random16th = 0
 
-    let count = 0
-
     for (let i = 0; i < notes; i++) {
         do {
             random4th = Math.floor(Math.random() * 3)
             random16th = Math.floor(Math.random() * 3)
             time = "0:" + random4th + ":" + random16th
-            noteClone.time = time
-            count++
-            console.log('count:' + count)
-            if (count > 20) {
-                break
-            }
 
         } while (timeGroup.includes(time))
         timeGroup.push(time)
+    }
+
+    timeGroup.sort()
+
+    for (time in timeGroup) {
+        noteClone.time = timeGroup[time]
         noteGroup.push(noteClone)
-        noteClone = Object.assign({}, note)
+        noteClone = {...note}
     }
 
     console.log(noteGroup)
@@ -98,14 +96,27 @@ function tonejsPart() {
     // use an array of objects as long as the object has a "time" attribute
     const part = new Tone.Part(((time, value) => {
             // the value is an object which contains both the note and the velocity
-            synth.triggerAttackRelease(value.note, "16n", time, value.velocity);
+            synth.triggerAttackRelease(value.note, "16n", time, value.velocity, 1);
         }), note_randomizer(4)).start(0);
 
     //without this, can't start loop again after stopping
     part.loop = true;
 }
 
+function tonejsDrums() {
+    const kickDrum = new Tone.MembraneSynth({
+        volume: 4
+    }).toDestination();
+
+    const kickPart = new Tone.Part(function(time) {
+        kickDrum.triggerAttackRelease('C1', '8n', time)
+    }, [{ time: '0:0' },{ time: '0:1' },{ time: '0:2' },{ time: '0:3' }]).start(0);
+
+    kickPart.loop = true;
+}
+
 tonejsPart()
+tonejsDrums()
 
 async function waitForInput() {
     Tone.start()
