@@ -50,24 +50,31 @@ function tonejsLoop() {
 
 function note_randomizer(notes) {
     let note = { time: 0, note: "C4", velocity: 0.9 }
-    let lastNote = note
     let noteGroup = []
     let random4th = 0
     let random16th = 0
+
     for (let i = 0; i < notes; i++) {
         do {
             random4th = Math.floor(Math.random() * 3)
             random16th = Math.floor(Math.random() * 3)
             note.time = "0:" + random4th + ":" + random16th
-            lastNote = note
-        } while (noteGroup.includes(lastNote))
+        } while (noteGroup.includes(note))
         noteGroup.push()
     }
 
     return noteGroup
 }
 
-
+function static_notes() {
+    let notes = [
+        { time: 0, note: "C3", velocity: 0.9 },
+        { time: "0:2", note: "G3", velocity: 0.5 },
+        { time: "0:3:1", note: "C4", velocity: 0.5 },
+        { time: "0:3:3", note: "C4", velocity: 0.5 }
+    ]
+    return notes
+}
 
 function tonejsPart() {
     const synth = new Tone.Synth().toDestination();
@@ -75,12 +82,7 @@ function tonejsPart() {
     const part = new Tone.Part(((time, value) => {
             // the value is an object which contains both the note and the velocity
             synth.triggerAttackRelease(value.note, "16n", time, value.velocity);
-        }), [
-        { time: 0, note: "C3", velocity: 0.9 },
-        { time: "0:2", note: "G3", velocity: 0.5 },
-        { time: "0:3:1", note: "C4", velocity: 0.5 },
-        { time: "0:3:3", note: "C4", velocity: 0.5 }
-    ]).start(0);
+        }), static_notes()).start(0);
 
     //without this, can't start loop again after stopping
     part.loop = true;
