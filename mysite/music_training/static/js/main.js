@@ -1,6 +1,9 @@
-//ripple effect: https://codepen.io/daless14/pen/DqXMvK
+// ripple effect: https://codepen.io/daless14/pen/DqXMvK
+// caculate note duration and hertz from bpm: http://bradthemad.org/guitar/tempo_explanation.php
 
 let synth = new Tone.Synth().toDestination();
+
+const BPM = 120;
 
 const reverb = new Tone.Reverb({
     decay: 4,
@@ -30,7 +33,7 @@ synth.set({
 effect.connect(reverb);
 reverb.connect(Tone.Destination);
 
-Tone.Transport.bpm.value = 120;
+Tone.Transport.bpm.value = BPM;
 
 Tone.start();
 
@@ -44,9 +47,9 @@ function tonejsLoop() {
         if (currentNote === 7) {
             currentNote = 0;
         }
-        synth.triggerAttackRelease(AMinorScale[currentNote]+'4', '8n', time);
+        synth.triggerAttackRelease(AMinorScale[currentNote]+'4', '16n', time);
         currentNote++;
-    }, "4n").start(0);
+    }, "16n").start(0);
 }
 
 // creates a number of notes within one measure at random rhythmic times, all the same pitch
@@ -133,11 +136,14 @@ function tonejsPart() {
     // use an array of objects as long as the object has a "time" attribute
 
     let part = new Tone.Part(((time, value) => {
-        // the value is an object which contains both the note and the velocity
         synth.triggerAttackRelease(value.note, "16n", time, value.velocity, 1);
-    }), randomizerExtender(7,16)).start(0);
+        
+        if (synth) {
+            noteDelay1(430);
+            noteDelay2(480);
+        }
 
-    //part.loop = true;
+    }), randomizerExtender(7,16)).start(0);
 }
 
 function tonejsDrums() {
@@ -146,7 +152,7 @@ function tonejsDrums() {
     }).toDestination();
 
     const kickPart = new Tone.Part(function(time) {
-        kickDrum.triggerAttackRelease('C1', '8n', time)
+        kickDrum.triggerAttackRelease('C1', '8n', time);
     }, [{ time: '0:0' },{ time: '0:1' },{ time: '0:2' },{ time: '0:3' }]).start(0);
 
     kickPart.loop = true;
@@ -159,6 +165,23 @@ async function waitForInput() {
     let ready = await Tone.start();
 }
 
+async function noteDelay1(milisec, action) {
+    await waitForNote(milisec);
+    document.getElementById('purpleSquare').style.backgroundColor = 'blue';
+}
+
+async function noteDelay2(milisec, action) {
+    await waitForNote(milisec);
+    document.getElementById('purpleSquare').style.backgroundColor = 'purple';
+}
+
+
+function waitForNote(milisec) {
+    return new Promise(resolve => {
+        setTimeout(() => { resolve('') }, milisec);
+    })
+}
+
 document.getElementById("play-button").addEventListener("click", event => {
     waitForInput();
     Tone.Transport.toggle();
@@ -166,14 +189,14 @@ document.getElementById("play-button").addEventListener("click", event => {
  });
 
 
- document.addEventListener('keydown', (event) => {
+document.addEventListener('keydown', (event) => {
     if (event.key === ' ') {
-      document.getElementById('blueSquare').style.backgroundColor = 'green';
+        document.getElementById('blueSquare').style.backgroundColor = 'green';
     }
-  });
-  
-  document.addEventListener('keyup', (event) => {
+});
+
+document.addEventListener('keyup', (event) => {
     if (event.key === ' ') {
-      document.getElementById('blueSquare').style.backgroundColor = 'blue';
+        document.getElementById('blueSquare').style.backgroundColor = 'blue';
     }
-  });
+});
