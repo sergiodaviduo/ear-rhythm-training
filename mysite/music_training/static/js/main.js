@@ -1,7 +1,7 @@
 //ripple effect: https://codepen.io/daless14/pen/DqXMvK
 
 let synth = new Tone.Synth().toDestination();
-const now = Tone.now();
+
 const reverb = new Tone.Reverb({
     decay: 4,
     wet: 0.2,
@@ -50,7 +50,7 @@ function tonejsLoop() {
 }
 
 // creates a number of notes within one measure at random rhythmic times, all the same pitch
-// can be up to 15 notes, as division in Tone.js only goes to 16ths
+// can produce up to 15 notes, as division in Tone.js only goes to 16ths
 // returns an array understood by Tone.js
 //example array returned with four notes requested:
 //[
@@ -60,9 +60,7 @@ function tonejsLoop() {
 //    { time: "0:3:3", note: "C4", velocity: 0.9 }
 //]
 function noteRandomizer(notes) {
-    if (notes > 15) {
-        notes = 15;
-    }
+    notes = (notes > 15) ? 15 : notes;
 
     const note = { time: 0, note: "C4", velocity: 0.9 };
     let noteClone = Object.assign({}, note);
@@ -94,7 +92,10 @@ function noteRandomizer(notes) {
 }
 
 // extends the randomizer to make long strings of random notes
-function randomizerExtender(notes, measures) {
+//     notes (int)      ->  how many notes in each phrase (within one 4/4 measure long by default)
+//     measures (int)   ->  How many total measures the randomizer will run
+//     hasSpace (bool)  ->  whether to include rests in-between every other phrase for user input
+function randomizerExtender(notes, measures, hasSpace=true) {
     let noteGroup = [];
     let currGroup = 0;
     let currNote = 0;
@@ -103,14 +104,19 @@ function randomizerExtender(notes, measures) {
     for (let i = 0; i < measures; i++) {
         currGroup = noteRandomizer(notes);
         for (const note in currGroup) {
-            currNote = {...currGroup[note]};
-            currNote.time = currNote.time.replace('0:', i+':');
-            noteGroup.push(currNote);
+            if (i % 2 !== 0 && hasSpace)  {
+                continue;
+            } else {
+                currNote = {...currGroup[note]};
+                currNote.time = currNote.time.replace('0:', i+':');
+                noteGroup.push(currNote);
+            }
         }
     }
     console.log(noteGroup);
     return noteGroup;
 }
+
 
 function static_notes() {
     let notes = [
@@ -146,18 +152,28 @@ function tonejsDrums() {
     kickPart.loop = true;
 }
 
-tonejsPart()
-tonejsDrums()
+tonejsPart();
+tonejsDrums();
 
 async function waitForInput() {
-    Tone.start()
-    let ready = await Tone.start()
-    console.log('audio is ready')
+    let ready = await Tone.start();
 }
-console.log(Tone.Transport.state)
+
 document.getElementById("play-button").addEventListener("click", event => {
-    console.log(Tone.Transport.state)
-    waitForInput()
-    Tone.Transport.toggle()
+    waitForInput();
+    Tone.Transport.toggle();
+    console.log(Tone.Transport.state);
  });
 
+
+ document.addEventListener('keydown', (event) => {
+    if (event.key === ' ') {
+      document.getElementById('blueSquare').style.backgroundColor = 'green';
+    }
+  });
+  
+  document.addEventListener('keyup', (event) => {
+    if (event.key === ' ') {
+      document.getElementById('blueSquare').style.backgroundColor = 'blue';
+    }
+  });

@@ -6,12 +6,15 @@
     <title>gettit</title>
 
     <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
-    <script type="module" src="{% static 'main.js' %}"></script>
+    <!-- <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script> -->
+    <script type="module" src="{% static 'js/main.js' %}"></script>
   </head>
   <body>
     <p>Buttons to play sounds:</p>
   <br><br>
 
   <button id="play-button">Tone.js sound</button>
+  <br><br>
+  <div id="blueSquare" style="background-color: blue; width: 100px; height: 100px;"></div>
   </body>
 </html>
