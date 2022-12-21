@@ -99,23 +99,29 @@ function noteRandomizer(notes) {
 //     notes (int)      ->  how many notes in each phrase (within one 4/4 measure long by default)
 //     measures (int)   ->  How many total measures the randomizer will run
 //     hasSpace (bool)  ->  whether to include rests in-between every other phrase for user input
-function randomizerExtender(notes, measures, hasSpace=true) {
+function randomizerExtender(notes, measures, hasRepeat=true) {
     let noteGroup = [];
     let currGroup = 0;
+    let lastGroup = 0;
     let currNote = 0;
     let time = "";
 
     for (let i = 0; i < measures; i++) {
         currGroup = noteRandomizer(notes);
         for (const note in currGroup) {
-            if (i % 2 !== 0 && hasSpace)  {
-                continue;
+            if (i % 2 !== 0 && hasRepeat)  {
+                currNote = {...lastGroup[note]};
+
+                currNote.time = currNote.time.replace('0:', i+':');
+                currNote.velocity = 0;
+                noteGroup.push(currNote);
             } else {
                 currNote = {...currGroup[note]};
                 currNote.time = currNote.time.replace('0:', i+':');
                 noteGroup.push(currNote);
             }
         }
+        lastGroup = currGroup;
     }
     console.log(noteGroup);
     return noteGroup;
