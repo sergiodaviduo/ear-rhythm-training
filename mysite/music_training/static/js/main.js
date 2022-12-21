@@ -80,7 +80,7 @@ function tonejsLoop() {
 //    { time: "0:3:1", note: "C4", velocity: 0.9 },
 //    { time: "0:3:3", note: "C4", velocity: 0.9 }
 //]
-function noteRandomizer(notes) {
+function hardRandomizer(notes) {
     notes = (notes > 15) ? 15 : notes;
 
     const note = { time: 0, note: "C4", velocity: 0.9 };
@@ -112,6 +112,39 @@ function noteRandomizer(notes) {
     return noteGroup;
 }
 
+function mediumRandomizer(notes) {
+    notes = (notes > 15) ? 15 : notes;
+
+    const note = { time: 0, note: "C4", velocity: 0.9 };
+    let noteClone = Object.assign({}, note);
+    let timeGroup = [];
+    let noteGroup = [];
+    let time = "";
+    let random4th = 0;
+    let random16th = 0;
+
+    let medium = [0, 2];
+
+    for (let i = 0; i < notes; i++) {
+        do {
+            random4th = Math.floor(Math.random() * 4);
+            random16th = medium[Math.floor(Math.random() * 2)];
+            time = "0:" + random4th + ":" + random16th;
+        } while (timeGroup.includes(time));
+        timeGroup.push(time);
+    }
+
+    timeGroup.sort();
+
+    for (time in timeGroup) {
+        noteClone.time = timeGroup[time];
+        noteGroup.push(noteClone);
+        noteClone = {...note};
+    }
+
+    return noteGroup;
+}
+
 // extends the randomizer to make long strings of random notes
 //     notes (int)      ->  how many notes in each phrase (within one 4/4 measure long by default)
 //     measures (int)   ->  How many total measures the randomizer will run
@@ -121,10 +154,9 @@ function randomizerExtender(notes, measures, hasRepeat=true) {
     let currGroup = 0;
     let lastGroup = 0;
     let currNote = 0;
-    let time = "";
 
     for (let i = 0; i < measures; i++) {
-        currGroup = noteRandomizer(notes);
+        currGroup = mediumRandomizer(notes);
         for (const note in currGroup) {
             if (i % 2 !== 0 && hasRepeat)  {
                 currNote = {...lastGroup[note]};
@@ -168,14 +200,12 @@ function tonejsPart() {
             inputClose(550);
         }
 
-    }), FourOnTheFloorTest).start(0);
+    }), randomizerExtender(5, 16)).start(0);
 
     //callback functions in-between every other measure
     Tone.Transport.scheduleRepeat((time) => {
         //some visual focus to signal input?
     }, "2m", "1m");
-
-    //part.loop = true;
 }
 
 function tonejsDrums() {
@@ -260,6 +290,7 @@ document.addEventListener('keydown', (event) => {
 
         if (noteWindow === 1) {
             score++;
+            document.getElementById("score").innerHTML = "Score: " + score;
             console.log(score);
         }
     }
