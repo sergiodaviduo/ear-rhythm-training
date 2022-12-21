@@ -1,5 +1,6 @@
 // ripple effect: https://codepen.io/daless14/pen/DqXMvK
 // caculate note duration and hertz from bpm: http://bradthemad.org/guitar/tempo_explanation.php
+// this visual library would be wild with this: https://ptsjs.org/
 
 let synth = new Tone.Synth().toDestination();
 
@@ -139,11 +140,17 @@ function tonejsPart() {
         synth.triggerAttackRelease(value.note, "16n", time, value.velocity, 1);
         
         if (synth) {
-            noteDelay1(430);
-            noteDelay2(480);
+            noteDelay1(410);
+            noteDelay2(460);
         }
 
     }), randomizerExtender(7,16)).start(0);
+
+    //callback functions in-between every other measure
+    Tone.Transport.scheduleRepeat((time) => {
+        noteDelay3(410);
+        noteDelay4(460);
+    }, "2m", "1m");
 }
 
 function tonejsDrums() {
@@ -175,6 +182,15 @@ async function noteDelay2(milisec, action) {
     document.getElementById('purpleSquare').style.backgroundColor = 'purple';
 }
 
+async function noteDelay3(milisec, action) {
+    await waitForNote(milisec);
+    document.getElementById('blueSquare').style.backgroundColor = 'blue';
+}
+
+async function noteDelay4(milisec, action) {
+    await waitForNote(milisec);
+    document.getElementById('blueSquare').style.backgroundColor = 'purple';
+}
 
 function waitForNote(milisec) {
     return new Promise(resolve => {
