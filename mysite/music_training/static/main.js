@@ -1,7 +1,7 @@
 //ripple effect: https://codepen.io/daless14/pen/DqXMvK
 
-var synth = new Tone.Synth().toDestination()
-const now = Tone.now()
+let synth = new Tone.Synth().toDestination();
+const now = Tone.now();
 const reverb = new Tone.Reverb({
     decay: 4,
     wet: 0.2,
@@ -30,22 +30,21 @@ synth.set({
 effect.connect(reverb);
 reverb.connect(Tone.Destination);
 
-Tone.Transport.bpm.value = 120
+Tone.Transport.bpm.value = 120;
 
-Tone.start()
+Tone.start();
 
-const AMinorScale = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-
+const AMinorScale = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 const AllNotes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 let currentNote = 0;
 
 function tonejsLoop() {
     const loopA = new Tone.Loop(time => {
-        if (currentNote == 7) {
+        if (currentNote === 7) {
             currentNote = 0;
         }
-        synth.triggerAttackRelease(AMinorScale[currentNote]+'4', '8n', time)
+        synth.triggerAttackRelease(AMinorScale[currentNote]+'4', '8n', time);
         currentNote++;
     }, "4n").start(0);
 }
@@ -62,55 +61,55 @@ function tonejsLoop() {
 //]
 function noteRandomizer(notes) {
     if (notes > 15) {
-        notes = 15
+        notes = 15;
     }
 
-    const note = { time: 0, note: "C4", velocity: 0.9 }
-    let noteClone = Object.assign({}, note)
-    let timeGroup = []
-    let noteGroup = []
-    let time = ""
-    let random4th = 0
-    let random16th = 0
+    const note = { time: 0, note: "C4", velocity: 0.9 };
+    let noteClone = Object.assign({}, note);
+    let timeGroup = [];
+    let noteGroup = [];
+    let time = "";
+    let random4th = 0;
+    let random16th = 0;
 
     for (let i = 0; i < notes; i++) {
         do {
-            random4th = Math.floor(Math.random() * 4)
-            random16th = Math.floor(Math.random() * 4)
-            time = "0:" + random4th + ":" + random16th
+            random4th = Math.floor(Math.random() * 4);
+            random16th = Math.floor(Math.random() * 4);
+            time = "0:" + random4th + ":" + random16th;
 
-        } while (timeGroup.includes(time))
-        timeGroup.push(time)
+        } while (timeGroup.includes(time));
+        timeGroup.push(time);
     }
 
-    timeGroup.sort()
+    timeGroup.sort();
 
     for (time in timeGroup) {
-        noteClone.time = timeGroup[time]
-        noteGroup.push(noteClone)
-        noteClone = {...note}
+        noteClone.time = timeGroup[time];
+        noteGroup.push(noteClone);
+        noteClone = {...note};
     }
 
-    return noteGroup
+    return noteGroup;
 }
 
 // extends the randomizer to make long strings of random notes
 function randomizerExtender(notes, measures) {
-    let noteGroup = []
-    let currGroup = 0
-    let currNote = 0
-    let time = ""
+    let noteGroup = [];
+    let currGroup = 0;
+    let currNote = 0;
+    let time = "";
 
     for (let i = 0; i < measures; i++) {
-        currGroup = noteRandomizer(notes)
+        currGroup = noteRandomizer(notes);
         for (const note in currGroup) {
-            currNote = {...currGroup[note]}
-            currNote.time = currNote.time.replace('0:', i+':')
-            noteGroup.push(currNote)
+            currNote = {...currGroup[note]};
+            currNote.time = currNote.time.replace('0:', i+':');
+            noteGroup.push(currNote);
         }
     }
-    console.log(noteGroup)
-    return noteGroup
+    console.log(noteGroup);
+    return noteGroup;
 }
 
 function static_notes() {
@@ -119,8 +118,8 @@ function static_notes() {
         { time: "0:2", note: "G3", velocity: 0.5 },
         { time: "0:3:1", note: "C4", velocity: 0.5 },
         { time: "0:3:3", note: "C4", velocity: 0.5 }
-    ]
-    return notes
+    ];
+    return notes;
 }
 
 function tonejsPart() {
