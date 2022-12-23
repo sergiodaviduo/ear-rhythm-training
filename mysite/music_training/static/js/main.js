@@ -187,12 +187,20 @@ function tonejsPart() {
     const synth = new Tone.Synth().toDestination();
     // use an array of objects as long as the object has a "time" attribute
 
+    let triggerNum = 0;
+
+    let leftPaw = document.getElementById('paw-left');
+
+    let rightPaw = document.getElementById('paw-right');
+
+    let paws = [leftPaw, rightPaw];
+
     let part = new Tone.Part(((time, value) => {
         synth.triggerAttackRelease(value.note, "16n", time, value.velocity, 2);
 
         if (synth) {
-            noteDelay1(410);
-            noteDelay2(460);
+            noteTrigger(410, paws[ triggerNum % 2 ], value.velocity);
+            noteRelease(460, paws[ triggerNum % 2 ], value.velocity);
         }
 
         if (synth && value.velocity == 0) {
@@ -227,14 +235,20 @@ async function waitForInput() {
     let ready = await Tone.start();
 }
 
-async function noteDelay1(milisec) {
+async function noteTrigger(milisec, paw, volume) {
     await waitForNote(milisec);
     document.getElementById('purpleSquare').style.backgroundColor = 'blue';
+    if (volume) {
+        paw.style.backgroundPositionX = '-800px';
+    }
 }
 
-async function noteDelay2(milisec) {
+async function noteRelease(milisec, paw, volume) {
     await waitForNote(milisec);
     document.getElementById('purpleSquare').style.backgroundColor = 'purple';
+    if (volume) {
+        paw.style.backgroundPositionX = '0px';
+    }
 }
 
 function inputOpen(milisec) {
