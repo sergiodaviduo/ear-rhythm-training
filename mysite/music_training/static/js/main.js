@@ -208,6 +208,8 @@ function tonejsPart() {
             inputClose(550);
         }
 
+        triggerNum++;
+
     }), randomizerExtender(5, 16)).start(0);
 
     //callback functions in-between every other measure
@@ -237,7 +239,7 @@ async function waitForInput() {
 
 async function noteTrigger(milisec, paw, volume) {
     await waitForNote(milisec);
-    document.getElementById('purpleSquare').style.backgroundColor = 'blue';
+
     if (volume) {
         paw.style.backgroundPositionX = '-800px';
     }
@@ -245,7 +247,7 @@ async function noteTrigger(milisec, paw, volume) {
 
 async function noteRelease(milisec, paw, volume) {
     await waitForNote(milisec);
-    document.getElementById('purpleSquare').style.backgroundColor = 'purple';
+
     if (volume) {
         paw.style.backgroundPositionX = '0px';
     }
