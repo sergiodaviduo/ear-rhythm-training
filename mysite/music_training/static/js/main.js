@@ -183,6 +183,10 @@ let noteWindow = 0;
 let openTime = 0;
 let closeTime = 0;
 
+let delay = 410;
+
+let delaySlider = document.getElementById("delay");
+
 function tonejsPart() {
     const synth = new Tone.Synth().toDestination();
     // use an array of objects as long as the object has a "time" attribute
@@ -193,19 +197,20 @@ function tonejsPart() {
 
     let rightPaw = document.getElementById('paw-right');
 
+    // triggerNum % 2
     let paws = [leftPaw, rightPaw];
 
     let part = new Tone.Part(((time, value) => {
         synth.triggerAttackRelease(value.note, "16n", time, value.velocity, 2);
 
         if (synth) {
-            noteTrigger(410, paws[ triggerNum % 2 ], value.velocity);
-            noteRelease(460, paws[ triggerNum % 2 ], value.velocity);
+            noteTrigger(delay, paws[ 0 ], value.velocity);
+            noteRelease(delay+50, paws[ 0 ], value.velocity);
         }
 
         if (synth && value.velocity == 0) {
-            inputOpen(410);
-            inputClose(550);
+            inputOpen(delay-40);
+            inputClose(delay+140);
         }
 
         triggerNum++;
@@ -250,7 +255,7 @@ async function noteRelease(milisec, paw, volume) {
 
     if (volume) {
         paw.style.backgroundPositionX = '0px';
-    }
+    }delaySlider
 }
 
 function inputOpen(milisec) {
@@ -317,3 +322,8 @@ document.addEventListener('keyup', (event) => {
         document.getElementById('blueSquare').style.backgroundColor = 'blue';
     }
 });
+
+delaySlider.addEventListener('change', function() { 
+    delay = delaySlider.value;
+    document.getElementById('liveDelay').innerHTML = delay;
+  })

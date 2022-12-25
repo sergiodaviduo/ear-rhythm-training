@@ -103,7 +103,7 @@
     position:absolute;
     top:50%;
     left:50%;
-    transform:translate(-50%,-50%);
+    transform:translate(0%,-100%);
     width:800px;
     height:450px
    }
@@ -232,7 +232,7 @@
    }
    .instruments>#keyboard,
    #layer-keyboard {
-    background-image:url(../images/keyboard.png)
+    background-image:url(https://bongo.cat/images/keyboard.png)
    }
    .instruments>#cymbal,
    #layer-cymbal {
@@ -316,7 +316,7 @@
      visibility:hidden
     }
     #container {
-     transform:scale(.6,.6) translate(-50%,-50%);
+     transform:scale(.6,.6) translate(0%,-100%);
      transform-origin:top left
     }
    }
@@ -329,3 +329,6 @@
     }
    }
    
+   #score {
+    text-align: center;
+   }
