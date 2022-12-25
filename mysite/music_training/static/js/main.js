@@ -4,7 +4,9 @@
 
 let synth = new Tone.Synth().toDestination();
 
-const BPM = 120;
+const BPM = 150;
+
+let tempo = BPM;
 
 const reverb = new Tone.Reverb({
     decay: 4,
@@ -34,7 +36,7 @@ synth.set({
 effect.connect(reverb);
 reverb.connect(Tone.Destination);
 
-Tone.Transport.bpm.value = BPM;
+Tone.Transport.bpm.value = tempo;
 
 Tone.start();
 
@@ -183,13 +185,23 @@ let noteWindow = 0;
 let openTime = 0;
 let closeTime = 0;
 
-let delay = 410;
+let delay = 480;
 
 let delaySlider = document.getElementById("delay");
 
+let tempoSlider = document.getElementById("tempo");
+
 let scoreBoard = document.getElementById("score");
 
-function tonejsPart() {
+let scoreResult = document.getElementById("scoreResult");
+
+let notesInMeasure = 5;
+
+document.getElementById('liveDelay').innerHTML = delay;
+
+document.getElementById('liveTempo').innerHTML = tempo;
+
+function tonejsPart(delay, notesInMeasure, song=randomizerExtender(notesInMeasure, 16), open=30, close=90) {
     const synth = new Tone.Synth().toDestination();
     // use an array of objects as long as the object has a "time" attribute
 
@@ -211,23 +223,27 @@ function tonejsPart() {
         }
 
         if (synth && value.velocity == 0) {
-            inputOpen(delay-40);
-            inputClose(delay+140);
+            inputOpen(delay-open);
+            inputClose(delay+close);
         }
 
         triggerNum++;
 
-    }), randomizerExtender(5, 16)).start(0);
+    }), song).start("2m");
 
     //callback functions in-between every other measure
     Tone.Transport.scheduleRepeat((time) => {
-        if ( score > 35 ) {
+        if ( score > notesInMeasure * 7 ) {
             party.confetti(scoreBoard, {
                 count: party.variation.range(20, 40),
             });
-            scoreBoard.innerHTML = "You got " + score + " out of 40!!";
+            scoreResult.innerHTML = "You got " + score + " out of " + (notesInMeasure * 8) +"!!";
+            score = 0;
         }
-    }, "16m", "0m");
+
+    }, "19m", "0m");
+
+    return part;
 }
 
 function tonejsDrums() {
@@ -240,10 +256,10 @@ function tonejsDrums() {
     }, [{ time: '0:0' },{ time: '0:1' },{ time: '0:2' },{ time: '0:3' }]).start(0);
 
     kickPart.loop = true;
+
+    return kickPart;
 }
 
-tonejsPart();
-tonejsDrums();
 
 async function waitForInput() {
     let ready = await Tone.start();
@@ -255,6 +271,7 @@ async function noteTrigger(milisec, paw, volume) {
     if (volume) {
         paw.style.backgroundPositionX = '-800px';
     }
+
 }
 
 async function noteRelease(milisec, paw, volume) {
@@ -297,14 +314,35 @@ function waitForNote(milisec) {
     })
 }
 
+let mainSong = tonejsPart(delay, notesInMeasure);
+let click = tonejsDrums();
+
+let firstRun = true;
+
 document.getElementById("play-button").addEventListener("click", event => {
     if (Tone.Transport.state !== "started") {
         console.log("-- new session --\n\n")
     }
 
     waitForInput();
+
+    if (mainSong.disposed && !firstRun) {
+        Tone.Transport.bpm.value = tempo;
+        mainSong = tonejsPart(delay, notesInMeasure);
+        click = tonejsDrums();
+    }
+
     Tone.Transport.toggle();
     console.log(Tone.Transport.state);
+
+    if (!mainSong.disposed && !firstRun && Tone.Transport.state === "stopped") {
+        mainSong.dispose();
+        click.dispose();
+        document.getElementById('paw-left').style.backgroundPositionX = '0px';
+        score = 0;
+    }
+
+    firstRun = false;
  });
 
 
@@ -340,4 +378,9 @@ document.addEventListener('keyup', (event) => {
 delaySlider.addEventListener('change', function() { 
     delay = delaySlider.value;
     document.getElementById('liveDelay').innerHTML = delay;
-  })
+})
+
+tempoSlider.addEventListener('change', function() { 
+    tempo = tempoSlider.value;
+    document.getElementById('liveTempo').innerHTML = tempo;
+})
