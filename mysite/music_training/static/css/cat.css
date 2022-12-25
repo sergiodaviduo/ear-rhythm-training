@@ -331,4 +331,11 @@
    
    #score {
     text-align: center;
+    margin:0 auto;
+    max-width: 200px;
+   }
+
+   .scored {
+    animation: pulse; /* referring directly to the animation's @keyframe declaration */
+    animation-duration: 0.09s; /* don't forget to set a duration! */
    }
