@@ -8,12 +8,13 @@
     <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
     <!-- <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script> -->
     <script type="module" src="{% static 'js/main.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cat.css' %}?{% now "U" %}">
   </head>
   <body>
-    <p>Buttons to play sounds:</p>
+
   <br><br>
 
-  <button id="play-button">Tone.js sound</button>
+  <button id="play-button">Start game :O</button>
   <br><br>
   <div id="blueSquare" style="background-color: blue; width: 100px; height: 100px;"></div>
   <br><br>
@@ -21,6 +22,23 @@
   <br><br><br><br>
   <h3 id="score">Score: 0</h3>
   <br>
-  <h3 id="score">Best Possible Score: 40</h3>
+  <h3 id="maxScore">Best Possible Score: 40</h3>
+  <br>
+  <h2>Adjust delay: </h2><h2 id="liveDelay">410</h2>
+  <input id="delay" type="range" min="50" max="1000" value="410">
+
+  <br><br><br>
+  <div id="container">
+    <hr>
+    <div class="cat">
+      <div id="head"></div>
+      <div id="mouth" style="background-position-x: 0px;"></div>
+      <div id="paw-left" style="background-position-x: 0px;"></div>
+      <div id="paw-right" style="background-position-x: 0px;"></div>
+    </div>
+    <div class="instruments">
+      <div id="keyboard" style="visibility: visible;"></div>
+    </div>
+  </div>
   </body>
 </html>
