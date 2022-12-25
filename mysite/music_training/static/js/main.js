@@ -187,6 +187,8 @@ let delay = 410;
 
 let delaySlider = document.getElementById("delay");
 
+let scoreBoard = document.getElementById("score");
+
 function tonejsPart() {
     const synth = new Tone.Synth().toDestination();
     // use an array of objects as long as the object has a "time" attribute
@@ -219,8 +221,13 @@ function tonejsPart() {
 
     //callback functions in-between every other measure
     Tone.Transport.scheduleRepeat((time) => {
-        //some visual focus to signal input?
-    }, "2m", "1m");
+        if ( score > 35 ) {
+            party.confetti(scoreBoard, {
+                count: party.variation.range(20, 40),
+            });
+            scoreBoard.innerHTML = "You got " + score + " out of 40!!";
+        }
+    }, "16m", "0m");
 }
 
 function tonejsDrums() {
@@ -311,8 +318,15 @@ document.addEventListener('keydown', (event) => {
 
         if (noteWindow === 1) {
             score++;
-            document.getElementById("score").innerHTML = "Score: " + score;
+            scoreBoard.innerHTML = "Score: " + score;
             console.log(score);
+            document.getElementById("score").classList.add("scored");
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    scoreBoard.classList.remove("scored");
+                    resolve(0);
+                }, 90);
+            });
         }
     }
 });
