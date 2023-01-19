@@ -222,6 +222,7 @@ function tonejsPart(delay, notesInMeasure, song=randomizerExtender(notesInMeasur
             noteRelease(delay+50, paws[ 0 ], value.velocity);
         }
 
+        // when synth is playing with no volume, so input check can be run
         if (synth && value.velocity == 0) {
             inputOpen(delay-open);
             inputClose(delay+close);
@@ -229,7 +230,7 @@ function tonejsPart(delay, notesInMeasure, song=randomizerExtender(notesInMeasur
 
         triggerNum++;
 
-    }), song).start("2m");
+    }), FourOnTheFloorTest).start("2m");
 
     //callback functions in-between every other measure
     Tone.Transport.scheduleRepeat((time) => {
@@ -246,6 +247,7 @@ function tonejsPart(delay, notesInMeasure, song=randomizerExtender(notesInMeasur
     return part;
 }
 
+// metronome
 function tonejsDrums() {
     const kickDrum = new Tone.MembraneSynth({
         volume: 4
@@ -265,6 +267,7 @@ async function waitForInput() {
     let ready = await Tone.start();
 }
 
+// when note is played, "move" paw down 
 async function noteTrigger(milisec, paw, volume) {
     await waitForNote(milisec);
 
@@ -279,34 +282,50 @@ async function noteRelease(milisec, paw, volume) {
 
     if (volume) {
         paw.style.backgroundPositionX = '0px';
-    }delaySlider
+    }
 }
 
 function inputOpen(milisec) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            console.log("open");
-            noteWindow = 1;
+    console.log("open");
 
-            openTime = +new Date();
+    openTime = +new Date();
 
-            resolve(1);
-        }, milisec);
-    });
+    openTime += milisec;
 }
+
+/*
+return new Promise((resolve) => {
+    setTimeout(() => {
+        console.log("open");
+        noteWindow = 1;
+
+        openTime = +new Date();
+
+        resolve(1);
+    }, milisec);
+});
+*/
 
 function inputClose(milisec) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            console.log("close");
-            noteWindow = 0;
+    console.log("close");
 
-            closeTime = +new Date();
+    closeTime = +new Date();
 
-            resolve(0);
-        }, milisec);
-    });
+    closeTime += milisec;
 }
+
+/*
+return new Promise((resolve) => {
+    setTimeout(() => {
+        console.log("close");
+        noteWindow = 0;
+
+        closeTime = +new Date();
+
+        resolve(0);
+    }, milisec);
+});
+*/
 
 function waitForNote(milisec) {
     return new Promise(resolve => {
@@ -349,12 +368,16 @@ document.getElementById("play-button").addEventListener("click", event => {
 document.addEventListener('keydown', (event) => {
     let accuracy = 0;
 
+    let keyDownTime = 0;
+
     if (event.key === ' ') {
         document.getElementById('blueSquare').style.backgroundColor = 'green';
 
-        console.log("Time between input and window open: ", +new Date() - openTime);
+        keyDownTime = +new Date();
 
-        if (noteWindow === 1) {
+        console.log("Time between actual input and window open: ", keyDownTime - openTime);
+
+        if (keyDownTime >= openTime && keyDownTime <= closeTime) {
             score++;
             scoreBoard.innerHTML = "Score: " + score;
             console.log(score);
