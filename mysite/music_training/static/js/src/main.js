@@ -2,6 +2,10 @@
 // caculate note duration and hertz from bpm: http://bradthemad.org/guitar/tempo_explanation.php
 // this visual library would be wild with this: https://ptsjs.org/
 
+import { STATIC_LIBRARY } from "./constants/notes";
+
+const QuarterNoteTest = STATIC_LIBRARY[2];
+
 let synth = new Tone.Synth().toDestination();
 
 const BPM = 150;
@@ -40,26 +44,6 @@ Tone.Transport.bpm.value = tempo;
 
 Tone.start();
 
-const AMinorScale = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-const AllNotes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-const FourOnTheFloorTest = [
-   { time: "0:0:0", note: "C4", velocity: 0.9 },
-   { time: "0:1:0", note: "C4", velocity: 0.9 },
-   { time: "0:2:0", note: "C4", velocity: 0.9 },
-   { time: "0:3:0", note: "C4", velocity: 0.9 },
-   { time: "1:0:0", note: "C4", velocity: 0.0 },
-   { time: "1:1:0", note: "C4", velocity: 0.0 },
-   { time: "1:2:0", note: "C4", velocity: 0.0 },
-   { time: "1:3:0", note: "C4", velocity: 0.0 }
-];
-
-const StaticNotes = [
-    { time: 0, note: "C3", velocity: 0.9 },
-    { time: "0:2", note: "G3", velocity: 0.5 },
-    { time: "0:3:1", note: "C4", velocity: 0.5 },
-    { time: "0:3:3", note: "C4", velocity: 0.5 }
-];
-
 let currentNote = 0;
 
 function tonejsLoop() {
@@ -70,112 +54,6 @@ function tonejsLoop() {
         synth.triggerAttackRelease(AMinorScale[currentNote]+'4', '16n', time);
         currentNote++;
     }, "16n").start(0);
-}
-
-// creates a number of notes within one measure at random rhythmic times, all the same pitch
-// can produce up to 15 notes, as division in Tone.js only goes to 16ths
-// returns an array understood by Tone.js
-//example array returned with four notes requested:
-//[
-//    { time: "0:0:0", note: "C4", velocity: 0.9 },
-//    { time: "0:2:0", note: "C4", velocity: 0.9 },
-//    { time: "0:3:1", note: "C4", velocity: 0.9 },
-//    { time: "0:3:3", note: "C4", velocity: 0.9 }
-//]
-function hardRandomizer(notes) {
-    notes = (notes > 15) ? 15 : notes;
-
-    const note = { time: 0, note: "C4", velocity: 0.9 };
-    let noteClone = Object.assign({}, note);
-    let timeGroup = [];
-    let noteGroup = [];
-    let time = "";
-    let random4th = 0;
-    let random16th = 0;
-
-    for (let i = 0; i < notes; i++) {
-        do {
-            random4th = Math.floor(Math.random() * 4);
-            random16th = Math.floor(Math.random() * 4);
-            time = "0:" + random4th + ":" + random16th;
-
-        } while (timeGroup.includes(time));
-        timeGroup.push(time);
-    }
-
-    timeGroup.sort();
-
-    for (time in timeGroup) {
-        noteClone.time = timeGroup[time];
-        noteGroup.push(noteClone);
-        noteClone = {...note};
-    }
-
-    return noteGroup;
-}
-
-function mediumRandomizer(notes) {
-    notes = (notes > 15) ? 15 : notes;
-
-    const note = { time: 0, note: "C4", velocity: 0.9 };
-    let noteClone = Object.assign({}, note);
-    let timeGroup = [];
-    let noteGroup = [];
-    let time = "";
-    let random4th = 0;
-    let random16th = 0;
-
-    let medium = [0, 2];
-
-    for (let i = 0; i < notes; i++) {
-        do {
-            random4th = Math.floor(Math.random() * 4);
-            random16th = medium[Math.floor(Math.random() * 2)];
-            time = "0:" + random4th + ":" + random16th;
-        } while (timeGroup.includes(time));
-        timeGroup.push(time);
-    }
-
-    timeGroup.sort();
-
-    for (time in timeGroup) {
-        noteClone.time = timeGroup[time];
-        noteGroup.push(noteClone);
-        noteClone = {...note};
-    }
-
-    return noteGroup;
-}
-
-// extends the randomizer to make long strings of random notes
-//     notes (int)      ->  how many notes in each phrase (within one 4/4 measure long by default)
-//     measures (int)   ->  How many total measures the randomizer will run
-//     hasSpace (bool)  ->  whether to include rests in-between every other phrase for user input
-function randomizerExtender(notes, measures, hasRepeat=true) {
-    let noteGroup = [];
-    let currGroup = 0;
-    let lastGroup = 0;
-    let currNote = 0;
-
-    for (let i = 0; i < measures; i++) {
-        currGroup = mediumRandomizer(notes);
-        for (const note in currGroup) {
-            if (i % 2 !== 0 && hasRepeat)  {
-                currNote = {...lastGroup[note]};
-
-                currNote.time = currNote.time.replace('0:', i+':');
-                currNote.velocity = 0;
-                noteGroup.push(currNote);
-            } else {
-                currNote = {...currGroup[note]};
-                currNote.time = currNote.time.replace('0:', i+':');
-                noteGroup.push(currNote);
-            }
-        }
-        lastGroup = currGroup;
-    }
-    console.log(noteGroup);
-    return noteGroup;
 }
 
 let score = 0;
@@ -230,7 +108,7 @@ function tonejsPart(delay, notesInMeasure, song=randomizerExtender(notesInMeasur
 
         triggerNum++;
 
-    }), FourOnTheFloorTest).start("2m");
+    }), QuarterNoteTest).start("2m");
 
     //callback functions in-between every other measure
     Tone.Transport.scheduleRepeat((time) => {
