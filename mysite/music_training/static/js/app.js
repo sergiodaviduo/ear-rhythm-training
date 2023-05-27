@@ -4,7 +4,7 @@
 
 import { Game } from "./components/game.js";
 import { STATIC_LIBRARY } from "./constants/notes.js";
-import { startKeyboard } from "./components/instruments.js";
+import { metronome } from "./components/instruments.js";
 import { mediumRandomizer, hardRandomizer, randomizerExtender } from "./components/generators.js";
 
 const GameInstance = new Game();
@@ -18,7 +18,6 @@ let closeTime = 0;
 
 GameInstance.tempo = 150;
 GameInstance.delay = 100;
-GameInstance.instrument = startKeyboard(GameInstance.tempo);
 GameInstance.notesInMeasure = 5;
 
 let delaySlider = document.getElementById("delay");
@@ -47,14 +46,14 @@ function tonejsPart(delay, notesInMeasure, song=randomizerExtender(GameInstance.
         synth.triggerAttackRelease(value.note, "16n", time, value.velocity, 2);
 
         if (synth) {
-            noteTrigger(GameInstance.delay, paws[ 0 ], value.velocity);
-            noteRelease(GameInstance.delay+50, paws[ 0 ], value.velocity);
+            noteTrigger(delay, paws[ 0 ], value.velocity);
+            noteRelease(delay+50, paws[ 0 ], value.velocity);
         }
 
         // when synth is playing with no volume, so input check can be run
         if (synth && value.velocity == 0) {
-            inputOpen(GameInstance.delay-open);
-            inputClose(GameInstance.delay+close);
+            inputOpen(delay-open);
+            inputClose(delay+close);
         }
 
         triggerNum++;
@@ -78,24 +77,9 @@ function tonejsPart(delay, notesInMeasure, song=randomizerExtender(GameInstance.
 
 // mainsong and click must be accessible by input
 let mainSong = tonejsPart(GameInstance.delay, GameInstance.notesInMeasure);
-let click = tonejsDrums();
+let click = metronome();
 
 let firstRun = true;
-
-// metronome
-function tonejsDrums() {
-    const kickDrum = new Tone.MembraneSynth({
-        volume: 4
-    }).toDestination();
-
-    const kickPart = new Tone.Part(function(time) {
-        kickDrum.triggerAttackRelease('C1', '8n', time);
-    }, [{ time: '0:0' },{ time: '0:1' },{ time: '0:2' },{ time: '0:3' }]).start(0);
-
-    kickPart.loop = true;
-
-    return kickPart;
-}
 
 // when note is played, "move" paw down 
 async function noteTrigger(milisec, paw, volume) {
@@ -123,19 +107,6 @@ function inputOpen(milisec) {
     openTime += milisec;
 }
 
-/*
-return new Promise((resolve) => {
-    setTimeout(() => {
-        console.log("open");
-        noteWindow = 1;
-
-        openTime = +new Date();
-
-        resolve(1);
-    }, milisec);
-});
-*/
-
 function inputClose(milisec) {
     console.log("close");
 
@@ -143,19 +114,6 @@ function inputClose(milisec) {
 
     closeTime += milisec;
 }
-
-/*
-return new Promise((resolve) => {
-    setTimeout(() => {
-        console.log("close");
-        noteWindow = 0;
-
-        closeTime = +new Date();
-
-        resolve(0);
-    }, milisec);
-});
-*/
 
 function waitForNote(milisec) {
     return new Promise(resolve => {
@@ -175,9 +133,9 @@ document.getElementById("play-button").addEventListener("click", event => {
     waitForInput();
 
     if (mainSong.disposed && !firstRun) {
-        Tone.Transport.bpm.value = GameInstance.tempo ;
+        Tone.Transport.bpm.value = GameInstance.tempo;
         mainSong = tonejsPart(GameInstance.delay, GameInstance.notesInMeasure);
-        click = tonejsDrums();
+        click = metronome();
     }
 
     Tone.Transport.toggle();
