@@ -14,8 +14,10 @@
     />
     {% if debug %}
     <script src="//localhost:35729/livereload.js"></script>
+    <script type="module" src="{% static 'js/app.js' %}"></script>
+    {% else %}
+    <script type="module" src="{% static 'js/app.min.js' %}"></script>
     {% endif %}
-    <script type="module" src="{% static 'js/main.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/cat.css' %}?{% now "U" %}">
     
   </head>
