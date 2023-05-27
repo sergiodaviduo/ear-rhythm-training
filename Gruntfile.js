@@ -5,20 +5,20 @@ grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
         concat: {
             app: {
-                src: ['mysite/music_training/static/js/app/*.js', 'mysite/music_training/static/js/generators/*.js'],
+                src: ['mysite/music_training/static/js/src/**/*.js'],
                 dest: 'mysite/music_training/static/js/main.js'
             }
         },
         uglify: {
             app: {
-                files: {'mysite/music_training/static/js/app.min.js': ['mysite/music_training/static/js/app/*.js', 'mysite/music_training/static/js/generators/*.js']}
+                files: {'mysite/music_training/static/js/app.min.js': ['mysite/music_training/static/js/src/**/*.js']}
             }
         },
         watch: {
             options: {livereload: true},
             javascript: {
-                files: ['mysite/music_training/static/js/app/*.js'],
-                tasks: ['concat']
+                files: ['mysite/music_training/static/js/src/**/*.js'],
+                tasks: ['concat', 'uglify']
             }
         }
 });
