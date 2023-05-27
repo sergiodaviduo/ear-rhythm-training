@@ -2,48 +2,34 @@
 // caculate note duration and hertz from bpm: http://bradthemad.org/guitar/tempo_explanation.php
 // this visual library would be wild with this: https://ptsjs.org/
 
+import { Game } from "./components/game";
 import { STATIC_LIBRARY } from "./constants/notes";
+import { startKeyboard } from "./components/instruments";
+
+const GameInstance = new Game();
 
 const QuarterNoteTest = STATIC_LIBRARY[2];
 
-let synth = new Tone.Synth().toDestination();
+let noteWindow = 0;
 
-const BPM = 150;
+let openTime = 0;
+let closeTime = 0;
 
-let tempo = BPM;
+GameInstance.tempo = 150;
+GameInstance.delay = 480;
+GameInstance.instrument = startKeyboard(GameInstance.tempo);
+GameInstance.notesInMeasure = 5;
 
-const reverb = new Tone.Reverb({
-    decay: 4,
-    wet: 0.2,
-    preDelay: 0.0,
-});
+let delaySlider = document.getElementById("delay");
+let tempoSlider = document.getElementById("tempo");
+let scoreBoard = document.getElementById("score");
+let scoreResult = document.getElementById("scoreResult");
 
-reverb.generate();
+document.getElementById('liveDelay').innerHTML = GameInstance.delay;
 
-const effect = new Tone.FeedbackDelay(`${Math.floor(2 / 2)}n`, 1 / 2);
-effect.wet.value = 0.2;
+document.getElementById('liveTempo').innerHTML = GameInstance.tempo;
 
-synth.set({
-    voice0: {
-        oscillator: {
-          type: "triangle",
-        },
-    volume: -30,
-    envelope: { attack: 0.005, release: 0.05, sustain: 1, },
-    },
-    voice1: {
-        volume: -20,
-        envelope: { attack: 0.005, release: 0.05, sustain: 1, },
-    },
-});
-
-effect.connect(reverb);
-reverb.connect(Tone.Destination);
-
-Tone.Transport.bpm.value = tempo;
-
-Tone.start();
-
+// scale I think?
 let currentNote = 0;
 
 function tonejsLoop() {
@@ -51,33 +37,10 @@ function tonejsLoop() {
         if (currentNote === 7) {
             currentNote = 0;
         }
-        synth.triggerAttackRelease(AMinorScale[currentNote]+'4', '16n', time);
+        GameInstance.instrument.triggerAttackRelease(AMinorScale[currentNote]+'4', '16n', time);
         currentNote++;
     }, "16n").start(0);
 }
-
-let score = 0;
-
-let noteWindow = 0;
-
-let openTime = 0;
-let closeTime = 0;
-
-let delay = 480;
-
-let delaySlider = document.getElementById("delay");
-
-let tempoSlider = document.getElementById("tempo");
-
-let scoreBoard = document.getElementById("score");
-
-let scoreResult = document.getElementById("scoreResult");
-
-let notesInMeasure = 5;
-
-document.getElementById('liveDelay').innerHTML = delay;
-
-document.getElementById('liveTempo').innerHTML = tempo;
 
 function tonejsPart(delay, notesInMeasure, song=randomizerExtender(notesInMeasure, 16), open=30, close=90) {
     const synth = new Tone.Synth().toDestination();
@@ -86,7 +49,6 @@ function tonejsPart(delay, notesInMeasure, song=randomizerExtender(notesInMeasur
     let triggerNum = 0;
 
     let leftPaw = document.getElementById('paw-left');
-
     let rightPaw = document.getElementById('paw-right');
 
     // triggerNum % 2
@@ -112,18 +74,24 @@ function tonejsPart(delay, notesInMeasure, song=randomizerExtender(notesInMeasur
 
     //callback functions in-between every other measure
     Tone.Transport.scheduleRepeat((time) => {
-        if ( score > notesInMeasure * 7 ) {
+        if ( GameInstance.score > notesInMeasure * 7 ) {
             party.confetti(scoreBoard, {
                 count: party.variation.range(20, 40),
             });
-            scoreResult.innerHTML = "You got " + score + " out of " + (notesInMeasure * 8) +"!!";
-            score = 0;
+            scoreResult.innerHTML = "You got " + GameInstance.score + " out of " + (notesInMeasure * 8) +"!!";
+            GameInstance.score = 0;
         }
 
     }, "19m", "0m");
 
     return part;
 }
+
+// mainsong and click must be accessible by input
+let mainSong = tonejsPart(delay, notesInMeasure);
+let click = tonejsDrums();
+
+let firstRun = true;
 
 // metronome
 function tonejsDrums() {
@@ -140,10 +108,75 @@ function tonejsDrums() {
     return kickPart;
 }
 
-let mainSong = tonejsPart(delay, notesInMeasure);
-let click = tonejsDrums();
+// when note is played, "move" paw down 
+async function noteTrigger(milisec, paw, volume) {
+    await waitForNote(milisec);
 
-let firstRun = true;
+    if (volume) {
+        paw.style.backgroundPositionX = '-800px';
+    }
+
+}
+
+async function noteRelease(milisec, paw, volume) {
+    await waitForNote(milisec);
+
+    if (volume) {
+        paw.style.backgroundPositionX = '0px';
+    }
+}
+
+function inputOpen(milisec) {
+    console.log("open");
+
+    openTime = +new Date();
+
+    openTime += milisec;
+}
+
+/*
+return new Promise((resolve) => {
+    setTimeout(() => {
+        console.log("open");
+        noteWindow = 1;
+
+        openTime = +new Date();
+
+        resolve(1);
+    }, milisec);
+});
+*/
+
+function inputClose(milisec) {
+    console.log("close");
+
+    closeTime = +new Date();
+
+    closeTime += milisec;
+}
+
+/*
+return new Promise((resolve) => {
+    setTimeout(() => {
+        console.log("close");
+        noteWindow = 0;
+
+        closeTime = +new Date();
+
+        resolve(0);
+    }, milisec);
+});
+*/
+
+function waitForNote(milisec) {
+    return new Promise(resolve => {
+        setTimeout(() => { resolve('') }, milisec);
+    })
+}
+
+async function waitForInput() {
+    let ready = await Tone.start();
+}
 
 document.getElementById("play-button").addEventListener("click", event => {
     if (Tone.Transport.state !== "started") {
@@ -165,7 +198,7 @@ document.getElementById("play-button").addEventListener("click", event => {
         mainSong.dispose();
         click.dispose();
         document.getElementById('paw-left').style.backgroundPositionX = '0px';
-        score = 0;
+        GameInstance.score = 0;
     }
 
     firstRun = false;
