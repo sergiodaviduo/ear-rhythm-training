@@ -14,7 +14,7 @@ const reverb = new Tone.Reverb({
     preDelay: 0.0,
 });
 
-await reverb.generate();      // Load the reverb
+reverb.generate();      // Load the reverb
 
 const effect = new Tone.FeedbackDelay(`${Math.floor(2 / 2)}n`, 1 / 2);
 effect.wet.value = 0.2;
