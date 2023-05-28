@@ -1,0 +1,142 @@
+diff --git a/mysite/music_training/__pycache__/__init__.cpython-310.pyc b/mysite/music_training/__pycache__/__init__.cpython-310.pyc
+index 0ff24df..80e2f2a 100644
+Binary files a/mysite/music_training/__pycache__/__init__.cpython-310.pyc and b/mysite/music_training/__pycache__/__init__.cpython-310.pyc differ
+diff --git a/mysite/music_training/__pycache__/admin.cpython-310.pyc b/mysite/music_training/__pycache__/admin.cpython-310.pyc
+index 6f42565..3812ab7 100644
+Binary files a/mysite/music_training/__pycache__/admin.cpython-310.pyc and b/mysite/music_training/__pycache__/admin.cpython-310.pyc differ
+diff --git a/mysite/music_training/__pycache__/apps.cpython-310.pyc b/mysite/music_training/__pycache__/apps.cpython-310.pyc
+index fbb485d..6ae9409 100644
+Binary files a/mysite/music_training/__pycache__/apps.cpython-310.pyc and b/mysite/music_training/__pycache__/apps.cpython-310.pyc differ
+diff --git a/mysite/music_training/__pycache__/models.cpython-310.pyc b/mysite/music_training/__pycache__/models.cpython-310.pyc
+index d138818..e71fb6d 100644
+Binary files a/mysite/music_training/__pycache__/models.cpython-310.pyc and b/mysite/music_training/__pycache__/models.cpython-310.pyc differ
+diff --git a/mysite/music_training/__pycache__/urls.cpython-310.pyc b/mysite/music_training/__pycache__/urls.cpython-310.pyc
+index 982136e..410bade 100644
+Binary files a/mysite/music_training/__pycache__/urls.cpython-310.pyc and b/mysite/music_training/__pycache__/urls.cpython-310.pyc differ
+diff --git a/mysite/music_training/__pycache__/views.cpython-310.pyc b/mysite/music_training/__pycache__/views.cpython-310.pyc
+index 83c2f6e..b4c4707 100644
+Binary files a/mysite/music_training/__pycache__/views.cpython-310.pyc and b/mysite/music_training/__pycache__/views.cpython-310.pyc differ
+diff --git a/mysite/music_training/migrations/__pycache__/__init__.cpython-310.pyc b/mysite/music_training/migrations/__pycache__/__init__.cpython-310.pyc
+index a075f0e..5e83eb2 100644
+Binary files a/mysite/music_training/migrations/__pycache__/__init__.cpython-310.pyc and b/mysite/music_training/migrations/__pycache__/__init__.cpython-310.pyc differ
+diff --git a/mysite/music_training/static/js/main.js b/mysite/music_training/static/js/main.js
+index 15d1ff4..26334dd 100644
+--- a/mysite/music_training/static/js/main.js
++++ b/mysite/music_training/static/js/main.js
+@@ -149,7 +149,7 @@ function mediumRandomizer(notes) {
+ 
+ // extends the randomizer to make long strings of random notes
+ //     notes (int)      ->  how many notes in each phrase (within one 4/4 measure long by default)
+-//     measures (int)   ->  How many total measures the randomizer will run
++//     measures (int)   ->  How many total measures the randomizer will produce
+ //     hasSpace (bool)  ->  whether to include rests in-between every other phrase for user input
+ function randomizerExtender(notes, measures, hasRepeat=true) {
+     let noteGroup = [];
+@@ -185,7 +185,7 @@ let noteWindow = 0;
+ let openTime = 0;
+ let closeTime = 0;
+ 
+-let delay = 480;
++let delay = 150;
+ 
+ let delaySlider = document.getElementById("delay");
+ 
+@@ -201,7 +201,11 @@ document.getElementById('liveDelay').innerHTML = delay;
+ 
+ document.getElementById('liveTempo').innerHTML = tempo;
+ 
+-function tonejsPart(delay, notesInMeasure, song=randomizerExtender(notesInMeasure, 16), open=30, close=90) {
++
++// test song metronome: FourOnTheFloorTest
++//normal: randomizerExtender(notesInMeasure, 16)
++
++function tonejsPart(delay, notesInMeasure, song=FourOnTheFloorTest, open=30, close=90) {
+     const synth = new Tone.Synth().toDestination();
+     // use an array of objects as long as the object has a "time" attribute
+ 
+@@ -285,7 +289,7 @@ async function noteRelease(milisec, paw, volume) {
+ function inputOpen(milisec) {
+     return new Promise((resolve) => {
+         setTimeout(() => {
+-            console.log("open");
++            console.log("open: " +  +new Date());
+             noteWindow = 1;
+ 
+             openTime = +new Date();
+@@ -298,12 +302,12 @@ function inputOpen(milisec) {
+ function inputClose(milisec) {
+     return new Promise((resolve) => {
+         setTimeout(() => {
+-            console.log("close");
++            console.log("close: " +  +new Date());
+             noteWindow = 0;
+ 
+             closeTime = +new Date();
+ 
+-            resolve(0);
++            resolve(1);
+         }, milisec);
+     });
+ }
+@@ -352,7 +356,9 @@ document.addEventListener('keydown', (event) => {
+     if (event.key === ' ') {
+         document.getElementById('blueSquare').style.backgroundColor = 'green';
+ 
+-        console.log("Time between input and window open: ", +new Date() - openTime);
++        //console.log("Time between input and window open: ", +new Date() - openTime);
++        console.log("Key pressed: ", +new Date());
++
+ 
+         if (noteWindow === 1) {
+             score++;
+diff --git a/mysite/music_training/templates/music_training/index.html b/mysite/music_training/templates/music_training/index.html
+index d9ca572..0fc1f25 100644
+--- a/mysite/music_training/templates/music_training/index.html
++++ b/mysite/music_training/templates/music_training/index.html
+@@ -31,8 +31,8 @@
+   <br>
+   <h3 id="maxScore">Best Possible Score: 40</h3>
+   <br>
+-  <h2>Adjust delay: </h2><h2 id="liveDelay">490</h2>
+-  <input id="delay" type="range" min="50" max="1000" value="410">
++  <h2>Adjust delay: </h2><h2 id="liveDelay">150</h2>
++  <input id="delay" type="range" min="50" max="500" value="150">
+   <br><br>
+   <h2>Tempo: </h2><h2 id="liveTempo">120</h2>
+   <input id="tempo" type="range" min="50" max="250" value="120">
+diff --git a/mysite/mysite/__pycache__/__init__.cpython-310.pyc b/mysite/mysite/__pycache__/__init__.cpython-310.pyc
+index 8e155d3..7a1723e 100644
+Binary files a/mysite/mysite/__pycache__/__init__.cpython-310.pyc and b/mysite/mysite/__pycache__/__init__.cpython-310.pyc differ
+diff --git a/mysite/mysite/__pycache__/settings.cpython-310.pyc b/mysite/mysite/__pycache__/settings.cpython-310.pyc
+index 4e0907d..7837fb7 100644
+Binary files a/mysite/mysite/__pycache__/settings.cpython-310.pyc and b/mysite/mysite/__pycache__/settings.cpython-310.pyc differ
+diff --git a/mysite/mysite/__pycache__/urls.cpython-310.pyc b/mysite/mysite/__pycache__/urls.cpython-310.pyc
+index d6df3de..5ae481b 100644
+Binary files a/mysite/mysite/__pycache__/urls.cpython-310.pyc and b/mysite/mysite/__pycache__/urls.cpython-310.pyc differ
+diff --git a/mysite/mysite/__pycache__/wsgi.cpython-310.pyc b/mysite/mysite/__pycache__/wsgi.cpython-310.pyc
+index 4835e37..014531e 100644
+Binary files a/mysite/mysite/__pycache__/wsgi.cpython-310.pyc and b/mysite/mysite/__pycache__/wsgi.cpython-310.pyc differ
+diff --git a/mysite/polls/__pycache__/__init__.cpython-310.pyc b/mysite/polls/__pycache__/__init__.cpython-310.pyc
+index 3e4d912..4033be5 100644
+Binary files a/mysite/polls/__pycache__/__init__.cpython-310.pyc and b/mysite/polls/__pycache__/__init__.cpython-310.pyc differ
+diff --git a/mysite/polls/__pycache__/admin.cpython-310.pyc b/mysite/polls/__pycache__/admin.cpython-310.pyc
+index 707688d..184f25c 100644
+Binary files a/mysite/polls/__pycache__/admin.cpython-310.pyc and b/mysite/polls/__pycache__/admin.cpython-310.pyc differ
+diff --git a/mysite/polls/__pycache__/apps.cpython-310.pyc b/mysite/polls/__pycache__/apps.cpython-310.pyc
+index 142c1a7..4440be5 100644
+Binary files a/mysite/polls/__pycache__/apps.cpython-310.pyc and b/mysite/polls/__pycache__/apps.cpython-310.pyc differ
+diff --git a/mysite/polls/__pycache__/models.cpython-310.pyc b/mysite/polls/__pycache__/models.cpython-310.pyc
+index fbf227c..4aaa533 100644
+Binary files a/mysite/polls/__pycache__/models.cpython-310.pyc and b/mysite/polls/__pycache__/models.cpython-310.pyc differ
+diff --git a/mysite/polls/__pycache__/urls.cpython-310.pyc b/mysite/polls/__pycache__/urls.cpython-310.pyc
+index ddab503..a9e4490 100644
+Binary files a/mysite/polls/__pycache__/urls.cpython-310.pyc and b/mysite/polls/__pycache__/urls.cpython-310.pyc differ
+diff --git a/mysite/polls/__pycache__/views.cpython-310.pyc b/mysite/polls/__pycache__/views.cpython-310.pyc
+index 44d803d..d8ecda2 100644
+Binary files a/mysite/polls/__pycache__/views.cpython-310.pyc and b/mysite/polls/__pycache__/views.cpython-310.pyc differ
+diff --git a/mysite/polls/migrations/__pycache__/0001_initial.cpython-310.pyc b/mysite/polls/migrations/__pycache__/0001_initial.cpython-310.pyc
+index 1748bd9..a0abf54 100644
+Binary files a/mysite/polls/migrations/__pycache__/0001_initial.cpython-310.pyc and b/mysite/polls/migrations/__pycache__/0001_initial.cpython-310.pyc differ
+diff --git a/mysite/polls/migrations/__pycache__/__init__.cpython-310.pyc b/mysite/polls/migrations/__pycache__/__init__.cpython-310.pyc
+index 53fbe88..3bdff63 100644
+Binary files a/mysite/polls/migrations/__pycache__/__init__.cpython-310.pyc and b/mysite/polls/migrations/__pycache__/__init__.cpython-310.pyc differ
