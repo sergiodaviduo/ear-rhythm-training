@@ -4,5 +4,8 @@
   },
   "scripts": {
     "start": "rollup -c -w"
+  },
+  "devDependencies": {
+    "vitest": "^0.31.1"
   }
 }
