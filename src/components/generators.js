@@ -13,7 +13,7 @@
 // Hard Version
 // Generates a measure of random 16th notes
 
-function hardRandomizer(notes) {
+export function hardRandomizer(notes) {
     notes = (notes > 15) ? 15 : notes;
 
     const note = { time: 0, note: "C4", velocity: 0.9 };
@@ -48,7 +48,7 @@ function hardRandomizer(notes) {
 // Medium Version
 // Generates a measure of random 8th notes
 
-function mediumRandomizer(notes) {
+export function mediumRandomizer(notes) {
     notes = (notes > 15) ? 15 : notes;
 
     const note = { time: 0, note: "C4", velocity: 0.9 };
@@ -85,7 +85,7 @@ function mediumRandomizer(notes) {
 //     notes (int)      ->  how many notes in each phrase (within one 4/4 measure long by default)
 //     measures (int)   ->  How many total measures the randomizer will run
 //     hasSpace (bool)  ->  whether to include rests in-between every other phrase for user input
-function randomizerExtender(notes, measures, hasRepeat=true) {
+export function randomizerExtender(measures, notes, hasRepeat=true) {
     let noteGroup = [];
     let currGroup = 0;
     let lastGroup = 0;

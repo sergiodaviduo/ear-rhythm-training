@@ -1,19 +1,43 @@
-class Game {
-    constructor() {
-        this.score = 0;
+export class Game {
+    constructor(tempo=100, delay=100) {
+        this._score = 0;
         this.isPlaying = false;
+        this._inputWindowO = 0;
+        this._inputWindowC = 0;
+        this._tempo = tempo;
+        this._delay = delay;
     }
 
     get score() {
-        return this.score;
+        return this._score;
+    }
+
+    get tempo() {
+        return this._tempo;
+    }
+
+    get delay() {
+        return this._delay;
+    }
+
+    get inputWindowO() {
+        return this._inputWindowO;
+    }
+
+    get inputWindowC() {
+        return this._inputWindowC;
+    }
+
+    set score(score) {
+        this._score = score;
     }
 
     set tempo(tempo) {
-        this.tempo = tempo;
+        this._tempo = tempo;
     }
 
     set delay(delay) {
-        this.delay = delay;
+        this._delay = delay;
     }
 
     togglePlay() {
@@ -25,20 +49,26 @@ class Game {
     }
 
     set answerTrack(track) {
-        this.answerTrack = track;
+        this._answerTrack = track;
     }
 
     set clickTrack(track) {
-        this.clickTrack = track;
+        this._clickTrack = track;
     }
 
     set instrument(instrument) {
-        this.instrument = instrument;
+        this._instrument = instrument;
     }
 
     set notesInMeausre(notes) {
-        this.notesInMeausre = notes;
+        this._notesInMeausre = notes;
+    }
+
+    set inputWindowO(milliseconds) {
+        this._inputWindowO = milliseconds;
+    }
+
+    set inputWindowC(milliseconds) {
+        this._inputWindowC = milliseconds;
     }
 }
-
-export class Game{};

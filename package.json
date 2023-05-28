@@ -1,5 +1,8 @@
 {
-  "devDependencies": {
+  "dependencies": {
     "rollup": "^3.23.0"
+  },
+  "scripts": {
+    "start": "rollup -c -w"
   }
 }
