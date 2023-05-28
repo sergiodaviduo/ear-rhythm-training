@@ -1,8 +1,5 @@
 {
   "devDependencies": {
     "rollup": "^3.23.0"
-  },
-  "dependencies": {
-    "rollup-plugin-clear": "^2.0.7"
   }
 }
