@@ -85,7 +85,7 @@ export function mediumRandomizer(notes) {
 //     notes (int)      ->  how many notes in each phrase (within one 4/4 measure long by default)
 //     measures (int)   ->  How many total measures the randomizer will run
 //     hasSpace (bool)  ->  whether to include rests in-between every other phrase for user input
-export function randomizerExtender(notes, measures, hasRepeat=true) {
+export function randomizerExtender(measures, notes, hasRepeat=true) {
     let noteGroup = [];
     let currGroup = 0;
     let lastGroup = 0;

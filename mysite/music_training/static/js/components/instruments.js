@@ -1,4 +1,4 @@
-export function startKeyboard(tempo) {
+function keyboard(tempo) {
     let synth = new Tone.Synth().toDestination();
 
     const reverb = new Tone.Reverb({
@@ -36,7 +36,7 @@ export function startKeyboard(tempo) {
     return synth;
 }
 
-export function metronome() {
+function fourByFour() {
     const kickDrum = new Tone.MembraneSynth({
         volume: 4
     }).toDestination();
@@ -49,3 +49,5 @@ export function metronome() {
 
     return kickPart;
 }
+
+export { keyboard, fourByFour };

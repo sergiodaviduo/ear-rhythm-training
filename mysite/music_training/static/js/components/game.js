@@ -1,7 +1,11 @@
 export class Game {
-    constructor() {
+    constructor(tempo=100, delay=100) {
         this._score = 0;
         this.isPlaying = false;
+        this._inputWindowO = 0;
+        this._inputWindowC = 0;
+        this._tempo = tempo;
+        this._delay = delay;
     }
 
     get score() {
@@ -14,6 +18,14 @@ export class Game {
 
     get delay() {
         return this._delay;
+    }
+
+    get inputWindowO() {
+        return this._inputWindowO;
+    }
+
+    get inputWindowC() {
+        return this._inputWindowC;
     }
 
     set score(score) {
@@ -50,5 +62,13 @@ export class Game {
 
     set notesInMeausre(notes) {
         this._notesInMeausre = notes;
+    }
+
+    set inputWindowO(milliseconds) {
+        this._inputWindowO = milliseconds;
+    }
+
+    set inputWindowC(milliseconds) {
+        this._inputWindowC = milliseconds;
     }
 }
