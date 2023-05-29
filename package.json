@@ -4,10 +4,11 @@
   },
   "scripts": {
     "start": "rollup -c -w",
-    "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "test": "vitest run --coverage",
+    "testW": "vitest"
   },
   "devDependencies": {
+    "@vitest/coverage-c8": "^0.31.1",
     "vitest": "^0.31.1"
   }
 }
