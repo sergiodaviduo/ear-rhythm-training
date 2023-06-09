@@ -3,9 +3,10 @@
     "rollup": "^3.23.0"
   },
   "scripts": {
-    "start": "rollup -c -w",
+    "start": "python mysite/manage.py runserver",
     "test": "vitest run --coverage",
-    "testW": "vitest"
+    "testW": "vitest",
+    "js": "rollup -c -w"
   },
   "devDependencies": {
     "@vitest/coverage-c8": "^0.31.1",
