@@ -44,7 +44,7 @@ function waitForNote(milisec) {
 export function gameEngine(game, synth=new Tone.Synth(), song=randomizerExtender(16, 5), open=30, close=90) {
     delay = game.delay;
     //this will eventually be randomized and linked between functions
-    let notesInMeasure = 5;
+    game.notesInMeasure = 5;
     synth.toDestination();
     let triggerNum = 0;
     let leftPaw = document.getElementById('paw-left');
@@ -74,11 +74,11 @@ export function gameEngine(game, synth=new Tone.Synth(), song=randomizerExtender
 
     //callback functions in-between every other measure
     Tone.Transport.scheduleRepeat((time) => {
-        if ( score > notesInMeasure * 7 ) {
+        if ( score > game.notesInMeasure * 7 ) {
             party.confetti(scoreBoard, {
                 count: party.variation.range(20, 40),
             });
-            scoreResult.innerHTML = "You got " + score + " out of " + (notesInMeasure * 8) +"!!";
+            scoreResult.innerHTML = "You got " + score + " out of " + (game.notesInMeasure * 8) +"!!";
             score = 0;
         }
 
