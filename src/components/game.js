@@ -1,7 +1,7 @@
 export class Game {
     constructor(tempo=100, delay=100) {
         this._score = 0;
-        this.isPlaying = false;
+        this._isPlaying = false;
         this._inputWindowO = 0;
         this._inputWindowC = 0;
         this._tempo = tempo;
@@ -32,6 +32,10 @@ export class Game {
         return this._notesInMeasure;
     }
 
+    get isPlaying() {
+        return this._isPlaying;
+    }
+
     set score(score) {
         this._score = score;
     }
@@ -45,10 +49,10 @@ export class Game {
     }
 
     togglePlay() {
-        if (this.isPlaying) {
-            this.isPlaying = false;
+        if (this._isPlaying) {
+            this._isPlaying = false;
         } else {
-            this.isPlaying = true;
+            this._isPlaying = true;
         }
     }
 
