@@ -4,7 +4,7 @@ import { Game } from '../src/components/game.js';
 const Spy = vi.fn(() => (new Game));
 const Mock = new Spy();
 
-// Defaults
+// object has correct defaults when constructed
 test('Game constructor returns expected defaults', () => {
     const Construction = Spy.mock.results[0].value;
 
