@@ -102,6 +102,7 @@ export function startGame(song, metronome, game) {
     tempoSlider.value = game.tempo;
 
     document.getElementById("play-button").addEventListener("click", event => {
+        game.togglePlay();
         if (Tone.Transport.state !== "started") {
             console.log("-- new session --\n\n")
         }
