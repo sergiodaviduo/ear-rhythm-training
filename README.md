@@ -1,5 +1,7 @@
 # ear-rhythm-training
-Web app that tests your musical ear by playing short, rhythmic sequences of sound, and has the user validate them by tapping the spacebar at the exact rhythm. A simon says type of rhythm game.
+
+
+Proof-of-concept Web app that tests your musical ear by playing short, rhythmic sequences of sound, and has the user validate them by tapping the spacebar at the exact rhythm. A simon says type of rhythm game.
 
 
 Start web server with "npm start"

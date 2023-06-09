@@ -28,6 +28,10 @@ export class Game {
         return this._inputWindowC;
     }
 
+    get notesInMeasure() {
+        return this._notesInMeasure;
+    }
+
     set score(score) {
         this._score = score;
     }
@@ -60,8 +64,8 @@ export class Game {
         this._instrument = instrument;
     }
 
-    set notesInMeausre(notes) {
-        this._notesInMeausre = notes;
+    set notesInMeasure(notes) {
+        this._notesInMeasure = notes;
     }
 
     set inputWindowO(milliseconds) {
