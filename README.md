@@ -9,7 +9,7 @@ Proof-of-concept Web app that tests your musical ear by playing short, rhythmic 
 
 > docker run --rm -it -p 8000:8000/tcp ear-rhythm-training:latest
 
-Requires Django 4.2.0, and a compatible python install under python3.
+Requires Django 4.2.0, and a compatible python install under python3. Tested on Node 19.
 
 Install with "npm install". Start web server with "npm start"
 
