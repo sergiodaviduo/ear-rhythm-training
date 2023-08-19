@@ -6,6 +6,7 @@ Proof-of-concept Web app that tests your musical ear by playing short, rhythmic 
 ## To put in a Docker container:
 
 > docker build . -t ear-rhythm-training
+
 > docker run --rm -it -p 8000:8000/tcp ear-rhythm-training:latest
 
 Requires Django 4.2.0, and a compatible python install under python3.
