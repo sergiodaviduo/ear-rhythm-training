@@ -3,7 +3,7 @@
     "rollup": "^3.23.0"
   },
   "scripts": {
-    "start": "python mysite/manage.py runserver",
+    "start": "python mysite/manage.py runserver 0.0.0.0:8000",
     "test": "vitest run --coverage",
     "testW": "vitest",
     "js": "rollup -c -w"
