@@ -133,7 +133,7 @@ export function startGame(song, metronome, game) {
     
         let keyDownTime = 0;
     
-        if (event.key === ' ') {
+        if (event.key === ' ' || event.key === 'm') {
             event.preventDefault();
             document.getElementById('blueSquare').style.backgroundColor = 'green';
     
@@ -157,7 +157,7 @@ export function startGame(song, metronome, game) {
     });
     
     document.addEventListener('keyup', (event) => {
-        if (event.key === ' ') {
+        if (event.key === ' ' || event.key === 'm') {
             document.getElementById('blueSquare').style.backgroundColor = 'blue';
         }
     });

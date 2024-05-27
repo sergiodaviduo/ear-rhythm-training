@@ -1,0 +1,33 @@
+Features that would make this pop:
+
+ - Support for very fast inputs - right now, is dropping a significant amount of inputs at higher speeds. May need to go to different platform?
+
+ - If game is built to be a "survival" style mode, then have it do a visual representation / review of the last measure you got wrong 
+    (at least, maybe show point representations of each?)
+
+ - visual, live histogram of input data showing when input is registered and for how long
+    ( https://epochjs.github.io/epoch/real-time/ )
+
+ - add gamepad?
+
+     window.addEventListener("gamepadconnected", (e) => {
+        console.log(
+          "Gamepad connected from index %d: %s",
+          e.gamepad.index,
+          e.gamepad.id,
+          e.gamepad.buttons.length,
+          e.gamepad.axes.length,
+        );
+
+
+    });
+
+    window.addEventListener("gamepaddisconnected", (e) => {
+        console.log(
+          "Gamepad disconnected from index %d: %s",
+          e.gamepad.index,
+          e.gamepad.id,
+        );
+    });
+
+ - add more than one key for input

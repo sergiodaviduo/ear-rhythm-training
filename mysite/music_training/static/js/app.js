@@ -4,7 +4,7 @@
     class Game {
         constructor(tempo=100, delay=100) {
             this._score = 0;
-            this.isPlaying = false;
+            this._isPlaying = false;
             this._inputWindowO = 0;
             this._inputWindowC = 0;
             this._tempo = tempo;
@@ -31,6 +31,14 @@
             return this._inputWindowC;
         }
 
+        get notesInMeasure() {
+            return this._notesInMeasure;
+        }
+
+        get isPlaying() {
+            return this._isPlaying;
+        }
+
         set score(score) {
             this._score = score;
         }
@@ -44,10 +52,10 @@
         }
 
         togglePlay() {
-            if (this.isPlaying) {
-                this.isPlaying = false;
+            if (this._isPlaying) {
+                this._isPlaying = false;
             } else {
-                this.isPlaying = true;
+                this._isPlaying = true;
             }
         }
 
@@ -63,8 +71,8 @@
             this._instrument = instrument;
         }
 
-        set notesInMeausre(notes) {
-            this._notesInMeausre = notes;
+        set notesInMeasure(notes) {
+            this._notesInMeasure = notes;
         }
 
         set inputWindowO(milliseconds) {
@@ -212,7 +220,7 @@
     function gameEngine(game, synth=new Tone.Synth(), song=randomizerExtender(16, 5), open=30, close=90) {
         delay = game.delay;
         //this will eventually be randomized and linked between functions
-        let notesInMeasure = 5;
+        game.notesInMeasure = 5;
         synth.toDestination();
         let leftPaw = document.getElementById('paw-left');
         let rightPaw = document.getElementById('paw-right');
@@ -239,11 +247,11 @@
 
         //callback functions in-between every other measure
         Tone.Transport.scheduleRepeat((time) => {
-            if ( score > notesInMeasure * 7 ) {
+            if ( score > game.notesInMeasure * 7 ) {
                 party.confetti(scoreBoard, {
                     count: party.variation.range(20, 40),
                 });
-                scoreResult.innerHTML = "You got " + score + " out of " + (notesInMeasure * 8) +"!!";
+                scoreResult.innerHTML = "You got " + score + " out of " + (game.notesInMeasure * 8) +"!!";
                 score = 0;
             }
 
@@ -267,6 +275,7 @@
         tempoSlider.value = game.tempo;
 
         document.getElementById("play-button").addEventListener("click", event => {
+            game.togglePlay();
             if (Tone.Transport.state !== "started") {
                 console.log("-- new session --\n\n");
             }
@@ -297,7 +306,7 @@
         
             let keyDownTime = 0;
         
-            if (event.key === ' ') {
+            if (event.key === ' ' || event.key === 'm') {
                 event.preventDefault();
                 document.getElementById('blueSquare').style.backgroundColor = 'green';
         
@@ -321,7 +330,7 @@
         });
         
         document.addEventListener('keyup', (event) => {
-            if (event.key === ' ') {
+            if (event.key === ' ' || event.key === 'm') {
                 document.getElementById('blueSquare').style.backgroundColor = 'blue';
             }
         });
