@@ -41,7 +41,9 @@ function waitForNote(milisec) {
     })
 }
 
-export function gameEngine(game, synth=new Tone.Synth(), song=randomizerExtender(16, 5), open=30, close=90) {
+
+// previous default input window is open = 30, close = 90
+export function gameEngine(game, synth=new Tone.Synth(), song=randomizerExtender(16, 5), open=90, close=130) {
     delay = game.delay;
     //this will eventually be randomized and linked between functions
     game.notesInMeasure = 5;
@@ -128,12 +130,14 @@ export function startGame(song, metronome, game) {
         firstRun = false;
      });
     
+     // spacebar
+
     document.addEventListener('keydown', (event) => {
         //let accuracy = 0;
     
         let keyDownTime = 0;
     
-        if (event.key === ' ' || event.key === 'm') {
+        if (event.key === ' ') {
             event.preventDefault();
             document.getElementById('blueSquare').style.backgroundColor = 'green';
     
@@ -157,7 +161,43 @@ export function startGame(song, metronome, game) {
     });
     
     document.addEventListener('keyup', (event) => {
-        if (event.key === ' ' || event.key === 'm') {
+        if (event.key === ' ') {
+            document.getElementById('blueSquare').style.backgroundColor = 'blue';
+        }
+    });
+
+    // "m" key
+     
+    document.addEventListener('keydown', (event) => {
+        //let accuracy = 0;
+    
+        let keyDownTime = 0;
+    
+        if (event.key === 'm') {
+            event.preventDefault();
+            document.getElementById('blueSquare').style.backgroundColor = 'green';
+    
+            keyDownTime = +new Date();
+    
+            console.log("Input recorded after ", keyDownTime - game.inputWindowO);
+    
+            if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC) {
+                game.score++;
+                scoreBoard.innerHTML = "Score: " + game.score;
+                console.log(game.score);
+                document.getElementById("score").classList.add("scored");
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        scoreBoard.classList.remove("scored");
+                        resolve(0);
+                    }, 90);
+                });
+            }
+        }
+    });
+    
+    document.addEventListener('keyup', (event) => {
+        if (event.key === 'm') {
             document.getElementById('blueSquare').style.backgroundColor = 'blue';
         }
     });
