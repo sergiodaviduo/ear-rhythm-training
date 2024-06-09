@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@floating-ui/react": "^0.26.16",
     "rollup": "^3.23.0"
   },
   "scripts": {

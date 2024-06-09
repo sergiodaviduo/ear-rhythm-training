@@ -1,5 +1,6 @@
 import { randomizerExtender } from './generators.js';
 import { fourByFour } from './instruments.js';
+import { menu } from '../navigation/menu.js';
 
 // when note is played, "move" paw down 
 async function noteTrigger(milisec, paw, volume) {
@@ -94,6 +95,7 @@ async function waitForInput() {
 }
 
 export function startGame(song, metronome, game) {
+    menu();
     let firstRun = true;
     let scoreBoard = document.getElementById("score");
     let delaySlider = document.getElementById("delay");
@@ -170,7 +172,7 @@ export function startGame(song, metronome, game) {
      
     document.addEventListener('keydown', (event) => {
         //let accuracy = 0;
-    
+
         let keyDownTime = 0;
     
         if (event.key === 'm') {
