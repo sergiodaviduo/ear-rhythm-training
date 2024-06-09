@@ -178,38 +178,27 @@
     }
 
     function menu() {
-        alert("hhhh");
 
         const menu_items = ["play-button", "Settings", "High-Scores"];
 
-        const selected = document.querySelector("#play-button:hover").style;
-        const unselected = document.querySelector("#play-button").style;
+        const selected = "blue";
+        const unselected =  "black";
 
-        let menu_choice = 1;
-
-        let gave_input = false;
+        let menu_choice = -1;
 
         document.addEventListener('keydown', (event) => {
             //let accuracy = 0;
 
-            gave_input = true;
-
-            alert("down");
-
             if (document.getElementById("play-button").style.display != "none") {
                 if (event.key === 'ArrowDown') {
-                    menu_choice--;
-                    alert(test);
-                    console.log("test down");
+                    menu_choice++;
                 }
 
                 if (event.key === 'ArrowUp') {
-                    menu_choice++;
+                    menu_choice--;
                 }
             }
-        });
 
-        if (gave_input) {
             if (menu_choice < 0) {
                 menu_choice = 2;
             }
@@ -220,22 +209,27 @@
         
             switch (menu_items[menu_choice]) {
                 case "play-button":
-                    document.getElementById("play-button").style = selected;
-                    document.getElementById("Settings").style = unselected;
-                    document.getElementById("High-Scores").style = unselected;
+                    document.getElementById("play-button").style.backgroundColor = selected;
+                    document.getElementById("Settings").style.backgroundColor = unselected;
+                    document.getElementById("High-Scores").style.backgroundColor = unselected;
                     break;
                 case "Settings":
-                    document.getElementById("play-button").style = unselected;
-                    document.getElementById("Settings").style = selected;
-                    document.getElementById("High-Scores").style = unselected;
+                    document.getElementById("play-button").style.backgroundColor = unselected;
+                    document.getElementById("Settings").style.backgroundColor = selected;
+                    document.getElementById("High-Scores").style.backgroundColor = unselected;
                     break;
                 case "High-Scores":
-                    document.getElementById("play-button").style = unselected;
-                    document.getElementById("Settings").style = unselected;
-                    document.getElementById("High-Scores").style = selected;
+                    document.getElementById("play-button").style.backgroundColor = unselected;
+                    document.getElementById("Settings").style.backgroundColor = unselected;
+                    document.getElementById("High-Scores").style.backgroundColor = selected;
                     break;
             }
-        } 
+        
+        });
+
+
+
+        
     }
 
     // export { menu };
@@ -331,6 +325,7 @@
 
     function startGame(song, metronome, game) {
         menu();
+
         let firstRun = true;
         let scoreBoard = document.getElementById("score");
         let delaySlider = document.getElementById("delay");

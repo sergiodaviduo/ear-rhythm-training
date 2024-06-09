@@ -96,6 +96,7 @@ async function waitForInput() {
 
 export function startGame(song, metronome, game) {
     menu();
+
     let firstRun = true;
     let scoreBoard = document.getElementById("score");
     let delaySlider = document.getElementById("delay");
