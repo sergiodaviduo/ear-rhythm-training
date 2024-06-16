@@ -56,6 +56,7 @@ export class Game {
         }
     }
 
+    // This track defines what notes are correct
     set answerTrack(track) {
         this._answerTrack = track;
     }

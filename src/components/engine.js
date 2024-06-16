@@ -1,6 +1,6 @@
 import { randomizerExtender } from './generators.js';
 import { fourByFour } from './instruments.js';
-import { menu } from '../navigation/menu.js';
+import { menu, playGame } from '../navigation/menu.js';
 
 // when note is played, "move" paw down 
 async function noteTrigger(milisec, paw, volume) {
@@ -94,7 +94,7 @@ async function waitForInput() {
     let ready = await Tone.start();
 }
 
-export function startGame(song, metronome, game) {
+export function gameRoom(song, metronome, game) {
     menu();
 
     let firstRun = true;
@@ -107,6 +107,8 @@ export function startGame(song, metronome, game) {
     tempoSlider.value = game.tempo;
 
     document.getElementById("play-button").addEventListener("click", event => {
+        playGame(); //turn this into a menu object at some point, just for the logic
+
         game.togglePlay();
         if (Tone.Transport.state !== "started") {
             console.log("-- new session --\n\n")

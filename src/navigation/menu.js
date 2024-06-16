@@ -69,4 +69,18 @@ function in_menu(){
 
 }
 
+export function playGame() {
+
+    let all_elements_nl = document.querySelectorAll('*[id]');
+
+    for (let i = 0; i < all_elements_nl.length - 2; i++) {
+        all_elements_nl[i].style.display = "block";
+    }
+
+    document.getElementById("play-button").style.display = "none";
+    document.getElementById("settings").style.display = "none";
+    document.getElementById("high-scores").style.display = "none";
+    document.getElementById("main-menu").style.display = "none";
+}
+
 // export { menu }

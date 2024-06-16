@@ -5,7 +5,7 @@
 import { Game } from "./components/game.js";
 import { STATIC_LIBRARY } from "./constants/notes.js";
 import { fourByFour } from "./components/instruments.js";
-import { gameEngine, startGame } from './components/engine.js';
+import { gameEngine, gameRoom } from './components/engine.js';
 
 const QuarterNoteTest = STATIC_LIBRARY[2];
 
@@ -14,5 +14,5 @@ const GameData = new Game(150, 100);
 let engine = gameEngine(GameData);
 let metronome = fourByFour();
 
-startGame(engine, metronome, GameData);
+gameRoom(engine, metronome, GameData);
 

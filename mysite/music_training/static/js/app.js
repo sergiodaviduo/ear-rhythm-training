@@ -59,6 +59,7 @@
             }
         }
 
+        // This track defines what notes are correct
         set answerTrack(track) {
             this._answerTrack = track;
         }
@@ -248,6 +249,20 @@
 
     }
 
+    function playGame() {
+
+        let all_elements_nl = document.querySelectorAll('*[id]');
+
+        for (let i = 0; i < all_elements_nl.length - 2; i++) {
+            all_elements_nl[i].style.display = "block";
+        }
+
+        document.getElementById("play-button").style.display = "none";
+        document.getElementById("settings").style.display = "none";
+        document.getElementById("high-scores").style.display = "none";
+        document.getElementById("main-menu").style.display = "none";
+    }
+
     // export { menu }
 
     // when note is played, "move" paw down 
@@ -339,7 +354,7 @@
         await Tone.start();
     }
 
-    function startGame(song, metronome, game) {
+    function gameRoom(song, metronome, game) {
         menu();
 
         let firstRun = true;
@@ -352,6 +367,8 @@
         tempoSlider.value = game.tempo;
 
         document.getElementById("play-button").addEventListener("click", event => {
+            playGame(); //turn this into a menu object at some point, just for the logic
+
             game.togglePlay();
             if (Tone.Transport.state !== "started") {
                 console.log("-- new session --\n\n");
@@ -471,6 +488,6 @@
     let engine = gameEngine(GameData);
     let metronome = fourByFour();
 
-    startGame(engine, metronome, GameData);
+    gameRoom(engine, metronome, GameData);
 
 })();
