@@ -286,12 +286,12 @@
         
                 if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC) {
                     game.score++;
-                    scoreBoard.innerHTML = "Score: " + game.score;
+                    document.getElementById("score").innerHTML = "Score: " + game.score;
                     console.log(game.score);
                     document.getElementById("score").classList.add("scored");
                     return new Promise((resolve) => {
                         setTimeout(() => {
-                            scoreBoard.classList.remove("scored");
+                            document.getElementById("score").classList.remove("scored");
                             resolve(0);
                         }, 90);
                     });
