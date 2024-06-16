@@ -82,7 +82,7 @@ function gameEngine(game, synth=new Tone.Synth(), songLength=4, song=randomizerE
     //callback functions in-between every other measure
     Tone.Transport.scheduleRepeat((time) => {
         if ( score > game.notesInMeasure * 7 ) {
-            party.confetti(scoreBoard, {
+            party.confetti(document.getElementById("score"), {
                 count: party.variation.range(20, 40),
             });
             scoreResult.innerHTML = "You got " + score + " out of " + (game.notesInMeasure * 8) +"!!";
@@ -113,7 +113,6 @@ export function gameRoom(game) {
 
     let engine = gameEngine(game);
 
-    let scoreBoard = document.getElementById("score");
     let delaySlider = document.getElementById("delay");
     let tempoSlider = document.getElementById("tempo");
     document.getElementById('liveDelay').innerHTML = game.delay;

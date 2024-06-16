@@ -418,7 +418,7 @@
         //callback functions in-between every other measure
         Tone.Transport.scheduleRepeat((time) => {
             if ( score > game.notesInMeasure * 7 ) {
-                party.confetti(scoreBoard, {
+                party.confetti(document.getElementById("score"), {
                     count: party.variation.range(20, 40),
                 });
                 scoreResult.innerHTML = "You got " + score + " out of " + (game.notesInMeasure * 8) +"!!";
@@ -449,7 +449,6 @@
 
         let engine = gameEngine(game);
 
-        document.getElementById("score");
         let delaySlider = document.getElementById("delay");
         let tempoSlider = document.getElementById("tempo");
         document.getElementById('liveDelay').innerHTML = game.delay;
