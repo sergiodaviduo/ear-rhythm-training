@@ -66,6 +66,7 @@ function in_menu(){
     document.getElementById("settings").style.display = "block";
     document.getElementById("high-scores").style.display = "block";
     document.getElementById("main-menu").style.display = "block";
+    document.getElementById("title").style.display = "block";
 
 }
 
@@ -81,6 +82,8 @@ export function playGame() {
     document.getElementById("settings").style.display = "none";
     document.getElementById("high-scores").style.display = "none";
     document.getElementById("main-menu").style.display = "none";
+    document.getElementById("play-again").style.display = "none";
+    document.getElementById("title").style.display = "none";
 }
 
 // export { menu }

@@ -31,3 +31,7 @@ Features that would make this pop:
     });
 
  - add more than one key for input
+
+ Housekeeping things:
+
+  - divide all the event listeners into a file, and / or figure out a better way to organize them

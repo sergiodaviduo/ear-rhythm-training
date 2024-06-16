@@ -11,8 +11,5 @@ const QuarterNoteTest = STATIC_LIBRARY[2];
 
 const GameData = new Game(150, 100);
 
-let engine = gameEngine(GameData);
-let metronome = fourByFour();
-
-gameRoom(engine, metronome, GameData);
+gameRoom(GameData);
 

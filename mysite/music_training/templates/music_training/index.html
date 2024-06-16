@@ -29,15 +29,22 @@
   <br><br><br><br>
   <h1 id="score">Score: 0</h1>
   <h1 id="scoreResult"></h1>
+  <button id="play-again" style="display: none;"> 
+    Play Again
+  </button>
+  <button id="back-to-menu" style="display: none;"> 
+    Back to Menu
+  </button>
   <br>
-  <h3 id="maxScore">Best Possible Score: 40</h3>
-  <br>
-  <h2>Adjust delay: </h2><h2 id="liveDelay">70</h2>
-  <input id="delay" type="range" min="50" max="300" value="70">
-  <br><br>
-  <h2>Tempo: </h2><h2 id="liveTempo">120</h2>
-  <input id="tempo" type="range" min="50" max="250" value="120">
 
+  <br>
+  <div id="settings-values">
+    <h2>Adjust delay: </h2><h2 id="liveDelay">70</h2>
+    <input id="delay" type="range" min="50" max="300" value="70">
+    <br><br>
+    <h2>Tempo: </h2><h2 id="liveTempo">120</h2>
+    <input id="tempo" type="range" min="50" max="250" value="120">
+  </div>
   <br><br><br>
   <div id="container">
     <hr>
@@ -51,15 +58,23 @@
       <div id="keyboard" style="visibility: visible;"></div>
     </div>
   </div>
+
+  <div class="centered" id="title">
+    <h1 class="centered">~ Rhythm Training ~</h1>
+    <h3 class="centered">Simon says, but with randomly generated notes</h3> 
+    <br>
+    <br>
+  </div>
+
   <div id="main-menu">
     <div id="play-button">
-      <button>Start game :O</button>
+      <button class="centered">Start Game</button>
     </div>
     <div id="settings">
-      <button>Settings</button>
+      <button class="centered">Settings</button>
     </div>
     <div id="high-scores">
-      <button>High Scores</button>
+      <button class="centered">High Scores</button>
     </div>
   </div>
   </body>
