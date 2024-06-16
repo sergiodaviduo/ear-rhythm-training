@@ -1,6 +1,7 @@
 import { randomizerExtender } from './generators.js';
 import { fourByFour } from './instruments.js';
 import { menu, playGame } from '../navigation/menu.js';
+import { allControls } from '../components/controls.js';
 
 // when note is played, "move" paw down 
 async function noteTrigger(milisec, paw, volume) {
@@ -128,77 +129,7 @@ export function gameRoom(game) {
         toggleGame(game, engine);
      });
     
-     // spacebar
-
-    document.addEventListener('keydown', (event) => {
-        //let accuracy = 0;
-    
-        let keyDownTime = 0;
-    
-        if (event.key === ' ') {
-            event.preventDefault();
-            document.getElementById('blueSquare').style.backgroundColor = 'green';
-    
-            keyDownTime = +new Date();
-    
-            console.log("Input recorded after ", keyDownTime - game.inputWindowO);
-    
-            if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC) {
-                game.score++;
-                scoreBoard.innerHTML = "Score: " + game.score;
-                console.log(game.score);
-                document.getElementById("score").classList.add("scored");
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        scoreBoard.classList.remove("scored");
-                        resolve(0);
-                    }, 90);
-                });
-            }
-        }
-    });
-    
-    document.addEventListener('keyup', (event) => {
-        if (event.key === ' ') {
-            document.getElementById('blueSquare').style.backgroundColor = 'blue';
-        }
-    });
-
-    // "m" key
-     
-    document.addEventListener('keydown', (event) => {
-        //let accuracy = 0;
-
-        let keyDownTime = 0;
-    
-        if (event.key === 'm') {
-            event.preventDefault();
-            document.getElementById('blueSquare').style.backgroundColor = 'green';
-    
-            keyDownTime = +new Date();
-    
-            console.log("Input recorded after ", keyDownTime - game.inputWindowO);
-    
-            if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC) {
-                game.score++;
-                scoreBoard.innerHTML = "Score: " + game.score;
-                console.log(game.score);
-                document.getElementById("score").classList.add("scored");
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        scoreBoard.classList.remove("scored");
-                        resolve(0);
-                    }, 90);
-                });
-            }
-        }
-    });
-    
-    document.addEventListener('keyup', (event) => {
-        if (event.key === 'm') {
-            document.getElementById('blueSquare').style.backgroundColor = 'blue';
-        }
-    });
+     allControls(game);
     
     delaySlider.addEventListener('change', function() { 
         game.delay = delaySlider.value;
@@ -226,7 +157,7 @@ export function gameRoom(game) {
 }
 
 
-// Stops all songs, or starts all songs
+// Starts or stops all songs / gameplay
 function toggleGame(game, engine) {
     game.togglePlay();
 
