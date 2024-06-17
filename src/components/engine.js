@@ -51,8 +51,8 @@ function startMetronome() {
 
 // This starts the main song track session
 // previous default input window is open = 30 (ms before), close = 90 (ms after)
-function answerTrack(game, synth=new Tone.Synth(), songLength=4, song=randomizerExtender(songLength, 5), open=90, close=130) {
-    
+function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=90, close=130) {
+
 
     delay = game.delay;
     //this will eventually be randomized and linked between functions
@@ -101,6 +101,8 @@ function answerTrack(game, synth=new Tone.Synth(), songLength=4, song=randomizer
         //document.getElementById("play-again").click();
         document.getElementById("play-again").style.display = "block";
         document.getElementById("back-to-menu").style.display = "block";
+        synth.dispose();
+        part.dispose();
         Tone.Transport.stop();
         console.log(Tone.Transport.state + " after end of song automatically");
         game.togglePlay();
@@ -113,8 +115,6 @@ export function gameRoom(game) {
     menu();
 
     let trackList = [];
-
-    
 
     let delaySlider = document.getElementById("delay");
     let tempoSlider = document.getElementById("tempo");
@@ -149,7 +149,7 @@ export function gameRoom(game) {
 
     // Play again button
     document.getElementById("play-again").addEventListener("click", event => {
-        startGame(game, game.answerTrack );
+        startGame(game, game.answerTrack);
         document.getElementById("play-again").style.display = "none";
     })
 
@@ -157,14 +157,17 @@ export function gameRoom(game) {
     document.getElementById("back-to-menu").addEventListener("click", event => {
         menu();
  
-        stopGame(game.answerTrack, game.clickTrack);
+        stopGame(game.answerTrack, game.clickTrack, game.instrument);
     })
 }
 
 
 // Starts or stops all songs / gameplay
 function startGame(game) {
+    game.score = 0;
     game.togglePlay();
+
+    game.instrument = new Tone.Synth();
 
     game.answerTrack = answerTrack(game);
 
@@ -183,8 +186,6 @@ function startGame(game) {
     }
 
     if (game.answerTrack.disposed && !game.firstRun) {
-        game.score = 0;
-        document.getElementById("score").innerHTML = "Score: " + game.score;
         Tone.Transport.bpm.value = game.tempo;
         console.log("restarting mainTrack");
         game.answerTrack = answerTrack(game);
@@ -203,9 +204,11 @@ function startGame(game) {
     return []
 }
 
-function stopGame(mainTrack, clickTrack) {
+function stopGame(mainTrack, clickTrack, instrument) {
     mainTrack.dispose();
     clickTrack.dispose();
+    instrument.dispose();
     Tone.Transport.stop();
-    console.log(Tone.Transport.state + " after end of song automatically");
+    game.score = 0;
+    console.log(Tone.Transport.state + " after exiting game");
 }

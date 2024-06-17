@@ -33,6 +33,10 @@ export class Game {
         return this._clickTrack;
     }
 
+    get instrument() {
+        return this._instrument;
+    }
+
     get inputWindowO() {
         return this._inputWindowO;
     }
@@ -55,10 +59,12 @@ export class Game {
 
     set score(score) {
         this._score = score;
+        document.getElementById("score").innerHTML = "Score: " + score;
     }
 
     set tempo(tempo) {
         this._tempo = tempo;
+        Tone.Transport.bpm.value = tempo;
     }
 
     set delay(delay) {
