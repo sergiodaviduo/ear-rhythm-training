@@ -1,7 +1,7 @@
 import { randomizerExtender } from './generators.js';
 import { fourByFour } from './instruments.js';
 import { menu, playGame } from '../navigation/menu.js';
-import { allControls } from '../components/controls.js';
+import { setupControls } from '../components/controls.js';
 
 // when note is played, "move" paw down 
 async function noteTrigger(milisec, paw, volume) {
@@ -43,12 +43,16 @@ function waitForNote(milisec) {
     })
 }
 
+function startMetronome() {
+    let metronome = fourByFour();
+
+    return metronome;
+}
 
 // This starts the main song track session
 // previous default input window is open = 30 (ms before), close = 90 (ms after)
-function gameEngine(game, synth=new Tone.Synth(), songLength=4, song=randomizerExtender(songLength, 5), open=90, close=130) {
-    Tone.Transport.toggle();
-    let metronome = fourByFour();
+function answerTrack(game, synth=new Tone.Synth(), songLength=4, song=randomizerExtender(songLength, 5), open=90, close=130) {
+    
 
     delay = game.delay;
     //this will eventually be randomized and linked between functions
@@ -97,22 +101,20 @@ function gameEngine(game, synth=new Tone.Synth(), songLength=4, song=randomizerE
         //document.getElementById("play-again").click();
         document.getElementById("play-again").style.display = "block";
         document.getElementById("back-to-menu").style.display = "block";
-        Tone.Transport.toggle();
-        console.log(Tone.Transport.state);
+        Tone.Transport.stop();
+        console.log(Tone.Transport.state + " after end of song automatically");
         game.togglePlay();
     }, String(songLength+2)+":0:0");
 
     return part;
 }
 
-async function toggleInput() {
-    let ready = await Tone.start();
-}
-
 export function gameRoom(game) {
     menu();
 
-    let engine = gameEngine(game);
+    let trackList = [];
+
+    
 
     let delaySlider = document.getElementById("delay");
     let tempoSlider = document.getElementById("tempo");
@@ -121,7 +123,7 @@ export function gameRoom(game) {
     delaySlider.value = game.delay;
     tempoSlider.value = game.tempo;
     
-    allControls(game);
+    setupControls(game);
     
     delaySlider.addEventListener('change', function() { 
         game.delay = delaySlider.value;
@@ -134,15 +136,20 @@ export function gameRoom(game) {
     })
 
     // Play from menu button
-    document.getElementById("play-button").addEventListener("click", event => {
+    document.getElementById("play-button").addEventListener("click", async () => {
+        if (game.firstRun) {
+            await Tone.start();
+            game.firstRun = false;
+        }
+        
         playGame(); //turn this into a menu object at some point, just for the logic, since this just changes the menu
 
-        toggleGame(game, engine);
+        startGame(game, game.answerTrack);
      });
 
     // Play again button
     document.getElementById("play-again").addEventListener("click", event => {
-        toggleGame(game, engine);
+        startGame(game, game.answerTrack );
         document.getElementById("play-again").style.display = "none";
     })
 
@@ -150,44 +157,55 @@ export function gameRoom(game) {
     document.getElementById("back-to-menu").addEventListener("click", event => {
         menu();
  
-        stopGame(game, engine);
+        stopGame(game.answerTrack, game.clickTrack);
     })
 }
 
 
 // Starts or stops all songs / gameplay
-function toggleGame(game, engine) {
+function startGame(game) {
     game.togglePlay();
 
-    if (game.firstRun == true) {
+    game.answerTrack = answerTrack(game);
+
+    console.log(game.answerTrack);
+
+    game.clickTrack= startMetronome();
+
+    /*if (game.firstRun == true) {
         console.log("first run");
         Tone.start();
         game.firstRun = false;
-    }
+    }*/
 
     if (Tone.Transport.state !== "started") {
         console.log("-- new session --\n\n")
     }
 
-    if (engine.disposed && !game.firstRun) {
+    if (game.answerTrack.disposed && !game.firstRun) {
         game.score = 0;
         document.getElementById("score").innerHTML = "Score: " + game.score;
         Tone.Transport.bpm.value = game.tempo;
-        console.log("restarting engine");
-        engine = gameEngine(game);
+        console.log("restarting mainTrack");
+        game.answerTrack = answerTrack(game);
     }
 
-    //Tone.Transport.toggle();
+    Tone.Transport.toggle();
     console.log(Tone.Transport.state);
 
-    if (!engine.disposed && !game.firstRun && Tone.Transport.state === "stopped") {
-        engine.dispose();
+    if (!game.answerTrack.disposed && !game.firstRun && Tone.Transport.state === "stopped") {
+
+        game.answerTrack.dispose();
         document.getElementById('paw-left').style.backgroundPositionX = '0px';
         game.score = 0;
     }
+
+    return []
 }
 
-function stopGame(game, engine) {
-    engine.dispose();
+function stopGame(mainTrack, clickTrack) {
+    mainTrack.dispose();
+    clickTrack.dispose();
     Tone.Transport.stop();
+    console.log(Tone.Transport.state + " after end of song automatically");
 }

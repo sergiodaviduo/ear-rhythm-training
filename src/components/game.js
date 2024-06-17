@@ -25,6 +25,14 @@ export class Game {
         return this._delay;
     }
 
+    get answerTrack() {
+        return this._answerTrack;
+    }
+
+    get clickTrack() {
+        return this._clickTrack;
+    }
+
     get inputWindowO() {
         return this._inputWindowO;
     }

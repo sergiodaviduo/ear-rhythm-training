@@ -1,4 +1,4 @@
-export function allControls(game) {
+export function setupControls(game) {
     // spacebar
 
     document.addEventListener('keydown', (event) => {

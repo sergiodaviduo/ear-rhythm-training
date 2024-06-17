@@ -3,11 +3,10 @@
 // this visual library would be wild with this: https://ptsjs.org/
 
 import { Game } from "./components/game.js";
-import { STATIC_LIBRARY } from "./constants/notes.js";
-import { fourByFour } from "./components/instruments.js";
-import { gameEngine, gameRoom } from './components/engine.js';
+// import { STATIC_LIBRARY } from "./constants/notes.js";
+import { gameRoom } from './components/engine.js';
 
-const QuarterNoteTest = STATIC_LIBRARY[2];
+//const QuarterNoteTest = STATIC_LIBRARY[2];
 
 const GameData = new Game(150, 100);
 
