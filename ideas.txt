@@ -32,6 +32,8 @@ Features that would make this pop:
 
  - add more than one key for input
 
+ - add a gif of a mouse that progresses some determined amount of frames (maybe based off of )
+
  Housekeeping things:
 
   - divide all the event listeners into a file, and / or figure out a better way to organize them
