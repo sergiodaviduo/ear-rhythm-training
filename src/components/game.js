@@ -6,6 +6,11 @@ export class Game {
         this._inputWindowC = 0;
         this._tempo = tempo;
         this._delay = delay;
+        this._firstRun = true;
+    }
+
+    get firstRun() {
+        return this._firstRun;
     }
 
     get score() {
@@ -34,6 +39,10 @@ export class Game {
 
     get isPlaying() {
         return this._isPlaying;
+    }
+
+    set firstRun(firstRun) {
+        this._firstRun = firstRun;
     }
 
     set score(score) {

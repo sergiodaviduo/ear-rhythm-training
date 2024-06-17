@@ -9,6 +9,11 @@
             this._inputWindowC = 0;
             this._tempo = tempo;
             this._delay = delay;
+            this._firstRun = true;
+        }
+
+        get firstRun() {
+            return this._firstRun;
         }
 
         get score() {
@@ -37,6 +42,10 @@
 
         get isPlaying() {
             return this._isPlaying;
+        }
+
+        set firstRun(firstRun) {
+            this._firstRun = firstRun;
         }
 
         set score(score) {
@@ -386,6 +395,7 @@
     // This starts the main song track session
     // previous default input window is open = 30 (ms before), close = 90 (ms after)
     function gameEngine(game, synth=new Tone.Synth(), songLength=4, song=randomizerExtender(songLength, 5), open=90, close=130) {
+        Tone.Transport.toggle();
         fourByFour();
 
         delay = game.delay;
@@ -440,10 +450,6 @@
         return part;
     }
 
-    async function toggleInput() {
-        await Tone.Transport.toggle();
-    }
-
     function gameRoom(game) {
         menu();
 
@@ -455,16 +461,8 @@
         document.getElementById('liveTempo').innerHTML = game.tempo;
         delaySlider.value = game.delay;
         tempoSlider.value = game.tempo;
-
-        document.getElementById("play-button").addEventListener("click", event => {
-            playGame(); //turn this into a menu object at some point, just for the logic, since this just changes the menu
-
-            toggleInput();
-
-            toggleGame(game, engine);
-         });
         
-         allControls(game);
+        allControls(game);
         
         delaySlider.addEventListener('change', function() { 
             game.delay = delaySlider.value;
@@ -476,18 +474,24 @@
             document.getElementById('liveTempo').innerHTML = game.tempo ;
         });
 
+        // Play from menu button
+        document.getElementById("play-button").addEventListener("click", event => {
+            playGame(); //turn this into a menu object at some point, just for the logic, since this just changes the menu
+
+            toggleGame(game, engine);
+         });
+
         // Play again button
         document.getElementById("play-again").addEventListener("click", event => {
             toggleGame(game, engine);
             document.getElementById("play-again").style.display = "none";
         });
 
-        // Back to menu
+        // Back to menu (while in game)
         document.getElementById("back-to-menu").addEventListener("click", event => {
             menu();
-            if (game.isPlaying) {
-                toggleGame(game, engine);
-            }
+     
+            stopGame(game, engine);
         });
     }
 
@@ -496,14 +500,17 @@
     function toggleGame(game, engine) {
         game.togglePlay();
 
+        if (game.firstRun == true) {
+            console.log("first run");
+            Tone.start();
+            game.firstRun = false;
+        }
+
         if (Tone.Transport.state !== "started") {
             console.log("-- new session --\n\n");
         }
 
-        if (game.isPlaying) ;
-        
-
-        if (engine.disposed) {
+        if (engine.disposed && !game.firstRun) {
             game.score = 0;
             document.getElementById("score").innerHTML = "Score: " + game.score;
             Tone.Transport.bpm.value = game.tempo;
@@ -511,14 +518,19 @@
             engine = gameEngine(game);
         }
 
-        Tone.Transport.toggle();
+        //Tone.Transport.toggle();
         console.log(Tone.Transport.state);
 
-        if (!engine.disposed && Tone.Transport.state === "stopped") {
+        if (!engine.disposed && !game.firstRun && Tone.Transport.state === "stopped") {
             engine.dispose();
             document.getElementById('paw-left').style.backgroundPositionX = '0px';
             game.score = 0;
         }
+    }
+
+    function stopGame(game, engine) {
+        engine.dispose();
+        Tone.Transport.stop();
     }
 
     // ripple effect: https://codepen.io/daless14/pen/DqXMvK
