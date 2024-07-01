@@ -321,6 +321,8 @@
     function setupControls(game) {
         // spacebar
 
+        let leftPaw = document.getElementById('u-paw-left');
+
         document.addEventListener('keydown', (event) => {
             //let accuracy = 0;
         
@@ -328,6 +330,9 @@
         
             if (event.key === ' ') {
                 event.preventDefault();
+
+                noteTrigger(0, leftPaw, true);
+
                 document.getElementById('blueSquare').style.backgroundColor = 'green';
         
                 keyDownTime = +new Date();
@@ -350,8 +355,10 @@
         });
         
         document.addEventListener('keyup', (event) => {
+            
             if (event.key === ' ') {
                 document.getElementById('blueSquare').style.backgroundColor = 'blue';
+                noteRelease(0, leftPaw, true);
             }
         });
 

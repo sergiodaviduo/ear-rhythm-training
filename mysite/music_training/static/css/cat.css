@@ -236,13 +236,13 @@
  }
  .cat>#u-paw-left {
   background-image:url(https://bongo.cat/images/paw-left.png);
-  z-index:30
+  z-index:30;
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
  }
  .cat>#u-paw-right {
   background-image:url(https://bongo.cat/images/paw-right.png);
-  z-index:30
+  z-index:30;
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
  }
