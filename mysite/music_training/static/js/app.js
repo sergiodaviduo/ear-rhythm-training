@@ -205,7 +205,7 @@
 
         in_menu();
 
-        const menu_items = ["play-button", "settings", "high-scores"];
+        /*const menu_items = ["play-button", "settings", "high-scores"];
 
         const selected = "blue";
         const unselected =  "black";
@@ -251,7 +251,7 @@
                     break;
             }
         
-        });
+        });*/
         
     }
 
@@ -287,9 +287,36 @@
         document.getElementById("main-menu").style.display = "none";
         document.getElementById("play-again").style.display = "none";
         document.getElementById("title").style.display = "none";
+
+        document.getElementById("settings-values").style.display = "none";
+        document.getElementById("blueSquare").style.display = "none";
+
+        document.getElementById("purpleSquare").style.display = "none";
+
     }
 
-    // export { menu }
+    function settings(game) {
+
+        console.log("opened settings");
+
+        let all_elements_nl = document.querySelectorAll('*[id]');
+
+        for (let i = 0; i < all_elements_nl.length; i++) {
+            all_elements_nl[i].style.display = "none";
+        }
+
+
+        document.getElementById('liveTempo').innerHTML = game.tempo;
+        document.getElementById('liveTempo').value = game.tempo;
+
+        document.getElementById("back-to-menu").style.display = "block";
+        document.getElementById("settings-values").style.display = "block";
+        document.getElementById("delay").style.display = "block";
+        document.getElementById("tempo").style.display = "block";
+        document.getElementById("liveTempo").style.display = "block";
+        document.getElementById("liveDelay").style.display = "block";
+        document.getElementById("default-settings").style.display = "block";
+    }
 
     function setupControls(game) {
         // spacebar
@@ -388,7 +415,7 @@
         openTime = +new Date();
         openTime += delay;
         
-        return openTime;
+        return openTime
     }
 
     function inputClose(delay, closeTime) {
@@ -414,7 +441,6 @@
     // This starts the main song track session
     // previous default input window is open = 30 (ms before), close = 90 (ms after)
     function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=90, close=130) {
-
 
         delay = game.delay;
         //this will eventually be randomized and linked between functions
@@ -489,13 +515,14 @@
         
         tempoSlider.addEventListener('change', function() { 
             game.tempo = tempoSlider.value;
-            document.getElementById('liveTempo').innerHTML = game.tempo ;
+            document.getElementById('liveTempo').innerHTML = game.tempo;
         });
 
         // Play from menu button
         document.getElementById("play-button").addEventListener("click", async () => {
             if (game.firstRun) {
                 await Tone.start();
+                console.log("");
                 game.firstRun = false;
             }
             
@@ -506,15 +533,30 @@
 
         // Play again button
         document.getElementById("play-again").addEventListener("click", event => {
-            startGame(game, game.answerTrack);
+            stopGame(game);
+            startGame(game);
             document.getElementById("play-again").style.display = "none";
         });
 
         // Back to menu (while in game)
         document.getElementById("back-to-menu").addEventListener("click", event => {
             menu();
-     
-            stopGame(game.answerTrack, game.clickTrack, game.instrument);
+            if (game.answerTrack) {
+                stopGame(game);
+            }
+        });
+
+        document.getElementById("settings").addEventListener("click", event => {
+            settings(game);
+        });
+
+        document.getElementById("default-settings").addEventListener("click", event => {
+            game.tempo = 100;
+            game.delay = 100;
+            document.getElementById('liveTempo').innerHTML = game.tempo;
+            document.getElementById('tempo').value = game.tempo;
+            document.getElementById('liveDelay').innerHTML = game.delay;
+            document.getElementById('delay').value = game.delay;
         });
     }
 
@@ -561,13 +603,13 @@
         return []
     }
 
-    function stopGame(mainTrack, clickTrack, instrument) {
-        mainTrack.dispose();
-        clickTrack.dispose();
-        instrument.dispose();
+    function stopGame(game) {
+        game.answerTrack.dispose();
+        game.clickTrack.dispose();
+        game.instrument.dispose();
         Tone.Transport.stop();
         game.score = 0;
-        console.log(Tone.Transport.state + " after exiting game");
+        console.log(Tone.Transport.state + " after stopping game");
     }
 
     // ripple effect: https://codepen.io/daless14/pen/DqXMvK
@@ -577,7 +619,7 @@
 
     //const QuarterNoteTest = STATIC_LIBRARY[2];
 
-    const GameData = new Game(150, 100);
+    const GameData = new Game(100, 100);
 
     gameRoom(GameData);
 

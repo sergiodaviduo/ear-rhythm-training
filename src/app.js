@@ -8,7 +8,7 @@ import { gameRoom } from './components/engine.js';
 
 //const QuarterNoteTest = STATIC_LIBRARY[2];
 
-const GameData = new Game(150, 100);
+const GameData = new Game(100, 100);
 
 gameRoom(GameData);
 

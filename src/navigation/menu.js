@@ -2,7 +2,7 @@ export function menu() {
 
     in_menu();
 
-    const menu_items = ["play-button", "settings", "high-scores"];
+    /*const menu_items = ["play-button", "settings", "high-scores"];
 
     const selected = "blue";
     const unselected =  "black";
@@ -48,7 +48,7 @@ export function menu() {
                 break;
         }
     
-    });
+    });*/
     
 }
 
@@ -84,6 +84,33 @@ export function playGame() {
     document.getElementById("main-menu").style.display = "none";
     document.getElementById("play-again").style.display = "none";
     document.getElementById("title").style.display = "none";
+
+    document.getElementById("settings-values").style.display = "none";
+    document.getElementById("blueSquare").style.display = "none";
+
+    document.getElementById("purpleSquare").style.display = "none";
+
 }
 
-// export { menu }
+export function settings(game) {
+
+    console.log("opened settings");
+
+    let all_elements_nl = document.querySelectorAll('*[id]');
+
+    for (let i = 0; i < all_elements_nl.length; i++) {
+        all_elements_nl[i].style.display = "none";
+    }
+
+
+    document.getElementById('liveTempo').innerHTML = game.tempo;
+    document.getElementById('liveTempo').value = game.tempo;
+
+    document.getElementById("back-to-menu").style.display = "block";
+    document.getElementById("settings-values").style.display = "block";
+    document.getElementById("delay").style.display = "block";
+    document.getElementById("tempo").style.display = "block";
+    document.getElementById("liveTempo").style.display = "block";
+    document.getElementById("liveDelay").style.display = "block";
+    document.getElementById("default-settings").style.display = "block";
+}

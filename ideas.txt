@@ -36,4 +36,7 @@ Features that would make this pop:
 
  Housekeeping things:
 
-  - divide all the event listeners into a file, and / or figure out a better way to organize them
+ - divide all the event listeners into a file, and / or figure out a better way to organize them
+ 
+ - use this equalizer thing somewhere, free to use?
+   https://codepen.io/long-lazuli/pen/JoLroV

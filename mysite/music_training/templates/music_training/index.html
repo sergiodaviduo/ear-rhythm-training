@@ -16,49 +16,65 @@
     <script type="module" src="{% static 'js/app.js' %}"></script>
 
     <link rel="stylesheet" type="text/css" href="{% static 'css/cat.css' %}?{% now "U" %}">
-    
+    <link rel="stylesheet" type="text/css" href="{% static 'css/sliders.css' %}?{% now "U" %}">
   </head>
   <body>
 
-  <br><br>
-
-  <br><br>
+     <!-- Debug input indicators -->
   <div id="blueSquare" style="background-color: blue; width: 100px; height: 100px;"></div>
   <br><br>
   <div id="purpleSquare" style="background-color: purple; width: 100px; height: 100px;"></div>
   <br><br><br><br>
+
+   <!-- Scoreboard-->
   <h1 id="score">Score: 0</h1>
   <h1 id="scoreResult"></h1>
+
+   <!-- Repeat play buttons-->
   <button id="play-again" style="display: none;"> 
     Play Again
   </button>
   <button id="back-to-menu" style="display: none;"> 
     Back to Menu
   </button>
-  <br>
+  <br><br>
 
-  <br>
-  <div id="settings-values">
+   <!-- Settings -->
+  <div id="settings-values" class="centered">
     <h2>Adjust delay: </h2><h2 id="liveDelay">70</h2>
-    <input id="delay" type="range" min="50" max="300" value="70">
+    <input id="delay" type="range" min="50" max="300" value="70" class="centered">
     <br><br>
-    <h2>Tempo: </h2><h2 id="liveTempo">120</h2>
-    <input id="tempo" type="range" min="50" max="250" value="120">
+    <h2>Tempo: </h2><h2 id="liveTempo">100</h2>
+    <input id="tempo" type="range" min="50" max="250" value="100" class="centered">
+    <button id="default-settings">Reset to Default</button>
   </div>
   <br><br><br>
+
+  <!-- rhythm mimic -->
   <div id="container">
     <hr>
-    <div class="cat">
+    <div class="cat player">
+      <div id="u-head"></div>
+      <div id="u-mouth" style="background-position-x: 0px;"></div>
+      <div id="u-paw-left" style="background-position-x: 0px;"></div>
+      <div id="u-paw-right" style="background-position-x: 0px;"></div>
+    </div>
+    <div class="cat violet">
       <div id="head"></div>
       <div id="mouth" style="background-position-x: 0px;"></div>
       <div id="paw-left" style="background-position-x: 0px;"></div>
       <div id="paw-right" style="background-position-x: 0px;"></div>
     </div>
+    <div class="instruments-player">
+      <div class="keyboard instruments-player" style="visibility: visible;"></div>
+    </div>
+
     <div class="instruments">
-      <div id="keyboard" style="visibility: visible;"></div>
+      <div class="keyboard" style="visibility: visible;"></div>
     </div>
   </div>
 
+   <!-- Title -->
   <div class="centered" id="title">
     <h1 class="centered">~ Rhythm Training ~</h1>
     <h3 class="centered">Simon says, but with randomly generated notes</h3> 
@@ -66,12 +82,13 @@
     <br>
   </div>
 
+   <!-- Main Menu -->
   <div id="main-menu">
     <div id="play-button">
       <button class="centered">Start Game</button>
     </div>
     <div id="settings">
-      <button class="centered"><del>Settings(soon!)</del></button>
+      <button class="centered">Settings</button>
     </div>
     <div id="high-scores">
       <button class="centered"><del>High Scores (soon!)</del></button>

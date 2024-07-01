@@ -1,47 +1,7 @@
 import { randomizerExtender } from './generators.js';
 import { fourByFour } from './instruments.js';
-import { menu, playGame } from '../navigation/menu.js';
-import { setupControls } from '../components/controls.js';
-
-// when note is played, "move" paw down 
-async function noteTrigger(milisec, paw, volume) {
-    await waitForNote(milisec);
-
-    if (volume) {
-        paw.style.backgroundPositionX = '-800px';
-    }
-
-}
-
-async function noteRelease(milisec, paw, volume) {
-    await waitForNote(milisec);
-
-    if (volume) {
-        paw.style.backgroundPositionX = '0px';
-    }
-}
-
-function inputOpen(delay, openTime) {
-    console.log("open");
-    openTime = +new Date();
-    openTime += delay;
-    
-    return openTime;
-}
-
-function inputClose(delay, closeTime) {
-    console.log("close");
-    closeTime = +new Date();
-    closeTime += delay;
-
-    return closeTime;
-}
-
-function waitForNote(milisec) {
-    return new Promise(resolve => {
-        setTimeout(() => { resolve('') }, milisec);
-    })
-}
+import { menu, playGame, settings } from '../navigation/menu.js';
+import { setupControls, waitForNote, inputClose, inputOpen, noteRelease, noteTrigger } from '../components/controls.js';
 
 function startMetronome() {
     let metronome = fourByFour();
@@ -52,7 +12,6 @@ function startMetronome() {
 // This starts the main song track session
 // previous default input window is open = 30 (ms before), close = 90 (ms after)
 function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=90, close=130) {
-
 
     delay = game.delay;
     //this will eventually be randomized and linked between functions
@@ -132,13 +91,14 @@ export function gameRoom(game) {
     
     tempoSlider.addEventListener('change', function() { 
         game.tempo = tempoSlider.value;
-        document.getElementById('liveTempo').innerHTML = game.tempo ;
+        document.getElementById('liveTempo').innerHTML = game.tempo;
     })
 
     // Play from menu button
     document.getElementById("play-button").addEventListener("click", async () => {
         if (game.firstRun) {
             await Tone.start();
+            console.log("");
             game.firstRun = false;
         }
         
@@ -149,15 +109,30 @@ export function gameRoom(game) {
 
     // Play again button
     document.getElementById("play-again").addEventListener("click", event => {
-        startGame(game, game.answerTrack);
+        stopGame(game);
+        startGame(game);
         document.getElementById("play-again").style.display = "none";
     })
 
     // Back to menu (while in game)
     document.getElementById("back-to-menu").addEventListener("click", event => {
         menu();
- 
-        stopGame(game.answerTrack, game.clickTrack, game.instrument);
+        if (game.answerTrack) {
+            stopGame(game);
+        }
+    })
+
+    document.getElementById("settings").addEventListener("click", event => {
+        settings(game);
+    })
+
+    document.getElementById("default-settings").addEventListener("click", event => {
+        game.tempo = 100;
+        game.delay = 100;
+        document.getElementById('liveTempo').innerHTML = game.tempo;
+        document.getElementById('tempo').value = game.tempo;
+        document.getElementById('liveDelay').innerHTML = game.delay;
+        document.getElementById('delay').value = game.delay;
     })
 }
 
@@ -204,11 +179,11 @@ function startGame(game) {
     return []
 }
 
-function stopGame(mainTrack, clickTrack, instrument) {
-    mainTrack.dispose();
-    clickTrack.dispose();
-    instrument.dispose();
+function stopGame(game) {
+    game.answerTrack.dispose();
+    game.clickTrack.dispose();
+    game.instrument.dispose();
     Tone.Transport.stop();
     game.score = 0;
-    console.log(Tone.Transport.state + " after exiting game");
+    console.log(Tone.Transport.state + " after stopping game");
 }

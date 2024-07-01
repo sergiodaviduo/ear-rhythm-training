@@ -71,3 +71,45 @@ export function setupControls(game) {
         }
     });
 }
+
+// when note is played, "move" paw down 
+async function noteTrigger(milisec, paw, volume) {
+    await waitForNote(milisec);
+
+    if (volume) {
+        paw.style.backgroundPositionX = '-800px';
+    }
+
+}
+
+async function noteRelease(milisec, paw, volume) {
+    await waitForNote(milisec);
+
+    if (volume) {
+        paw.style.backgroundPositionX = '0px';
+    }
+}
+
+function inputOpen(delay, openTime) {
+    console.log("open");
+    openTime = +new Date();
+    openTime += delay;
+    
+    return openTime
+}
+
+function inputClose(delay, closeTime) {
+    console.log("close");
+    closeTime = +new Date();
+    closeTime += delay;
+
+    return closeTime;
+}
+
+function waitForNote(milisec) {
+    return new Promise(resolve => {
+        setTimeout(() => { resolve('') }, milisec);
+    })
+}
+
+export { waitForNote, inputClose, inputOpen, noteRelease, noteTrigger }
