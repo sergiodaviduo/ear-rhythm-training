@@ -9,6 +9,11 @@
             this._inputWindowC = 0;
             this._tempo = tempo;
             this._delay = delay;
+            this._firstRun = true;
+        }
+
+        get firstRun() {
+            return this._firstRun;
         }
 
         get score() {
@@ -21,6 +26,18 @@
 
         get delay() {
             return this._delay;
+        }
+
+        get answerTrack() {
+            return this._answerTrack;
+        }
+
+        get clickTrack() {
+            return this._clickTrack;
+        }
+
+        get instrument() {
+            return this._instrument;
         }
 
         get inputWindowO() {
@@ -39,12 +56,18 @@
             return this._isPlaying;
         }
 
+        set firstRun(firstRun) {
+            this._firstRun = firstRun;
+        }
+
         set score(score) {
             this._score = score;
+            document.getElementById("score").innerHTML = "Score: " + score;
         }
 
         set tempo(tempo) {
             this._tempo = tempo;
+            Tone.Transport.bpm.value = tempo;
         }
 
         set delay(delay) {
@@ -59,6 +82,7 @@
             }
         }
 
+        // This track defines what notes are correct
         set answerTrack(track) {
             this._answerTrack = track;
         }
@@ -82,20 +106,6 @@
         set inputWindowC(milliseconds) {
             this._inputWindowC = milliseconds;
         }
-    }
-
-    function fourByFour() {
-        const kickDrum = new Tone.MembraneSynth({
-            volume: 4
-        }).toDestination();
-
-        const kickPart = new Tone.Part(function(time) {
-            kickDrum.triggerAttackRelease('C1', '8n', time);
-        }, [{ time: '0:0' },{ time: '0:1' },{ time: '0:2' },{ time: '0:3' }]).start(0);
-
-        kickPart.loop = true;
-
-        return kickPart;
     }
 
     // creates a number of notes within one measure at random rhythmic times, all the same pitch
@@ -177,6 +187,218 @@
         return noteGroup;
     }
 
+    function fourByFour() {
+        const kickDrum = new Tone.MembraneSynth({
+            volume: 4
+        }).toDestination();
+
+        const kickPart = new Tone.Part(function(time) {
+            kickDrum.triggerAttackRelease('C1', '8n', time);
+        }, [{ time: '0:0' },{ time: '0:1' },{ time: '0:2' },{ time: '0:3' }]).start(0);
+
+        kickPart.loop = true;
+
+        return kickPart;
+    }
+
+    function menu() {
+
+        in_menu();
+
+        /*const menu_items = ["play-button", "settings", "high-scores"];
+
+        const selected = "blue";
+        const unselected =  "black";
+
+        let menu_choice = -1;
+
+        document.addEventListener('keydown', (event) => {
+            //let accuracy = 0;
+
+            if (document.getElementById("play-button").style.display != "none") {
+                if (event.key === 'ArrowDown') {
+                    menu_choice++;
+                }
+
+                if (event.key === 'ArrowUp') {
+                    menu_choice--;
+                }
+            }
+
+            if (menu_choice < 0) {
+                menu_choice = 2;
+            }
+        
+            if (menu_choice > 2) {
+                menu_choice = 0;
+            }
+        
+            switch (menu_items[menu_choice]) {
+                case "play-button":
+                    document.getElementById("play-button").style.backgroundColor = selected;
+                    document.getElementById("settings").style.backgroundColor = unselected;
+                    document.getElementById("high-scores").style.backgroundColor = unselected;
+                    break;
+                case "Settings":
+                    document.getElementById("play-button").style.backgroundColor = unselected;
+                    document.getElementById("settings").style.backgroundColor = selected;
+                    document.getElementById("high-scores").style.backgroundColor = unselected;
+                    break;
+                case "high-scores":
+                    document.getElementById("play-button").style.backgroundColor = unselected;
+                    document.getElementById("settings").style.backgroundColor = unselected;
+                    document.getElementById("high-scores").style.backgroundColor = selected;
+                    break;
+            }
+        
+        });*/
+        
+    }
+
+    // hide everything except menu objects
+    // When page loads, all elements of game load initially. This hides the game objects so only the menu appears.
+
+    function in_menu(){
+        let all_elements_nl = document.querySelectorAll('*[id]');
+
+        for (let i = 0; i < all_elements_nl.length - 2; i++) {
+            all_elements_nl[i].style.display = "none";
+        }
+
+        document.getElementById("play-button").style.display = "block";
+        document.getElementById("settings").style.display = "block";
+        document.getElementById("high-scores").style.display = "block";
+        document.getElementById("main-menu").style.display = "block";
+        document.getElementById("title").style.display = "block";
+
+    }
+
+    function playGame() {
+
+        let all_elements_nl = document.querySelectorAll('*[id]');
+
+        for (let i = 0; i < all_elements_nl.length - 2; i++) {
+            all_elements_nl[i].style.display = "block";
+        }
+
+        document.getElementById("play-button").style.display = "none";
+        document.getElementById("settings").style.display = "none";
+        document.getElementById("high-scores").style.display = "none";
+        document.getElementById("main-menu").style.display = "none";
+        document.getElementById("play-again").style.display = "none";
+        document.getElementById("title").style.display = "none";
+
+        document.getElementById("settings-values").style.display = "none";
+        document.getElementById("blueSquare").style.display = "none";
+
+        document.getElementById("purpleSquare").style.display = "none";
+
+    }
+
+    function settings(game) {
+
+        console.log("opened settings");
+
+        let all_elements_nl = document.querySelectorAll('*[id]');
+
+        for (let i = 0; i < all_elements_nl.length; i++) {
+            all_elements_nl[i].style.display = "none";
+        }
+
+
+        document.getElementById('liveTempo').innerHTML = game.tempo;
+        document.getElementById('liveTempo').value = game.tempo;
+
+        document.getElementById("back-to-menu").style.display = "block";
+        document.getElementById("settings-values").style.display = "block";
+        document.getElementById("delay").style.display = "block";
+        document.getElementById("tempo").style.display = "block";
+        document.getElementById("liveTempo").style.display = "block";
+        document.getElementById("liveDelay").style.display = "block";
+        document.getElementById("default-settings").style.display = "block";
+    }
+
+    function setupControls(game) {
+        // spacebar
+
+        let leftPaw = document.getElementById('u-paw-left');
+
+        document.addEventListener('keydown', (event) => {
+            //let accuracy = 0;
+        
+            let keyDownTime = 0;
+        
+            if (event.key === ' ') {
+                event.preventDefault();
+
+                noteTrigger(0, leftPaw, true);
+
+                document.getElementById('blueSquare').style.backgroundColor = 'green';
+        
+                keyDownTime = +new Date();
+        
+                console.log("Input recorded after ", keyDownTime - game.inputWindowO);
+        
+                if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC) {
+                    game.score++;
+                    document.getElementById("score").innerHTML = "Score: " + game.score;
+                    console.log(game.score);
+                    document.getElementById("score").classList.add("scored");
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            document.getElementById("score").classList.remove("scored");
+                            resolve(0);
+                        }, 90);
+                    });
+                }
+            }
+        });
+        
+        document.addEventListener('keyup', (event) => {
+            
+            if (event.key === ' ') {
+                document.getElementById('blueSquare').style.backgroundColor = 'blue';
+                noteRelease(0, leftPaw, true);
+            }
+        });
+
+        // "m" key
+         
+        document.addEventListener('keydown', (event) => {
+            //let accuracy = 0;
+
+            let keyDownTime = 0;
+        
+            if (event.key === 'm') {
+                event.preventDefault();
+                document.getElementById('blueSquare').style.backgroundColor = 'green';
+        
+                keyDownTime = +new Date();
+        
+                console.log("Input recorded after ", keyDownTime - game.inputWindowO);
+        
+                if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC) {
+                    game.score++;
+                    document.getElementById("score").innerHTML = "Score: " + game.score;
+                    console.log(game.score);
+                    document.getElementById("score").classList.add("scored");
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            document.getElementById("score").classList.remove("scored");
+                            resolve(0);
+                        }, 90);
+                    });
+                }
+            }
+        });
+        
+        document.addEventListener('keyup', (event) => {
+            if (event.key === 'm') {
+                document.getElementById('blueSquare').style.backgroundColor = 'blue';
+            }
+        });
+    }
+
     // when note is played, "move" paw down 
     async function noteTrigger(milisec, paw, volume) {
         await waitForNote(milisec);
@@ -200,7 +422,7 @@
         openTime = +new Date();
         openTime += delay;
         
-        return openTime;
+        return openTime
     }
 
     function inputClose(delay, closeTime) {
@@ -217,7 +439,16 @@
         })
     }
 
-    function gameEngine(game, synth=new Tone.Synth(), song=randomizerExtender(16, 5), open=30, close=90) {
+    function startMetronome() {
+        let metronome = fourByFour();
+
+        return metronome;
+    }
+
+    // This starts the main song track session
+    // previous default input window is open = 30 (ms before), close = 90 (ms after)
+    function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=90, close=130) {
+
         delay = game.delay;
         //this will eventually be randomized and linked between functions
         game.notesInMeasure = 5;
@@ -248,92 +479,41 @@
         //callback functions in-between every other measure
         Tone.Transport.scheduleRepeat((time) => {
             if ( score > game.notesInMeasure * 7 ) {
-                party.confetti(scoreBoard, {
+                party.confetti(document.getElementById("score"), {
                     count: party.variation.range(20, 40),
                 });
                 scoreResult.innerHTML = "You got " + score + " out of " + (game.notesInMeasure * 8) +"!!";
                 score = 0;
             }
+            
+        }, String(songLength+3)+"m", "0m");
 
-        }, "19m", "0m");
+        // at end of song
+        Tone.Transport.schedule(function(time){
+            //document.getElementById("play-again").click();
+            document.getElementById("play-again").style.display = "block";
+            document.getElementById("back-to-menu").style.display = "block";
+            synth.dispose();
+            part.dispose();
+            Tone.Transport.stop();
+            console.log(Tone.Transport.state + " after end of song automatically");
+            game.togglePlay();
+        }, String(songLength+2)+":0:0");
 
         return part;
     }
 
-    async function waitForInput() {
-        await Tone.start();
-    }
+    function gameRoom(game) {
+        menu();
 
-    function startGame(song, metronome, game) {
-        let firstRun = true;
-        let scoreBoard = document.getElementById("score");
         let delaySlider = document.getElementById("delay");
         let tempoSlider = document.getElementById("tempo");
         document.getElementById('liveDelay').innerHTML = game.delay;
         document.getElementById('liveTempo').innerHTML = game.tempo;
         delaySlider.value = game.delay;
         tempoSlider.value = game.tempo;
-
-        document.getElementById("play-button").addEventListener("click", event => {
-            game.togglePlay();
-            if (Tone.Transport.state !== "started") {
-                console.log("-- new session --\n\n");
-            }
         
-            waitForInput();
-        
-            if (song.disposed && !firstRun) {
-                Tone.Transport.bpm.value = game.tempo;
-                song = gameEngine(game);
-                metronome = fourByFour();
-            }
-        
-            Tone.Transport.toggle();
-            console.log(Tone.Transport.state);
-        
-            if (!song.disposed && !firstRun && Tone.Transport.state === "stopped") {
-                song.dispose();
-                metronome.dispose();
-                document.getElementById('paw-left').style.backgroundPositionX = '0px';
-                game.score = 0;
-            }
-        
-            firstRun = false;
-         });
-        
-        document.addEventListener('keydown', (event) => {
-            //let accuracy = 0;
-        
-            let keyDownTime = 0;
-        
-            if (event.key === ' ' || event.key === 'm') {
-                event.preventDefault();
-                document.getElementById('blueSquare').style.backgroundColor = 'green';
-        
-                keyDownTime = +new Date();
-        
-                console.log("Input recorded after ", keyDownTime - game.inputWindowO);
-        
-                if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC) {
-                    game.score++;
-                    scoreBoard.innerHTML = "Score: " + game.score;
-                    console.log(game.score);
-                    document.getElementById("score").classList.add("scored");
-                    return new Promise((resolve) => {
-                        setTimeout(() => {
-                            scoreBoard.classList.remove("scored");
-                            resolve(0);
-                        }, 90);
-                    });
-                }
-            }
-        });
-        
-        document.addEventListener('keyup', (event) => {
-            if (event.key === ' ' || event.key === 'm') {
-                document.getElementById('blueSquare').style.backgroundColor = 'blue';
-            }
-        });
+        setupControls(game);
         
         delaySlider.addEventListener('change', function() { 
             game.delay = delaySlider.value;
@@ -342,8 +522,101 @@
         
         tempoSlider.addEventListener('change', function() { 
             game.tempo = tempoSlider.value;
-            document.getElementById('liveTempo').innerHTML = game.tempo ;
+            document.getElementById('liveTempo').innerHTML = game.tempo;
         });
+
+        // Play from menu button
+        document.getElementById("play-button").addEventListener("click", async () => {
+            if (game.firstRun) {
+                await Tone.start();
+                console.log("");
+                game.firstRun = false;
+            }
+            
+            playGame(); //turn this into a menu object at some point, just for the logic, since this just changes the menu
+
+            startGame(game, game.answerTrack);
+         });
+
+        // Play again button
+        document.getElementById("play-again").addEventListener("click", event => {
+            stopGame(game);
+            startGame(game);
+            document.getElementById("play-again").style.display = "none";
+        });
+
+        // Back to menu (while in game)
+        document.getElementById("back-to-menu").addEventListener("click", event => {
+            menu();
+            if (game.answerTrack) {
+                stopGame(game);
+            }
+        });
+
+        document.getElementById("settings").addEventListener("click", event => {
+            settings(game);
+        });
+
+        document.getElementById("default-settings").addEventListener("click", event => {
+            game.tempo = 100;
+            game.delay = 100;
+            document.getElementById('liveTempo').innerHTML = game.tempo;
+            document.getElementById('tempo').value = game.tempo;
+            document.getElementById('liveDelay').innerHTML = game.delay;
+            document.getElementById('delay').value = game.delay;
+        });
+    }
+
+
+    // Starts or stops all songs / gameplay
+    function startGame(game) {
+        game.score = 0;
+        game.togglePlay();
+
+        game.instrument = new Tone.Synth();
+
+        game.answerTrack = answerTrack(game);
+
+        console.log(game.answerTrack);
+
+        game.clickTrack= startMetronome();
+
+        /*if (game.firstRun == true) {
+            console.log("first run");
+            Tone.start();
+            game.firstRun = false;
+        }*/
+
+        if (Tone.Transport.state !== "started") {
+            console.log("-- new session --\n\n");
+        }
+
+        if (game.answerTrack.disposed && !game.firstRun) {
+            Tone.Transport.bpm.value = game.tempo;
+            console.log("restarting mainTrack");
+            game.answerTrack = answerTrack(game);
+        }
+
+        Tone.Transport.toggle();
+        console.log(Tone.Transport.state);
+
+        if (!game.answerTrack.disposed && !game.firstRun && Tone.Transport.state === "stopped") {
+
+            game.answerTrack.dispose();
+            document.getElementById('paw-left').style.backgroundPositionX = '0px';
+            game.score = 0;
+        }
+
+        return []
+    }
+
+    function stopGame(game) {
+        game.answerTrack.dispose();
+        game.clickTrack.dispose();
+        game.instrument.dispose();
+        Tone.Transport.stop();
+        game.score = 0;
+        console.log(Tone.Transport.state + " after stopping game");
     }
 
     // ripple effect: https://codepen.io/daless14/pen/DqXMvK
@@ -351,11 +624,10 @@
     // this visual library would be wild with this: https://ptsjs.org/
 
 
-    const GameData = new Game(150, 100);
+    //const QuarterNoteTest = STATIC_LIBRARY[2];
 
-    let engine = gameEngine(GameData);
-    let metronome = fourByFour();
+    const GameData = new Game(100, 100);
 
-    startGame(engine, metronome, GameData);
+    gameRoom(GameData);
 
 })();

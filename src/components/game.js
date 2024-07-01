@@ -6,6 +6,11 @@ export class Game {
         this._inputWindowC = 0;
         this._tempo = tempo;
         this._delay = delay;
+        this._firstRun = true;
+    }
+
+    get firstRun() {
+        return this._firstRun;
     }
 
     get score() {
@@ -18,6 +23,18 @@ export class Game {
 
     get delay() {
         return this._delay;
+    }
+
+    get answerTrack() {
+        return this._answerTrack;
+    }
+
+    get clickTrack() {
+        return this._clickTrack;
+    }
+
+    get instrument() {
+        return this._instrument;
     }
 
     get inputWindowO() {
@@ -36,12 +53,18 @@ export class Game {
         return this._isPlaying;
     }
 
+    set firstRun(firstRun) {
+        this._firstRun = firstRun;
+    }
+
     set score(score) {
         this._score = score;
+        document.getElementById("score").innerHTML = "Score: " + score;
     }
 
     set tempo(tempo) {
         this._tempo = tempo;
+        Tone.Transport.bpm.value = tempo;
     }
 
     set delay(delay) {
@@ -56,6 +79,7 @@ export class Game {
         }
     }
 
+    // This track defines what notes are correct
     set answerTrack(track) {
         this._answerTrack = track;
     }
