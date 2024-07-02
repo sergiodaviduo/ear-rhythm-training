@@ -40,3 +40,7 @@ Features that would make this pop:
  
  - use this equalizer thing somewhere, free to use?
    https://codepen.io/long-lazuli/pen/JoLroV
+
+   - bytecode to protect app?
+
+   https://www.npmjs.com/package/bytenode
