@@ -40,3 +40,7 @@ Features that would make this pop:
  
  - use this equalizer thing somewhere, free to use?
    https://codepen.io/long-lazuli/pen/JoLroV
+
+- this seems like it may be interesting to use for easier implementation to more advanced stuffs:
+
+https://tonejs.github.io/docs/r13/Midi

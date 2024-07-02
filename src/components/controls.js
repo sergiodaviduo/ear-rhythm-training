@@ -1,3 +1,5 @@
+import { s } from "vitest/dist/types-198fd1d9.js";
+
 export function setupControls(game) {
     // spacebar
 
@@ -23,8 +25,8 @@ export function setupControls(game) {
     
             console.log("Input recorded after ", keyDownTime - game.inputWindowO);
     
-            if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC) {
-                inWindow = true;
+            if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC && !game.didScore) {
+                game.didScore = true;
                 game.score++;
 
                 //scoredInWindow = true;
@@ -32,16 +34,23 @@ export function setupControls(game) {
                 console.log(game.score);
                 console.log("hiiiii"+game.inputWindowC);
                 document.getElementById("score").classList.add("scored");
+
                 return new Promise((resolve) => {
                     setTimeout(() => {
                         document.getElementById("score").classList.remove("scored");
-                        scoredInWindow = true;
+                        game.didScore = false;
                         resolve(0);
-                    }, 90);
+                    }, game.inputWindowC - +new Date());
                 });
-            } else if (keyDownTime > game.inputWindowC) {
-                inWindow = false;
+            } else if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC && game.didScore) {
+                console.log("already scored :(");
             }
+
+            // this doesn't work as is, I need to make a promise that will execute right at the end of the input window to reset the
+            // didScore property
+            /*if (+new Date() > game.inputWindowC) {
+                game.didScore = false;
+            }*/
         }
     });
     
