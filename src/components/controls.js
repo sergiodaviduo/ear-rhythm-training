@@ -1,7 +1,13 @@
+import { s } from "vitest/dist/types-198fd1d9.js";
+
 export function setupControls(game) {
     // spacebar
 
     let leftPaw = document.getElementById('u-paw-left');
+
+    let scoredInWindow = false;
+
+    let inWindow = false;
 
     document.addEventListener('keydown', (event) => {
         //let accuracy = 0;
@@ -19,18 +25,32 @@ export function setupControls(game) {
     
             console.log("Input recorded after ", keyDownTime - game.inputWindowO);
     
-            if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC) {
+            if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC && !game.didScore) {
+                game.didScore = true;
                 game.score++;
+
+                //scoredInWindow = true;
                 document.getElementById("score").innerHTML = "Score: " + game.score;
                 console.log(game.score);
+                console.log("hiiiii"+game.inputWindowC);
                 document.getElementById("score").classList.add("scored");
+
                 return new Promise((resolve) => {
                     setTimeout(() => {
                         document.getElementById("score").classList.remove("scored");
+                        game.didScore = false;
                         resolve(0);
-                    }, 90);
+                    }, game.inputWindowC - +new Date());
                 });
+            } else if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC && game.didScore) {
+                console.log("already scored :(");
             }
+
+            // this doesn't work as is, I need to make a promise that will execute right at the end of the input window to reset the
+            // didScore property
+            /*if (+new Date() > game.inputWindowC) {
+                game.didScore = false;
+            }*/
         }
     });
     
@@ -102,7 +122,7 @@ function inputOpen(delay, openTime) {
     openTime = +new Date();
     openTime += delay;
     
-    return openTime
+    return openTime;
 }
 
 function inputClose(delay, closeTime) {
