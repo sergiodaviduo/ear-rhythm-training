@@ -7,6 +7,7 @@ export class Game {
         this._tempo = tempo;
         this._delay = delay;
         this._firstRun = true;
+        this._scored = false;
     }
 
     get firstRun() {
@@ -51,6 +52,10 @@ export class Game {
 
     get isPlaying() {
         return this._isPlaying;
+    }
+
+    get didScore() {
+        return this._scored;
     }
 
     set firstRun(firstRun) {
@@ -102,5 +107,9 @@ export class Game {
 
     set inputWindowC(milliseconds) {
         this._inputWindowC = milliseconds;
+    }
+
+    set didScore(scored) {
+        this._scored = scored;
     }
 }

@@ -3,6 +3,10 @@ export function setupControls(game) {
 
     let leftPaw = document.getElementById('u-paw-left');
 
+    let scoredInWindow = false;
+
+    let inWindow = false;
+
     document.addEventListener('keydown', (event) => {
         //let accuracy = 0;
     
@@ -20,16 +24,23 @@ export function setupControls(game) {
             console.log("Input recorded after ", keyDownTime - game.inputWindowO);
     
             if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC) {
+                inWindow = true;
                 game.score++;
+
+                //scoredInWindow = true;
                 document.getElementById("score").innerHTML = "Score: " + game.score;
                 console.log(game.score);
+                console.log("hiiiii"+game.inputWindowC);
                 document.getElementById("score").classList.add("scored");
                 return new Promise((resolve) => {
                     setTimeout(() => {
                         document.getElementById("score").classList.remove("scored");
+                        scoredInWindow = true;
                         resolve(0);
                     }, 90);
                 });
+            } else if (keyDownTime > game.inputWindowC) {
+                inWindow = false;
             }
         }
     });
@@ -102,7 +113,7 @@ function inputOpen(delay, openTime) {
     openTime = +new Date();
     openTime += delay;
     
-    return openTime
+    return openTime;
 }
 
 function inputClose(delay, closeTime) {

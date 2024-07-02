@@ -10,6 +10,7 @@
             this._tempo = tempo;
             this._delay = delay;
             this._firstRun = true;
+            this._scored = false;
         }
 
         get firstRun() {
@@ -54,6 +55,10 @@
 
         get isPlaying() {
             return this._isPlaying;
+        }
+
+        get didScore() {
+            return this._scored;
         }
 
         set firstRun(firstRun) {
@@ -105,6 +110,10 @@
 
         set inputWindowC(milliseconds) {
             this._inputWindowC = milliseconds;
+        }
+
+        set didScore(scored) {
+            this._scored = scored;
         }
     }
 
@@ -341,8 +350,11 @@
         
                 if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC) {
                     game.score++;
+
+                    //scoredInWindow = true;
                     document.getElementById("score").innerHTML = "Score: " + game.score;
                     console.log(game.score);
+                    console.log("hiiiii"+game.inputWindowC);
                     document.getElementById("score").classList.add("scored");
                     return new Promise((resolve) => {
                         setTimeout(() => {
@@ -350,7 +362,7 @@
                             resolve(0);
                         }, 90);
                     });
-                }
+                } else if (keyDownTime > game.inputWindowC) ;
             }
         });
         
@@ -422,7 +434,7 @@
         openTime = +new Date();
         openTime += delay;
         
-        return openTime
+        return openTime;
     }
 
     function inputClose(delay, closeTime) {
