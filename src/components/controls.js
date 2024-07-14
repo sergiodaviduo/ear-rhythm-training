@@ -12,7 +12,7 @@ export function setupControls(game) {
 
         if (event.key === ' ') { event.preventDefault(); };
     
-        if (event.key === ' ' && !event.repeat) {
+        if (event.key === ' ' && !event.repeat || event.key === 'p' && !event.repeat) {
 
             noteTrigger(0, duck, true);
 
@@ -48,7 +48,7 @@ export function setupControls(game) {
     
     document.addEventListener('keyup', (event) => {
         
-        if (event.key === ' ') {
+        if (event.key === ' ' || event.key === 'p') {
             document.getElementById('blueSquare').style.backgroundColor = 'blue';
             noteRelease(0, duck, true);
             
@@ -57,33 +57,7 @@ export function setupControls(game) {
 
     // "m" key
      
-    document.addEventListener('keydown', (event) => {
-        //let accuracy = 0;
-
-        let keyDownTime = 0;
     
-        if (event.key === 'm') {
-            event.preventDefault();
-            document.getElementById('blueSquare').style.backgroundColor = 'green';
-    
-            keyDownTime = +new Date();
-    
-            console.log("Input recorded after ", keyDownTime - game.inputWindowO);
-    
-            if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC) {
-                game.score++;
-                document.getElementById("score").innerHTML = "Score: " + game.score;
-                console.log(game.score);
-                document.getElementById("score").classList.add("scored");
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        document.getElementById("score").classList.remove("scored");
-                        resolve(0);
-                    }, 90);
-                });
-            }
-        }
-    });
     
     document.addEventListener('keyup', (event) => {
         if (event.key === 'm') {

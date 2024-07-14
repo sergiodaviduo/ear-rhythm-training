@@ -1,3 +1,5 @@
+import * as Tone from 'tone';
+
 export class Game {
     constructor(tempo=100, delay=100) {
         this._score = 0;
@@ -68,8 +70,13 @@ export class Game {
     }
 
     set tempo(tempo) {
+        let tempoRatio = this._tempo / tempo;
+
         this._tempo = tempo;
         Tone.Transport.bpm.value = tempo;
+
+        this.inputWindowO = Math.round( this.inputWindowO * tempoRatio );
+        this.inputWindowC = Math.round( this.inputWindowO * tempoRatio );
     }
 
     set delay(delay) {
@@ -84,7 +91,6 @@ export class Game {
         }
     }
 
-    // This track defines what notes are correct
     set answerTrack(track) {
         this._answerTrack = track;
     }

@@ -1,201 +1,6 @@
 (function () {
     'use strict';
 
-    class Game {
-        constructor(tempo=100, delay=100) {
-            this._score = 0;
-            this._isPlaying = false;
-            this._inputWindowO = 0;
-            this._inputWindowC = 0;
-            this._tempo = tempo;
-            this._delay = delay;
-            this._firstRun = true;
-            this._scored = false;
-        }
-
-        get firstRun() {
-            return this._firstRun;
-        }
-
-        get score() {
-            return this._score;
-        }
-
-        get tempo() {
-            return this._tempo;
-        }
-
-        get delay() {
-            return this._delay;
-        }
-
-        get answerTrack() {
-            return this._answerTrack;
-        }
-
-        get clickTrack() {
-            return this._clickTrack;
-        }
-
-        get instrument() {
-            return this._instrument;
-        }
-
-        get inputWindowO() {
-            return this._inputWindowO;
-        }
-
-        get inputWindowC() {
-            return this._inputWindowC;
-        }
-
-        get notesInMeasure() {
-            return this._notesInMeasure;
-        }
-
-        get isPlaying() {
-            return this._isPlaying;
-        }
-
-        get didScore() {
-            return this._scored;
-        }
-
-        set firstRun(firstRun) {
-            this._firstRun = firstRun;
-        }
-
-        set score(score) {
-            this._score = score;
-            document.getElementById("score").innerHTML = "Score: " + score;
-        }
-
-        set tempo(tempo) {
-            this._tempo = tempo;
-            Tone.Transport.bpm.value = tempo;
-        }
-
-        set delay(delay) {
-            this._delay = delay;
-        }
-
-        togglePlay() {
-            if (this._isPlaying) {
-                this._isPlaying = false;
-            } else {
-                this._isPlaying = true;
-            }
-        }
-
-        // This track defines what notes are correct
-        set answerTrack(track) {
-            this._answerTrack = track;
-        }
-
-        set clickTrack(track) {
-            this._clickTrack = track;
-        }
-
-        set instrument(instrument) {
-            this._instrument = instrument;
-        }
-
-        set notesInMeasure(notes) {
-            this._notesInMeasure = notes;
-        }
-
-        set inputWindowO(milliseconds) {
-            this._inputWindowO = milliseconds;
-        }
-
-        set inputWindowC(milliseconds) {
-            this._inputWindowC = milliseconds;
-        }
-
-        set didScore(scored) {
-            this._scored = scored;
-        }
-    }
-
-    // creates a number of notes within one measure at random rhythmic times, all the same pitch
-    // can produce up to 15 notes, as division in Tone.js only goes to 16ths
-    // returns an array understood by Tone.js
-    //example array returned with four notes requested:
-    //[
-    //    { time: "0:0:0", note: "C4", velocity: 0.9 },
-    //    { time: "0:2:0", note: "C4", velocity: 0.9 },
-    //    { time: "0:3:1", note: "C4", velocity: 0.9 },
-    //    { time: "0:3:3", note: "C4", velocity: 0.9 }
-    //]
-
-
-    // Medium Version
-    // Generates a measure of random 8th notes
-
-    function mediumRandomizer(notes) {
-        notes = (notes > 15) ? 15 : notes;
-
-        const note = { time: 0, note: "C4", velocity: 0.9 };
-        let noteClone = Object.assign({}, note);
-        let timeGroup = [];
-        let noteGroup = [];
-        let time = "";
-        let random4th = 0;
-        let random16th = 0;
-
-        let medium = [0, 2];
-
-        for (let i = 0; i < notes; i++) {
-            do {
-                random4th = Math.floor(Math.random() * 4);
-                random16th = medium[Math.floor(Math.random() * 2)];
-                time = "0:" + random4th + ":" + random16th;
-            } while (timeGroup.includes(time));
-            timeGroup.push(time);
-        }
-
-        timeGroup.sort();
-
-        for (time in timeGroup) {
-            noteClone.time = timeGroup[time];
-            noteGroup.push(noteClone);
-            noteClone = {...note};
-        }
-
-        return noteGroup;
-    }
-
-    // extends a randomizer to make long strings of random notes
-    //     notes (int)      ->  how many notes in each phrase (within one 4/4 measure long by default)
-    //     measures (int)   ->  How many total measures the randomizer will run
-    //     hasSpace (bool)  ->  whether to include rests in-between every other phrase for user input
-    function randomizerExtender(measures, notes, hasRepeat=true) {
-        let noteGroup = [];
-        let currGroup = 0;
-        let lastGroup = 0;
-        let currNote = 0;
-
-        for (let i = 0; i < measures; i++) {
-            currGroup = mediumRandomizer(notes);
-            for (const note in currGroup) {
-                if (i % 2 !== 0 && hasRepeat)  {
-                    currNote = {...lastGroup[note]};
-
-                    currNote.time = currNote.time.replace('0:', i+':');
-                    currNote.velocity = 0;
-                    noteGroup.push(currNote);
-                } else {
-                    currNote = {...currGroup[note]};
-                    currNote.time = currNote.time.replace('0:', i+':');
-                    noteGroup.push(currNote);
-                }
-            }
-            lastGroup = currGroup;
-        }
-        console.log(noteGroup);
-        return noteGroup;
-    }
-
     const version = "14.7.77";
 
     const createExtendedExponentialRampToValueAutomationEvent = (value, endTime, insertTime) => {
@@ -8476,7 +8281,7 @@
      * @category Core
      * @constructor
      */
-    let Tone$1 = class Tone {
+    class Tone {
         constructor() {
             //-------------------------------------
             // 	DEBUGGING
@@ -8542,11 +8347,11 @@
         toString() {
             return this.name;
         }
-    };
+    }
     /**
      * The version number semver
      */
-    Tone$1.version = version;
+    Tone.version = version;
 
     /**
      * The threshold for correctness for operators. Less than one sample even
@@ -8590,7 +8395,7 @@
      * Internally, events are stored in time order for fast
      * retrieval.
      */
-    class Timeline extends Tone$1 {
+    class Timeline extends Tone {
         constructor() {
             super();
             this.name = "Timeline";
@@ -8973,7 +8778,7 @@
      * MIT (c) 2011 Jerome Etienne.
      * @category Core
      */
-    class Emitter extends Tone$1 {
+    class Emitter extends Tone {
         constructor() {
             super(...arguments);
             this.name = "Emitter";
@@ -9733,7 +9538,7 @@
      * });
      * @category Core
      */
-    class ToneAudioBuffer extends Tone$1 {
+    class ToneAudioBuffer extends Tone {
         constructor() {
             super();
             this.name = "ToneAudioBuffer";
@@ -10287,7 +10092,7 @@
     /**
      * TimeBase is a flexible encoding of time which can be evaluated to and from a string.
      */
-    class TimeBaseClass extends Tone$1 {
+    class TimeBaseClass extends Tone {
         /**
          * @param context The context associated with the time value. Used to compute
          * Transport and context-relative timing.
@@ -10889,7 +10694,7 @@
     /**
      * The Base class for all nodes that have an AudioContext.
      */
-    class ToneWithContext extends Tone$1 {
+    class ToneWithContext extends Tone {
         constructor() {
             super();
             const options = optionsFromArguments(ToneWithContext.getDefaults(), arguments, ["context"]);
@@ -13190,7 +12995,7 @@
      * });
      * @category Core
      */
-    class ToneAudioBuffers extends Tone$1 {
+    class ToneAudioBuffers extends Tone {
         constructor() {
             super();
             this.name = "ToneAudioBuffers";
@@ -13441,7 +13246,7 @@
      * events. Internally uses an [Interval Tree](https://en.wikipedia.org/wiki/Interval_tree)
      * to represent the data.
      */
-    class IntervalTimeline extends Tone$1 {
+    class IntervalTimeline extends Tone {
         constructor() {
             super(...arguments);
             this.name = "IntervalTimeline";
@@ -14134,7 +13939,7 @@
     /**
      * Represents a single value which is gettable and settable in a timed way
      */
-    class TimelineValue extends Tone$1 {
+    class TimelineValue extends Tone {
         /**
          * @param initialValue The value to return if there is no scheduled values
          */
@@ -19996,6 +19801,205 @@
      */
     getContext();
 
+    class Game {
+        constructor(tempo=100, delay=100) {
+            this._score = 0;
+            this._isPlaying = false;
+            this._inputWindowO = 0;
+            this._inputWindowC = 0;
+            this._tempo = tempo;
+            this._delay = delay;
+            this._firstRun = true;
+            this._scored = false;
+        }
+
+        get firstRun() {
+            return this._firstRun;
+        }
+
+        get score() {
+            return this._score;
+        }
+
+        get tempo() {
+            return this._tempo;
+        }
+
+        get delay() {
+            return this._delay;
+        }
+
+        get answerTrack() {
+            return this._answerTrack;
+        }
+
+        get clickTrack() {
+            return this._clickTrack;
+        }
+
+        get instrument() {
+            return this._instrument;
+        }
+
+        get inputWindowO() {
+            return this._inputWindowO;
+        }
+
+        get inputWindowC() {
+            return this._inputWindowC;
+        }
+
+        get notesInMeasure() {
+            return this._notesInMeasure;
+        }
+
+        get isPlaying() {
+            return this._isPlaying;
+        }
+
+        get didScore() {
+            return this._scored;
+        }
+
+        set firstRun(firstRun) {
+            this._firstRun = firstRun;
+        }
+
+        set score(score) {
+            this._score = score;
+            document.getElementById("score").innerHTML = "Score: " + score;
+        }
+
+        set tempo(tempo) {
+            let tempoRatio = this._tempo / tempo;
+
+            this._tempo = tempo;
+            Transport.bpm.value = tempo;
+
+            this.inputWindowO = Math.round( this.inputWindowO * tempoRatio );
+            this.inputWindowC = Math.round( this.inputWindowO * tempoRatio );
+        }
+
+        set delay(delay) {
+            this._delay = delay;
+        }
+
+        togglePlay() {
+            if (this._isPlaying) {
+                this._isPlaying = false;
+            } else {
+                this._isPlaying = true;
+            }
+        }
+
+        set answerTrack(track) {
+            this._answerTrack = track;
+        }
+
+        set clickTrack(track) {
+            this._clickTrack = track;
+        }
+
+        set instrument(instrument) {
+            this._instrument = instrument;
+        }
+
+        set notesInMeasure(notes) {
+            this._notesInMeasure = notes;
+        }
+
+        set inputWindowO(milliseconds) {
+            this._inputWindowO = milliseconds;
+        }
+
+        set inputWindowC(milliseconds) {
+            this._inputWindowC = milliseconds;
+        }
+
+        set didScore(scored) {
+            this._scored = scored;
+        }
+    }
+
+    // creates a number of notes within one measure at random rhythmic times, all the same pitch
+    // can produce up to 15 notes, as division in Tone.js only goes to 16ths
+    // returns an array understood by Tone.js
+    //example array returned with four notes requested:
+    //[
+    //    { time: "0:0:0", note: "C4", velocity: 0.9 },
+    //    { time: "0:2:0", note: "C4", velocity: 0.9 },
+    //    { time: "0:3:1", note: "C4", velocity: 0.9 },
+    //    { time: "0:3:3", note: "C4", velocity: 0.9 }
+    //]
+
+
+    // Medium Version
+    // Generates a measure of random 8th notes
+
+    function mediumRandomizer(notes) {
+        notes = (notes > 15) ? 15 : notes;
+
+        const note = { time: 0, note: "C4", velocity: 0.9 };
+        let noteClone = Object.assign({}, note);
+        let timeGroup = [];
+        let noteGroup = [];
+        let time = "";
+        let random4th = 0;
+        let random16th = 0;
+
+        let medium = [0, 2];
+
+        for (let i = 0; i < notes; i++) {
+            do {
+                random4th = Math.floor(Math.random() * 4);
+                random16th = medium[Math.floor(Math.random() * 2)];
+                time = "0:" + random4th + ":" + random16th;
+            } while (timeGroup.includes(time));
+            timeGroup.push(time);
+        }
+
+        timeGroup.sort();
+
+        for (time in timeGroup) {
+            noteClone.time = timeGroup[time];
+            noteGroup.push(noteClone);
+            noteClone = {...note};
+        }
+
+        return noteGroup;
+    }
+
+    // extends a randomizer to make long strings of random notes
+    //     notes (int)      ->  how many notes in each phrase (within one 4/4 measure long by default)
+    //     measures (int)   ->  How many total measures the randomizer will run
+    //     hasSpace (bool)  ->  whether to include rests in-between every other phrase for user input
+    function randomizerExtender(measures, notes, hasRepeat=true) {
+        let noteGroup = [];
+        let currGroup = 0;
+        let lastGroup = 0;
+        let currNote = 0;
+
+        for (let i = 0; i < measures; i++) {
+            currGroup = mediumRandomizer(notes);
+            for (const note in currGroup) {
+                if (i % 2 !== 0 && hasRepeat)  {
+                    currNote = {...lastGroup[note]};
+
+                    currNote.time = currNote.time.replace('0:', i+':');
+                    currNote.velocity = 0;
+                    noteGroup.push(currNote);
+                } else {
+                    currNote = {...currGroup[note]};
+                    currNote.time = currNote.time.replace('0:', i+':');
+                    noteGroup.push(currNote);
+                }
+            }
+            lastGroup = currGroup;
+        }
+        console.log(noteGroup);
+        return noteGroup;
+    }
+
     function fourByFour() {
         const kickDrum = new MembraneSynth({
             volume: 4
@@ -20138,7 +20142,7 @@
             let keyDownTime = 0;
 
             if (event.key === ' ') { event.preventDefault(); }    
-            if (event.key === ' ' && !event.repeat) {
+            if (event.key === ' ' && !event.repeat || event.key === 'p' && !event.repeat) {
 
                 noteTrigger(0, duck, true);
 
@@ -20174,7 +20178,7 @@
         
         document.addEventListener('keyup', (event) => {
             
-            if (event.key === ' ') {
+            if (event.key === ' ' || event.key === 'p') {
                 document.getElementById('blueSquare').style.backgroundColor = 'blue';
                 noteRelease(0, duck, true);
                 
@@ -20183,33 +20187,7 @@
 
         // "m" key
          
-        document.addEventListener('keydown', (event) => {
-            //let accuracy = 0;
-
-            let keyDownTime = 0;
         
-            if (event.key === 'm') {
-                event.preventDefault();
-                document.getElementById('blueSquare').style.backgroundColor = 'green';
-        
-                keyDownTime = +new Date();
-        
-                console.log("Input recorded after ", keyDownTime - game.inputWindowO);
-        
-                if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC) {
-                    game.score++;
-                    document.getElementById("score").innerHTML = "Score: " + game.score;
-                    console.log(game.score);
-                    document.getElementById("score").classList.add("scored");
-                    return new Promise((resolve) => {
-                        setTimeout(() => {
-                            document.getElementById("score").classList.remove("scored");
-                            resolve(0);
-                        }, 90);
-                    });
-                }
-            }
-        });
         
         document.addEventListener('keyup', (event) => {
             if (event.key === 'm') {
