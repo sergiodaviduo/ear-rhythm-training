@@ -1,7 +1,11 @@
 {
   "dependencies": {
     "@floating-ui/react": "^0.26.16",
-    "rollup": "^4.18.0"
+    "animejs": "^3.2.2",
+    "party-js": "~2.2.0",
+    "rollup": "^4.18.0",
+    "rollup-plugin-import-css": "^3.5.0",
+    "tone": "^14.7.77"
   },
   "scripts": {
     "start": "python3 mysite/manage.py runserver 0.0.0.0:8000",
@@ -10,8 +14,24 @@
     "js": "rollup -c -w"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@vitest/coverage-v8": "^0.33.0",
-    "pixi.js": "7.2.4",
+    "rollup-plugin-css-only": "^4.5.2",
     "vitest": "^0.33.0"
-  }
+  },
+  "name": "ear-rhythm-training",
+  "version": "0.8.0",
+  "description": "Proof-of-concept Web app that tests your musical ear by playing short, rhythmic sequences of sound, and has the user validate them by tapping the spacebar at the exact rhythm. A simon says type of rhythm game.",
+  "main": "src/app.js",
+  "keywords": [],
+  "author": "Sergio Urrutia-Oyer",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergiodaviduo/ear-rhythm-training.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sergiodaviduo/ear-rhythm-training/issues"
+  },
+  "homepage": "https://github.com/sergiodaviduo/ear-rhythm-training#readme"
 }

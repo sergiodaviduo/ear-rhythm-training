@@ -1,3 +1,5 @@
+import * as Tone from 'tone';
+
 function keyboard(tempo) {
     let synth = new Tone.Synth().toDestination();
 

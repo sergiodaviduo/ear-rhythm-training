@@ -1,7 +1,21 @@
 import { randomizerExtender } from './generators.js';
 import { fourByFour } from './instruments.js';
 import { menu, playGame, settings } from '../navigation/menu.js';
-import { setupControls, waitForNote, inputClose, inputOpen, noteRelease, noteTrigger } from '../components/controls.js';
+import { setupControls, inputClose, inputOpen, noteRelease, noteTrigger } from '../components/controls.js';
+import * as Tone from 'tone';
+
+// import party from "party-js";
+
+
+/* let party = require("party-js");
+let Tone = require("tone");
+let animate = require("animate.css")*/
+
+//import party from 'party-js';
+//import Tone from 'tone';
+//import animate from 'animate.js';
+
+
 
 function startMetronome() {
     let metronome = fourByFour();
@@ -12,27 +26,22 @@ function startMetronome() {
 // This starts the main song track session
 // previous default input window is open = 30 (ms before), close = 90 (ms after)
 function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=90, close=130) {
-
-    delay = game.delay;
-    //this will eventually be randomized and linked between functions
-    game.notesInMeasure = 5;
-    synth.toDestination();
     let triggerNum = 0;
-    let leftPaw = document.getElementById('cpu-duck');
-    let rightPaw = document.getElementById('cpu-duck');
+    let cpuAnimations = document.getElementById('cpu-duck');
     let scoreResult = document.getElementById("scoreResult");
 
-    let duck = document.getElementById('player-duck'); // .style.backgroundImage
+    delay = game.delay;
+    game.notesInMeasure = 5;
 
-    // triggerNum % 2
-    let cpuAnimations = [leftPaw, rightPaw];
+    synth.toDestination();
+
 
     let part = new Tone.Part(((time, value) => {
         synth.triggerAttackRelease(value.note, "16n", time, value.velocity, 2);
 
         if (synth) {
-            noteTrigger(delay, cpuAnimations[ 0 ], value.velocity);
-            noteRelease(delay+50, cpuAnimations[ 0 ], value.velocity);
+            noteTrigger(delay, cpuAnimations, value.velocity);
+            noteRelease(delay+50, cpuAnimations, value.velocity);
         }
 
         // when synth is playing with no volume, so input check can be run
@@ -59,7 +68,6 @@ function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerE
 
     // at end of song
     Tone.Transport.schedule(function(time){
-        //document.getElementById("play-again").click();
         document.getElementById("play-again").style.display = "block";
         document.getElementById("back-to-menu").style.display = "block";
         synth.dispose();
@@ -74,8 +82,6 @@ function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerE
 
 export function gameRoom(game) {
     menu();
-
-    let trackList = [];
 
     let delaySlider = document.getElementById("delay");
     let tempoSlider = document.getElementById("tempo");
