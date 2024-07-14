@@ -47,17 +47,7 @@
  footer span {
   margin:0 7px
  }
- hr {
-  position:relative;
-  display:block;
-  width:200%;
-  height:5px;
-  background:#000;
-  margin:140px 0 0 -50%;
-  border:none;
-  transform:rotate(13.5deg);
-  z-index:10
- }
+
  a#github {
   z-index:1000
  }
@@ -105,7 +95,8 @@
   left:50%;
   transform:translate(0%,-70%);
   width:800px;
-  height:450px
+  height:450px;
+  text-align: center;
  }
  #container div {
   position:absolute;
@@ -210,22 +201,22 @@
   background-image:url(https://bongo.cat/images/cat.png);
   z-index:10
  }
- .cat>#u-head {
+ /*.cat>#u-head {
   background-image:url(https://bongo.cat/images/cat.png);
   z-index:10;
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
- }
+ }*/
  .cat>#mouth {
   background-image:url(https://bongo.cat/images/mouth.png);
   z-index:20;
  }
- .cat>#u-mouth {
+ /*.cat>#u-mouth {
   background-image:url(https://bongo.cat/images/mouth.png);
   z-index:20;
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
- }
+ }*/
  .cat>#paw-left {
   background-image:url(https://bongo.cat/images/paw-left.png);
   z-index:30
@@ -234,7 +225,7 @@
   background-image:url(https://bongo.cat/images/paw-right.png);
   z-index:30
  }
- .cat>#u-paw-left {
+ /*.cat>#u-paw-left {
   background-image:url(https://bongo.cat/images/paw-left.png);
   z-index:30;
   -webkit-transform: scaleX(-1);
@@ -245,7 +236,9 @@
   z-index:30;
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
- }
+ }*/
+
+
 
  .instruments {
   z-index:20;
@@ -384,11 +377,40 @@ button:hover::before {
 
 .player {
   top: 60%;
-  left: -70%;
+  left: -131%;
 }
 
-.violet {
-  top: 0;
+.duck>#player-duck {
+  background-image:url(../images/duck.png);
+  z-index:30;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+ }
+
+ .duck>#cpu-duck {
+  background-image:url(../images/duck.png);
+  z-index:30;
+  filter: invert(1);
+  filter: invert(70%) saturate(23);
+ }
+
+.cpu {
+  top: 61%;
+  left: 38%;
+}
+
+.keyboard-rainbow {
+  top: 7%;
+  left: -50%;
+  transform: skewX(60deg) rotate(-13.5deg) scaleY(-1) scaleX(-3);
+  background-image: url(../images/piano1.png);
+}
+
+.keyboard-rainbow-cpu {
+  top: 6%;
+  left: -120%;
+  transform: skewX(60deg) rotate(-13.5deg) scaleY(-1) scaleX(-3);
+  background-image: url(../images/piano1.png);
 }
 
 .instruments-player {

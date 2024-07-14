@@ -3,11 +3,7 @@ import { s } from "vitest/dist/types-198fd1d9.js";
 export function setupControls(game) {
     // spacebar
 
-    let leftPaw = document.getElementById('u-paw-left');
-
-    let scoredInWindow = false;
-
-    let inWindow = false;
+    let duck = document.getElementById('player-duck');
 
     document.addEventListener('keydown', (event) => {
         //let accuracy = 0;
@@ -17,7 +13,7 @@ export function setupControls(game) {
         if (event.key === ' ') {
             event.preventDefault();
 
-            noteTrigger(0, leftPaw, true);
+            noteTrigger(0, duck, true);
 
             document.getElementById('blueSquare').style.backgroundColor = 'green';
     
@@ -58,7 +54,7 @@ export function setupControls(game) {
         
         if (event.key === ' ') {
             document.getElementById('blueSquare').style.backgroundColor = 'blue';
-            noteRelease(0, leftPaw, true);
+            noteRelease(0, duck, true);
         }
     });
 
@@ -99,21 +95,26 @@ export function setupControls(game) {
     });
 }
 
-// when note is played, "move" paw down 
-async function noteTrigger(milisec, paw, volume) {
+// when note is played, duck takes a squat
+async function noteTrigger(milisec, subject, volume) {
     await waitForNote(milisec);
 
     if (volume) {
-        paw.style.backgroundPositionX = '-800px';
+        subject.style.backgroundImage = "url('../static/images/duck-squat.png')";
+
+        subject.style.marginTop = '38px';
     }
 
 }
 
-async function noteRelease(milisec, paw, volume) {
+// After note release, duck sits up
+async function noteRelease(milisec, subject, volume) {
     await waitForNote(milisec);
 
     if (volume) {
-        paw.style.backgroundPositionX = '0px';
+        subject.style.backgroundImage = "url('../static/images/duck.png')";
+
+        subject.style.marginTop = '8px';
     }
 }
 

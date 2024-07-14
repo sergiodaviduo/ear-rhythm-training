@@ -18,19 +18,21 @@ function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerE
     game.notesInMeasure = 5;
     synth.toDestination();
     let triggerNum = 0;
-    let leftPaw = document.getElementById('paw-left');
-    let rightPaw = document.getElementById('paw-right');
+    let leftPaw = document.getElementById('cpu-duck');
+    let rightPaw = document.getElementById('cpu-duck');
     let scoreResult = document.getElementById("scoreResult");
 
+    let duck = document.getElementById('player-duck'); // .style.backgroundImage
+
     // triggerNum % 2
-    let paws = [leftPaw, rightPaw];
+    let cpuAnimations = [leftPaw, rightPaw];
 
     let part = new Tone.Part(((time, value) => {
         synth.triggerAttackRelease(value.note, "16n", time, value.velocity, 2);
 
         if (synth) {
-            noteTrigger(delay, paws[ 0 ], value.velocity);
-            noteRelease(delay+50, paws[ 0 ], value.velocity);
+            noteTrigger(delay, cpuAnimations[ 0 ], value.velocity);
+            noteRelease(delay+50, cpuAnimations[ 0 ], value.velocity);
         }
 
         // when synth is playing with no volume, so input check can be run

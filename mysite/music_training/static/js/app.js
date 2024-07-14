@@ -330,7 +330,7 @@
     function setupControls(game) {
         // spacebar
 
-        let leftPaw = document.getElementById('u-paw-left');
+        let duck = document.getElementById('player-duck');
 
         document.addEventListener('keydown', (event) => {
             //let accuracy = 0;
@@ -340,7 +340,7 @@
             if (event.key === ' ') {
                 event.preventDefault();
 
-                noteTrigger(0, leftPaw, true);
+                noteTrigger(0, duck, true);
 
                 document.getElementById('blueSquare').style.backgroundColor = 'green';
         
@@ -381,7 +381,7 @@
             
             if (event.key === ' ') {
                 document.getElementById('blueSquare').style.backgroundColor = 'blue';
-                noteRelease(0, leftPaw, true);
+                noteRelease(0, duck, true);
             }
         });
 
@@ -422,21 +422,26 @@
         });
     }
 
-    // when note is played, "move" paw down 
-    async function noteTrigger(milisec, paw, volume) {
+    // when note is played, duck takes a squat
+    async function noteTrigger(milisec, subject, volume) {
         await waitForNote(milisec);
 
         if (volume) {
-            paw.style.backgroundPositionX = '-800px';
+            subject.style.backgroundImage = "url('../static/images/duck-squat.png')";
+
+            subject.style.marginTop = '38px';
         }
 
     }
 
-    async function noteRelease(milisec, paw, volume) {
+    // After note release, duck sits up
+    async function noteRelease(milisec, subject, volume) {
         await waitForNote(milisec);
 
         if (volume) {
-            paw.style.backgroundPositionX = '0px';
+            subject.style.backgroundImage = "url('../static/images/duck.png')";
+
+            subject.style.marginTop = '8px';
         }
     }
 
@@ -476,19 +481,21 @@
         //this will eventually be randomized and linked between functions
         game.notesInMeasure = 5;
         synth.toDestination();
-        let leftPaw = document.getElementById('paw-left');
-        let rightPaw = document.getElementById('paw-right');
+        let leftPaw = document.getElementById('cpu-duck');
+        let rightPaw = document.getElementById('cpu-duck');
         let scoreResult = document.getElementById("scoreResult");
 
+        document.getElementById('player-duck'); // .style.backgroundImage
+
         // triggerNum % 2
-        let paws = [leftPaw, rightPaw];
+        let cpuAnimations = [leftPaw, rightPaw];
 
         let part = new Tone.Part(((time, value) => {
             synth.triggerAttackRelease(value.note, "16n", time, value.velocity, 2);
 
             if (synth) {
-                noteTrigger(delay, paws[ 0 ], value.velocity);
-                noteRelease(delay+50, paws[ 0 ], value.velocity);
+                noteTrigger(delay, cpuAnimations[ 0 ], value.velocity);
+                noteRelease(delay+50, cpuAnimations[ 0 ], value.velocity);
             }
 
             // when synth is playing with no volume, so input check can be run
