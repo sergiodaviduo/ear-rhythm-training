@@ -3,4 +3,7 @@ unused
 mysite/mysite/__pycache__/
 mysite/polls/__pycache__/
 mysite/music_training/__pycache__/
+mysite/music_training/migrations/__pycache__/
+mysite/polls/migrations/__pycache__/
 env
+notes.md
