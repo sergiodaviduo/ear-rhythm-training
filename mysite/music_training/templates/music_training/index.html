@@ -65,6 +65,13 @@
     <div class="instruments">
       <div class="keyboard" style="visibility: visible;"></div>
     </div>
+    <form action="/send-score/" method="post">
+      <label for="send-score">Your name: </label>
+      <input id="send-score" type="text" name="your_name" value="{{ player_name }}">
+      <label for="send-score">Score: </label>
+      <input id="send-score" type="text" name="your_name" value="{{ player_score }}">
+      <input type="submit" value="Upload Score">
+  </form>
   </div>
 
    <!-- Title -->

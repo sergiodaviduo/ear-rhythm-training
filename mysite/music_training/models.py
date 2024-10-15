@@ -5,4 +5,4 @@ class HighScores(models.Model):
     finalScore = models.IntegerField()
 
     def __int__(self):
-        return self.finalScore
+        return f"{self.name}: {self.finalScore}"
