@@ -20099,6 +20099,8 @@
         document.getElementById("high-scores").style.display = "none";
         document.getElementById("main-menu").style.display = "none";
         document.getElementById("play-again").style.display = "none";
+        document.getElementById("high-score-submission").style.display = "none";
+        document.getElementById("submit-score").style.display = "none";
         document.getElementById("title").style.display = "none";
 
         document.getElementById("settings-values").style.display = "none";
@@ -20129,6 +20131,26 @@
         document.getElementById("liveTempo").style.display = "block";
         document.getElementById("liveDelay").style.display = "block";
         document.getElementById("default-settings").style.display = "block";
+    }
+
+    function showScoreSubmitMenu() {
+
+        let all_elements_nl = document.querySelectorAll('*[id]');
+
+        for (let i = 0; i < all_elements_nl.length - 2; i++) {
+            all_elements_nl[i].style.display = "none";
+        }
+
+        document.getElementById("submit-score").style.display = "block";
+        document.getElementById("back-to-menu").style.display = "block";
+        document.getElementById("id_final_score").style.display = "block";
+        document.getElementById("id_name").style.display = "block";
+    }
+
+    function endOfSong() {
+        document.getElementById("play-again").style.display = "block";
+        document.getElementById("back-to-menu").style.display = "block";
+        document.getElementById("high-score-submission").style.display = "block";
     }
 
     function setupControls(game) {
@@ -20302,8 +20324,7 @@
 
         // at end of song
         Transport.schedule(function(time){
-            document.getElementById("play-again").style.display = "block";
-            document.getElementById("back-to-menu").style.display = "block";
+            endOfSong();
             synth.dispose();
             part.dispose();
             Transport.stop();
@@ -20359,6 +20380,14 @@
         // Back to menu (while in game)
         document.getElementById("back-to-menu").addEventListener("click", event => {
             menu();
+            if (game.answerTrack) {
+                stopGame(game);
+            }
+        });
+
+        // Submit Score Menu
+         document.getElementById("high-score-submission").addEventListener("click", event => {
+            showScoreSubmitMenu();
             if (game.answerTrack) {
                 stopGame(game);
             }

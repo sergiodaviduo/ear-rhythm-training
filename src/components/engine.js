@@ -1,6 +1,6 @@
 import { randomizerExtender } from './generators.js';
 import { fourByFour } from './instruments.js';
-import { menu, playGame, settings } from '../navigation/menu.js';
+import { menu, playGame, settings, showScoreSubmitMenu, endOfSong } from '../navigation/menu.js';
 import { setupControls, inputClose, inputOpen, noteRelease, noteTrigger } from '../components/controls.js';
 import * as Tone from 'tone';
 
@@ -68,8 +68,7 @@ function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerE
 
     // at end of song
     Tone.Transport.schedule(function(time){
-        document.getElementById("play-again").style.display = "block";
-        document.getElementById("back-to-menu").style.display = "block";
+        endOfSong();
         synth.dispose();
         part.dispose();
         Tone.Transport.stop();
@@ -125,6 +124,14 @@ export function gameRoom(game) {
     // Back to menu (while in game)
     document.getElementById("back-to-menu").addEventListener("click", event => {
         menu();
+        if (game.answerTrack) {
+            stopGame(game);
+        }
+    })
+
+    // Submit Score Menu
+     document.getElementById("high-score-submission").addEventListener("click", event => {
+        showScoreSubmitMenu();
         if (game.answerTrack) {
             stopGame(game);
         }
