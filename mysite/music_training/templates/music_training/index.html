@@ -90,12 +90,14 @@
     <div id="high-scores">
       <button class="centered"><del>High Scores (soon!)</del></button>
     </div>
-    <form action="/" method="post">
-      {% csrf_token %}
-      test
-      {{ form }}
-      <input type="submit" value="Upload Score">
-    </form>
+    <div id="high-score-submission">
+      <form action="/" method="post">
+        {% csrf_token %}
+        test
+        {{ form }}
+        <input type="submit" value="Upload Score">
+      </form>
+    </div>
   </div>
   </body>
 </html>
