@@ -1,0 +1,10 @@
+{% block content %}
+
+<h1>Highscores:</h1>
+</br>
+{% for score in all_highscores %}
+    {{ score.name }}
+    </br>   
+{% endfor %}
+
+{% endblock %}

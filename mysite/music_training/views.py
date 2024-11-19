@@ -25,6 +25,13 @@ def index(request):
 
         return HttpResponseRedirect("/admin/")
     else:
+        print("test")
+        print(HighScores.objects.all()[0].name)
         form = ScoreForm()
 
     return render(request, "music_training/index.html", {"form": form})
+
+def show_highscores(request):
+    all_highscores = HighScores.objects.all()
+    template = loader.get_template("music_training/show-highscores.html")
+    return HttpResponse(template.render({'all_highscores': all_highscores}, request) )
