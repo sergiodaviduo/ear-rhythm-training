@@ -1,10 +1,23 @@
+{% extends 'music_training/default_template.html' %} 
+
 {% block content %}
-
+<br/>
+<br/>
+<br/>
+<br/>
+<div class="centered">
 <h1>Highscores:</h1>
-</br>
+<br/>
+<br/>
 {% for score in all_highscores %}
-    {{ score.name }}
-    </br>   
+    {{ score.name }} -- {{score.finalScore}}
+    <br/>
+    <br/> 
 {% endfor %}
-
+<br/>
+<br/>
+<a href="/"><button id="back-to-menu"> 
+    Back to Menu
+</button></a>
+</div>
 {% endblock %}

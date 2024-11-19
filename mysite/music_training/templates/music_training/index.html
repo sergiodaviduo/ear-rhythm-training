@@ -40,16 +40,16 @@
   <button id="high-score-submission" style="display: none;"> 
     Submit Score
   </button>
+
+  <!-- Submit Score -->
   <br/>
   <form action="/" method="post" id="submit-score" style="display: none;">
     <p>Submit your score:</p>
-
     {% csrf_token %}
-    
     {{ form }}
     <input type="submit" value="Upload Score">
   </form>
-  <br><br>
+  <br/><br/>
 
    <!-- Settings -->
   <div id="settings-values" class="centered">
@@ -100,7 +100,7 @@
       <button class="centered">Settings</button>
     </div>
     <div id="high-scores">
-      <button class="centered"><del>High Scores (soon!)</del></button>
+      <a href="./show-highscores.html"><button class="centered">High Scores</button></a>
     </div>
     
       

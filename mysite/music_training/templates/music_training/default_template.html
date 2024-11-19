@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>Duck Music</title>
+
+    <script type="module" src="{% static 'js/app.js' %}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}?{% now "U" %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/sliders.css' %}?{% now "U" %}">
+  </head>
+  <body>
+    {% block content %}
+
+    {% endblock %}
+  </body>
+</html>

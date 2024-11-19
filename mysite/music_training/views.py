@@ -25,8 +25,6 @@ def index(request):
 
         return HttpResponseRedirect("/admin/")
     else:
-        print("test")
-        print(HighScores.objects.all()[0].name)
         form = ScoreForm()
 
     return render(request, "music_training/index.html", {"form": form})
