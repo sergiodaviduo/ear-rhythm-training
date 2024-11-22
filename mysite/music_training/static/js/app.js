@@ -20133,7 +20133,7 @@
         document.getElementById("default-settings").style.display = "block";
     }
 
-    function showScoreSubmitMenu() {
+    function showScoreSubmitMenu(game) {
 
         let all_elements_nl = document.querySelectorAll('*[id]');
 
@@ -20145,6 +20145,10 @@
         document.getElementById("back-to-menu").style.display = "block";
         document.getElementById("id_final_score").style.display = "block";
         document.getElementById("id_name").style.display = "block";
+
+        document.getElementById("id_final_score").value = game.score;
+        document.getElementById('id_final_score').readOnly = true;
+        document.getElementById('submit-score').classList.add("centered");
     }
 
     function endOfSong() {
@@ -20284,6 +20288,8 @@
 
     // This starts the main song track session
     // previous default input window is open = 30 (ms before), close = 90 (ms after)
+    // NOTE: to get song answer, we need to send this to server, protected, in some way:
+    // mediumRandomizer(4)[0]['time'])
     function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=90, close=130) {
         let cpuAnimations = document.getElementById('cpu-duck');
         let scoreResult = document.getElementById("scoreResult");
@@ -20387,7 +20393,7 @@
 
         // Submit Score Menu
          document.getElementById("high-score-submission").addEventListener("click", event => {
-            showScoreSubmitMenu();
+            showScoreSubmitMenu(game);
             if (game.answerTrack) {
                 stopGame(game);
             }
