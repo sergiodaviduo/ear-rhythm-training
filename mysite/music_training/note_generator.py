@@ -1,5 +1,11 @@
 #generate answer string server side
 
+# will need to find a way to have javascript take it. Maybe encrypt it first?
+
+# first line of business: 
+
+import json
+
 import random
 
 def medium_randomizer(notes):
@@ -33,4 +39,10 @@ def medium_randomizer(notes):
 
     return note_group
 
-print(medium_randomizer(4))
+song_answer = medium_randomizer(4)
+
+print(json.dumps(song_answer))
+
+# calculate when notes are played, and get valid input windows for answer
+
+# will work on this on a different branch once basic high score function is wrapped up
