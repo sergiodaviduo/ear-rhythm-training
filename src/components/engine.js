@@ -131,7 +131,7 @@ export function gameRoom(game) {
 
     // Submit Score Menu
      document.getElementById("high-score-submission").addEventListener("click", event => {
-        showScoreSubmitMenu();
+        showScoreSubmitMenu(game);
         if (game.answerTrack) {
             stopGame(game);
         }

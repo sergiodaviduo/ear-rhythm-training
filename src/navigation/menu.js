@@ -117,7 +117,7 @@ export function settings(game) {
     document.getElementById("default-settings").style.display = "block";
 }
 
-export function showScoreSubmitMenu() {
+export function showScoreSubmitMenu(game) {
 
     let all_elements_nl = document.querySelectorAll('*[id]');
 
@@ -129,6 +129,10 @@ export function showScoreSubmitMenu() {
     document.getElementById("back-to-menu").style.display = "block";
     document.getElementById("id_final_score").style.display = "block";
     document.getElementById("id_name").style.display = "block";
+
+    document.getElementById("id_final_score").value = game.score;
+    document.getElementById('id_final_score').readOnly = true;
+    document.getElementById('submit-score').classList.add("centered");
 }
 
 export function endOfSong() {
