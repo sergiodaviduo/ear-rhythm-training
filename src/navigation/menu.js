@@ -83,6 +83,8 @@ export function playGame() {
     document.getElementById("high-scores").style.display = "none";
     document.getElementById("main-menu").style.display = "none";
     document.getElementById("play-again").style.display = "none";
+    document.getElementById("high-score-submission").style.display = "none";
+    document.getElementById("submit-score").style.display = "none";
     document.getElementById("title").style.display = "none";
 
     document.getElementById("settings-values").style.display = "none";
@@ -113,4 +115,24 @@ export function settings(game) {
     document.getElementById("liveTempo").style.display = "block";
     document.getElementById("liveDelay").style.display = "block";
     document.getElementById("default-settings").style.display = "block";
+}
+
+export function showScoreSubmitMenu() {
+
+    let all_elements_nl = document.querySelectorAll('*[id]');
+
+    for (let i = 0; i < all_elements_nl.length - 2; i++) {
+        all_elements_nl[i].style.display = "none";
+    }
+
+    document.getElementById("submit-score").style.display = "block";
+    document.getElementById("back-to-menu").style.display = "block";
+    document.getElementById("id_final_score").style.display = "block";
+    document.getElementById("id_name").style.display = "block";
+}
+
+export function endOfSong() {
+    document.getElementById("play-again").style.display = "block";
+    document.getElementById("back-to-menu").style.display = "block";
+    document.getElementById("high-score-submission").style.display = "block";
 }

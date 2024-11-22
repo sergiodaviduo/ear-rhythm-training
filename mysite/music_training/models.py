@@ -1,3 +1,8 @@
 from django.db import models
 
-# Create your models here.
+class HighScores(models.Model):
+    name = models.CharField(max_length = 100)
+    finalScore = models.IntegerField()
+
+    def __int__(self):
+        return f"{self.name}: {self.finalScore}"

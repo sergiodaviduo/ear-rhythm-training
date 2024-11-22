@@ -331,7 +331,7 @@
   animation-duration: 0.09s; /* don't forget to set a duration! */
  }
 
-#main-menu, #play-button, #settings, #high-scores, .centered, button {
+#main-menu, #play-button, #settings, #high-scores, .centered, button, form {
   margin: auto;
   width: 50%;
   text-align: center;

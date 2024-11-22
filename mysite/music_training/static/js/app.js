@@ -20099,6 +20099,8 @@
         document.getElementById("high-scores").style.display = "none";
         document.getElementById("main-menu").style.display = "none";
         document.getElementById("play-again").style.display = "none";
+        document.getElementById("high-score-submission").style.display = "none";
+        document.getElementById("submit-score").style.display = "none";
         document.getElementById("title").style.display = "none";
 
         document.getElementById("settings-values").style.display = "none";
@@ -20129,6 +20131,30 @@
         document.getElementById("liveTempo").style.display = "block";
         document.getElementById("liveDelay").style.display = "block";
         document.getElementById("default-settings").style.display = "block";
+    }
+
+    function showScoreSubmitMenu(game) {
+
+        let all_elements_nl = document.querySelectorAll('*[id]');
+
+        for (let i = 0; i < all_elements_nl.length - 2; i++) {
+            all_elements_nl[i].style.display = "none";
+        }
+
+        document.getElementById("submit-score").style.display = "block";
+        document.getElementById("back-to-menu").style.display = "block";
+        document.getElementById("id_final_score").style.display = "block";
+        document.getElementById("id_name").style.display = "block";
+
+        document.getElementById("id_final_score").value = game.score;
+        document.getElementById('id_final_score').readOnly = true;
+        document.getElementById('submit-score').classList.add("centered");
+    }
+
+    function endOfSong() {
+        document.getElementById("play-again").style.display = "block";
+        document.getElementById("back-to-menu").style.display = "block";
+        document.getElementById("high-score-submission").style.display = "block";
     }
 
     function setupControls(game) {
@@ -20262,6 +20288,8 @@
 
     // This starts the main song track session
     // previous default input window is open = 30 (ms before), close = 90 (ms after)
+    // NOTE: to get song answer, we need to send this to server, protected, in some way:
+    // mediumRandomizer(4)[0]['time'])
     function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=90, close=130) {
         let cpuAnimations = document.getElementById('cpu-duck');
         let scoreResult = document.getElementById("scoreResult");
@@ -20302,8 +20330,7 @@
 
         // at end of song
         Transport.schedule(function(time){
-            document.getElementById("play-again").style.display = "block";
-            document.getElementById("back-to-menu").style.display = "block";
+            endOfSong();
             synth.dispose();
             part.dispose();
             Transport.stop();
@@ -20359,6 +20386,14 @@
         // Back to menu (while in game)
         document.getElementById("back-to-menu").addEventListener("click", event => {
             menu();
+            if (game.answerTrack) {
+                stopGame(game);
+            }
+        });
+
+        // Submit Score Menu
+         document.getElementById("high-score-submission").addEventListener("click", event => {
+            showScoreSubmitMenu(game);
             if (game.answerTrack) {
                 stopGame(game);
             }
