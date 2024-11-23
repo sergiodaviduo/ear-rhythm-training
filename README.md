@@ -3,7 +3,7 @@
 
 Proof-of-concept Web app that tests your musical ear by playing short, rhythmic sequences of sound, and has the user validate them by tapping the spacebar at the exact rhythm. A simon says type of rhythm game.
 
-Requires at least Django 4.2.0, a postgres client (I use psycopg2) and a compatible python install under python3. Tested on Node 19, python 3.12, and Django 4.2.0 and 5.0.6.
+Requires at least Django 4.2.0, and a postgres client (I use psycopg2). Tested on Node 19, python 3.12, and Django 4.2.0 and 5.0.6.
 
 ## Launch instructions:
 
