@@ -54,6 +54,8 @@ function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerE
 
     }), song).start("2m");
 
+    console.log("HI!!!!!!!!!!!!!!  \n\n"+part)
+
     //callback functions in-between every other measure
     Tone.Transport.scheduleRepeat((time) => {
         if ( score > game.notesInMeasure * 7 ) {

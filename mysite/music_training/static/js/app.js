@@ -20288,8 +20288,6 @@
 
     // This starts the main song track session
     // previous default input window is open = 30 (ms before), close = 90 (ms after)
-    // NOTE: to get song answer, we need to send this to server, protected, in some way:
-    // mediumRandomizer(4)[0]['time'])
     function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=90, close=130) {
         let cpuAnimations = document.getElementById('cpu-duck');
         let scoreResult = document.getElementById("scoreResult");
@@ -20315,6 +20313,8 @@
             }
 
         }), song).start("2m");
+
+        console.log("HI!!!!!!!!!!!!!!  \n\n"+part);
 
         //callback functions in-between every other measure
         Transport.scheduleRepeat((time) => {
