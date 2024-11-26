@@ -15,8 +15,8 @@ export default {
 		resolve(), css({output: "animate.css"}),
 		obfuscator({
 			options: {
-				// Your javascript-obfuscator options here
-				// See what's allowed: https://github.com/javascript-obfuscator/javascript-obfuscator
+				splitStrings: false,
+    			splitStringsChunkLength: 10
 			},
 		}),
 	],

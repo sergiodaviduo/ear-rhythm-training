@@ -4,9 +4,7 @@
 
 # first line of business: 
 
-import json
-
-import random
+import json, base64, random
 
 def medium_randomizer(notes):
     notes = min(notes, 15)
