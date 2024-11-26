@@ -18,6 +18,7 @@
     "@vitest/coverage-v8": "^0.33.0",
     "javascript-obfuscator": "^4.1.1",
     "rollup-plugin-css-only": "^4.5.2",
+    "rollup-plugin-obfuscator": "^1.1.0",
     "vitest": "^0.33.0"
   },
   "name": "ear-rhythm-training",

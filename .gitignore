@@ -8,3 +8,4 @@ mysite/polls/migrations/__pycache__/
 mysite/music_training/migrations/__pycache__/
 env
 notes.md
+src/output
