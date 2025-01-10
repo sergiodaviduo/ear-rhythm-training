@@ -20288,8 +20288,6 @@
 
     // This starts the main song track session
     // previous default input window is open = 30 (ms before), close = 90 (ms after)
-    // NOTE: to get song answer, we need to send this to server, protected, in some way:
-    // mediumRandomizer(4)[0]['time'])
     function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=90, close=130) {
         let cpuAnimations = document.getElementById('cpu-duck');
         let scoreResult = document.getElementById("scoreResult");
@@ -20472,7 +20470,7 @@
 
     //const QuarterNoteTest = STATIC_LIBRARY[2];
 
-    const GameData = new Game(100, 100);
+    const GameData = new Game(120, 100);
 
     gameRoom(GameData);
 
