@@ -54,7 +54,8 @@ function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerE
             game.windowKeys.push(
                 {
                     open: game.inputWindowO,
-                    close: game.inputWindowC
+                    close: game.inputWindowC,
+                    scored: 0
                 }
             );
 

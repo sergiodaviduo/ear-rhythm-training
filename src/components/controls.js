@@ -23,11 +23,11 @@ export function setupControls(game) {
             console.log("Input recorded on: ", keyDownTime);
 
             // when scored
+            // need to add logic to prevent scoring multiple points in the same window again
             for (const noteKey in game.windowKeys) {
-                console.log("start of score loop")
-                console.log(game.didScore);
-                if ( keyDownTime >= game.windowKeys[noteKey].open && keyDownTime <= game.windowKeys[noteKey].close && !game.didScore ) {
+                if ( keyDownTime >= game.windowKeys[noteKey].open && keyDownTime <= game.windowKeys[noteKey].close && !game.windowKeys[noteKey].scored ) {
                     game.didScore = true;
+                    game.windowKeys[noteKey].scored = 1;
                     game.score = game.score + 100;
     
                     document.getElementById("score").innerHTML = "Score: " + game.score;
@@ -40,6 +40,18 @@ export function setupControls(game) {
                             document.getElementById("score").classList.remove("scored");
                             resolve(0);
                         }, game.windowKeys[noteKey].close - +new Date());
+                    });
+                } else if (keyDownTime >= game.windowKeys[noteKey].open && keyDownTime <= game.windowKeys[noteKey].close && game.windowKeys[noteKey].scored) {
+                    game.score = game.score - 5;
+                    document.getElementById("score").innerHTML = "Score: " + game.score;
+                    console.log("-- Missed...... Score: ",game.score);
+                    document.getElementById("score").classList.add("scored");
+        
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            document.getElementById("score").classList.remove("scored");
+                            resolve(0);
+                        }, +new Date() + 200);
                     });
                 }
             }
