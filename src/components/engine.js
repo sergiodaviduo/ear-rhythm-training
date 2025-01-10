@@ -101,6 +101,7 @@ function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerE
         Tone.Transport.stop();
         console.log(Tone.Transport.state + " after end of song automatically");
         game.togglePlay();
+        game.windowKeys = [];
     }, String(songLength+2)+":0:0");
 
     return part;
