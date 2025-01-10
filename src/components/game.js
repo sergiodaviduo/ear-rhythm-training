@@ -10,6 +10,7 @@ export class Game {
         this._delay = delay;
         this._firstRun = true;
         this._scored = false;
+        this._windowKeys = [];
     }
 
     get firstRun() {
@@ -46,6 +47,10 @@ export class Game {
 
     get inputWindowC() {
         return this._inputWindowC;
+    }
+
+    get windowKeys() {
+        return this._windowKeys;
     }
 
     get notesInMeasure() {
@@ -113,6 +118,10 @@ export class Game {
 
     set inputWindowC(milliseconds) {
         this._inputWindowC = milliseconds;
+    }
+
+    set windowKeys(windowKeys) {
+        this._windowKeys = windowKeys;
     }
 
     set didScore(scored) {

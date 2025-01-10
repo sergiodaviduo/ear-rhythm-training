@@ -19811,6 +19811,7 @@
             this._delay = delay;
             this._firstRun = true;
             this._scored = false;
+            this._windowKeys = [];
         }
 
         get firstRun() {
@@ -19847,6 +19848,10 @@
 
         get inputWindowC() {
             return this._inputWindowC;
+        }
+
+        get windowKeys() {
+            return this._windowKeys;
         }
 
         get notesInMeasure() {
@@ -19914,6 +19919,10 @@
 
         set inputWindowC(milliseconds) {
             this._inputWindowC = milliseconds;
+        }
+
+        set windowKeys(windowKeys) {
+            this._windowKeys = windowKeys;
         }
 
         set didScore(scored) {
@@ -20161,7 +20170,7 @@
         // spacebar
 
         let duck = document.getElementById('player-duck');
-
+        
         document.addEventListener('keydown', (event) => {
             //let accuracy = 0;
         
@@ -20175,12 +20184,45 @@
                 document.getElementById('blueSquare').style.backgroundColor = 'green';
         
                 keyDownTime = +new Date();
-        
-                console.log("Input recorded after ", keyDownTime - game.inputWindowO);
-                
-        
 
-                if ( keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC && !game.didScore ) {
+                console.log("Input recorded on: ", keyDownTime);
+
+                // when scored
+                console.log("trying loop");
+                for (const noteKey in game.windowKeys) {
+                    if ( keyDownTime >= game.windowKeys[noteKey].open && keyDownTime <= game.windowKeys[noteKey].close && !game.didScore ) {
+                        game.didScore = true;
+                        game.score = game.score + 100;
+        
+                        document.getElementById("score").innerHTML = "Score: " + game.score;
+                        console.log(game.score);
+                        console.log("hiiiii "+game.windowKeys[noteKey].close);
+                        document.getElementById("score").classList.add("scored");
+        
+                        return new Promise((resolve) => {
+                            setTimeout(() => {
+                                document.getElementById("score").classList.remove("scored");
+                                resolve(0);
+                            }, game.windowKeys[noteKey].close - +new Date());
+                        });
+                    }
+                }
+
+                if (!game.didScore) {
+                    game.score = game.score - 5;
+                    document.getElementById("score").innerHTML = "Score: " + game.score;
+                    console.log(game.score);
+                    document.getElementById("score").classList.add("scored");
+        
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            document.getElementById("score").classList.remove("scored");
+                            resolve(0);
+                        }, +new Date() + 200);
+                    });
+                }
+                game.didScore = false;
+                /*if ( keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC && !game.didScore ) {
                     game.didScore = true;
                     game.score++;
 
@@ -20198,16 +20240,14 @@
                     });
                 } else if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC && game.didScore) {
                     console.log("already scored :(");
-                }
+                }*/
             }
         });
         
-        document.addEventListener('keyup', (event) => {
-            
+        document.addEventListener('keyup', (event) => {   
             if (event.key === ' ' || event.key === 'p') {
                 document.getElementById('blueSquare').style.backgroundColor = 'blue';
                 noteRelease(0, duck, true);
-                
             }
         });
 
@@ -20245,20 +20285,20 @@
         }
     }
 
-    function inputOpen(delay) {
-        console.log("open");
-        let openTime = +new Date();
-        openTime += delay;
-        
-        return openTime;
+    function inputOpen(open) {
+        return new Promise((resolve) => {
+            setTimeout(function(){
+                console.log("open:                ", open);
+            },open);
+        });
     }
 
-    function inputClose(delay) {
-        console.log("close");
-        let closeTime = +new Date();
-        closeTime += delay;
-
-        return closeTime;
+    function inputClose(close) {
+        return new Promise((resolve) => {
+            setTimeout(function(){
+                console.log("close:               ", close);
+            },close);
+        });
     }
 
     function waitForNote(milisec) {
@@ -20291,8 +20331,9 @@
     function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=90, close=130) {
         let cpuAnimations = document.getElementById('cpu-duck');
         let scoreResult = document.getElementById("scoreResult");
-
         let delay = game.delay;
+        let currentTime = 0;
+
         game.notesInMeasure = 5;
 
         synth.toDestination();
@@ -20300,17 +20341,35 @@
         let part = new Part(((time, value) => {
             synth.triggerAttackRelease(value.note, "16n", time, value.velocity, 2);
 
-            if (synth) {
+            if (synth && value.velocity) {
+                // first we get the current time in milliseconds
+                currentTime = +new Date();
+
+                // then we take this time, and add the time it takes to pass a full measure. This is assuming 4/4 time
+                // to do this, we must calculate how many milliseconds are in a measure given the current BPM
+                // beats per minute (game.tempo) always refer to how many quarter notes are in a minute
+                let measureInMillis = (60000 / game.tempo) * 4;
+
+                game.inputWindowO = delay-open + measureInMillis + currentTime;
+                game.inputWindowC = delay+close + measureInMillis + currentTime;
+                game.windowKeys.push(
+                    {
+                        open: game.inputWindowO,
+                        close: game.inputWindowC
+                    }
+                );
+
+                // debug, schedules console.log of each note
+                inputOpen(game.inputWindowO);
+                inputClose(game.inputWindowC);
+
+                console.log("Answer key:\n");
+                console.log(game.windowKeys);
+
+                // plays animation of cpu
                 noteTrigger(delay, cpuAnimations, value.velocity);
                 noteRelease(delay+50, cpuAnimations, value.velocity);
             }
-
-            // when synth is playing with no volume, so input check can be run
-            if (synth && value.velocity == 0) {
-                game.inputWindowO = inputOpen(delay-open);
-                game.inputWindowC = inputClose(delay+close);
-            }
-
         }), song).start("2m");
 
         //callback functions in-between every other measure

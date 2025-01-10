@@ -26,11 +26,13 @@ function startMetronome() {
 // This starts the main song track session
 // previous default input window is open = 30 (ms before), close = 90 (ms after)
 function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=90, close=130) {
-    let triggerNum = 0;
     let cpuAnimations = document.getElementById('cpu-duck');
     let scoreResult = document.getElementById("scoreResult");
 
+    let triggerNum = 0;
     let delay = game.delay;
+    let currentTime = 0;
+
     game.notesInMeasure = 5;
 
     synth.toDestination();
@@ -38,19 +40,45 @@ function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerE
     let part = new Tone.Part(((time, value) => {
         synth.triggerAttackRelease(value.note, "16n", time, value.velocity, 2);
 
-        if (synth) {
+        if (synth && value.velocity) {
+            // first we get the current time in milliseconds
+            currentTime = +new Date();
+
+            // then we take this time, and add the time it takes to pass a full measure. This is assuming 4/4 time
+            // to do this, we must calculate how many milliseconds are in a measure given the current BPM
+            // beats per minute (game.tempo) always refer to how many quarter notes are in a minute
+            let measureInMillis = (60000 / game.tempo) * 4;
+
+            game.inputWindowO = delay-open + measureInMillis + currentTime;
+            game.inputWindowC = delay+close + measureInMillis + currentTime;
+            game.windowKeys.push(
+                {
+                    open: game.inputWindowO,
+                    close: game.inputWindowC
+                }
+            );
+
+            // debug, schedules console.log of each note
+            inputOpen(game.inputWindowO);
+            inputClose(game.inputWindowC);
+
+            console.log("Answer key:\n");
+            console.log(game.windowKeys)
+
+            // plays animation of cpu
             noteTrigger(delay, cpuAnimations, value.velocity);
             noteRelease(delay+50, cpuAnimations, value.velocity);
         }
 
         // when synth is playing with no volume, so input check can be run
-        if (synth && value.velocity == 0) {
-            game.inputWindowO = inputOpen(delay-open);
-            game.inputWindowC = inputClose(delay+close);
-        }
+        /*if (synth && value.velocity == 0) {
+            game.inputWindowO = delay-open;
+            game.inputWindowC = delay+close;
+            inputOpen(game.inputWindowO);
+            inputClose(game.inputWindowC);
+        }*/
 
         triggerNum++;
-
     }), song).start("2m");
 
     //callback functions in-between every other measure
