@@ -30,11 +30,10 @@ function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerE
     let cpuAnimations = document.getElementById('cpu-duck');
     let scoreResult = document.getElementById("scoreResult");
 
-    delay = game.delay;
+    let delay = game.delay;
     game.notesInMeasure = 5;
 
     synth.toDestination();
-
 
     let part = new Tone.Part(((time, value) => {
         synth.triggerAttackRelease(value.note, "16n", time, value.velocity, 2);
@@ -91,11 +90,13 @@ export function gameRoom(game) {
     
     setupControls(game);
     
+    // setup delay slider
     delaySlider.addEventListener('change', function() { 
         game.delay = delaySlider.value;
         document.getElementById('liveDelay').innerHTML = game.delay;
     })
     
+    //setup tempo slider
     tempoSlider.addEventListener('change', function() { 
         game.tempo = tempoSlider.value;
         document.getElementById('liveTempo').innerHTML = game.tempo;
@@ -160,6 +161,7 @@ function startGame(game) {
     game.instrument = new Tone.Synth();
 
     game.answerTrack = answerTrack(game);
+    Tone.Transport.bpm.value = game.tempo;
 
     console.log(game.answerTrack);
 
