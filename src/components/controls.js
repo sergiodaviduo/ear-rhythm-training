@@ -89,17 +89,17 @@ async function noteRelease(milisec, subject, volume) {
     }
 }
 
-function inputOpen(delay, openTime) {
+function inputOpen(delay) {
     console.log("open");
-    openTime = +new Date();
+    let openTime = +new Date();
     openTime += delay;
     
     return openTime;
 }
 
-function inputClose(delay, closeTime) {
+function inputClose(delay) {
     console.log("close");
-    closeTime = +new Date();
+    let closeTime = +new Date();
     closeTime += delay;
 
     return closeTime;

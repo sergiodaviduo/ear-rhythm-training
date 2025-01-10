@@ -20245,17 +20245,17 @@
         }
     }
 
-    function inputOpen(delay, openTime) {
+    function inputOpen(delay) {
         console.log("open");
-        openTime = +new Date();
+        let openTime = +new Date();
         openTime += delay;
         
         return openTime;
     }
 
-    function inputClose(delay, closeTime) {
+    function inputClose(delay) {
         console.log("close");
-        closeTime = +new Date();
+        let closeTime = +new Date();
         closeTime += delay;
 
         return closeTime;
@@ -20307,8 +20307,8 @@
 
             // when synth is playing with no volume, so input check can be run
             if (synth && value.velocity == 0) {
-                game.inputWindowO = inputOpen(delay-open, game.inputWindowO);
-                game.inputWindowC = inputClose(delay+close, game.inputWindowC);
+                game.inputWindowO = inputOpen(delay-open);
+                game.inputWindowC = inputClose(delay+close);
             }
 
         }), song).start("2m");

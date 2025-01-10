@@ -45,8 +45,8 @@ function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerE
 
         // when synth is playing with no volume, so input check can be run
         if (synth && value.velocity == 0) {
-            game.inputWindowO = inputOpen(delay-open, game.inputWindowO);
-            game.inputWindowC = inputClose(delay+close, game.inputWindowC);
+            game.inputWindowO = inputOpen(delay-open);
+            game.inputWindowC = inputClose(delay+close);
         }
 
         triggerNum++;
