@@ -25,7 +25,7 @@ function startMetronome() {
 
 // This starts the main song track session
 // previous default input window is open = 30 (ms before), close = 90 (ms after)
-function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=90, close=130) {
+function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=40, close=130) {
     let cpuAnimations = document.getElementById('cpu-duck');
     let scoreResult = document.getElementById("scoreResult");
 
@@ -122,13 +122,14 @@ export function gameRoom(game) {
     
     // setup delay slider
     delaySlider.addEventListener('change', function() { 
-        game.delay = delaySlider.value;
+        game.delay = Number(delaySlider.value);
+        console.log("delay set to: ", game.delay);
         document.getElementById('liveDelay').innerHTML = game.delay;
     })
     
     //setup tempo slider
     tempoSlider.addEventListener('change', function() { 
-        game.tempo = tempoSlider.value;
+        game.tempo = Number(tempoSlider.value);
         document.getElementById('liveTempo').innerHTML = game.tempo;
     })
 
@@ -172,6 +173,7 @@ export function gameRoom(game) {
         settings(game);
     })
 
+    // set to default
     document.getElementById("default-settings").addEventListener("click", event => {
         game.tempo = 100;
         game.delay = 100;
