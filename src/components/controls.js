@@ -25,15 +25,23 @@ export function setupControls(game) {
             // when scored
             // need to add logic to prevent scoring multiple points in the same window again
             for (const noteKey in game.windowKeys) {
-                if ( keyDownTime >= game.windowKeys[noteKey].open && keyDownTime <= game.windowKeys[noteKey].close && !game.windowKeys[noteKey].scored ) {
+                if ( keyDownTime >= game.windowKeys[noteKey].nOpen && keyDownTime <= game.windowKeys[noteKey].nClose && !game.windowKeys[noteKey].scored ) {
                     game.didScore = true;
                     game.windowKeys[noteKey].scored = 1;
-                    game.score = game.score + 100;
+
+                    //check for great score window
+                    if ( keyDownTime >= game.windowKeys[noteKey].pOpen && keyDownTime <= game.windowKeys[noteKey].pClose ) {
+                        game.score = game.score + 150;
+                    } else if ( keyDownTime >= game.windowKeys[noteKey].gOpen && keyDownTime <= game.windowKeys[noteKey].gClose ) {
+                        game.score = game.score + 125;
+                    } else {
+                        game.score = game.score + 100;
+                    }
     
                     document.getElementById("score").innerHTML = "Score: " + game.score;
                     console.log("   ++ Scored! New score: ",game.score);
-                    console.log("   Time to spare:         ",game.windowKeys[noteKey].close - keyDownTime);
                     document.getElementById("score").classList.add("scored");
+                    console.log("   Millis off:         ",(game.windowKeys[noteKey].note - keyDownTime) * (-1));
     
                     return new Promise((resolve) => {
                         setTimeout(() => {
@@ -41,12 +49,13 @@ export function setupControls(game) {
                             resolve(0);
                         }, game.windowKeys[noteKey].close - +new Date());
                     });
-                } else if (keyDownTime >= game.windowKeys[noteKey].open && keyDownTime <= game.windowKeys[noteKey].close && game.windowKeys[noteKey].scored) {
+                } else if (keyDownTime >= game.windowKeys[noteKey].nOpen && keyDownTime <= game.windowKeys[noteKey].nClose && game.windowKeys[noteKey].scored) {
                     game.score = game.score - 5;
                     document.getElementById("score").innerHTML = "Score: " + game.score;
-                    console.log("-- Missed...... Score: ",game.score);
+                    console.log("-- Already scored...... Score: ",game.score);
                     document.getElementById("score").classList.add("scored");
-        
+                    console.log("   Millis off:         ",game.windowKeys[noteKey].note - keyDownTime);
+
                     return new Promise((resolve) => {
                         setTimeout(() => {
                             document.getElementById("score").classList.remove("scored");
