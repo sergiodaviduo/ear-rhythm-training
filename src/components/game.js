@@ -1,7 +1,7 @@
 import * as Tone from 'tone';
 
 export class Game {
-    constructor(tempo=100, delay=100) {
+    constructor(tempo=120, delay=45) {
         this._score = 0;
         this._isPlaying = false;
         this._inputWindowO = 0;
