@@ -1,7 +1,7 @@
 import * as Tone from 'tone';
 
 export class Game {
-    constructor(tempo=100, delay=100) {
+    constructor(tempo=120, delay=45) {
         this._score = 0;
         this._isPlaying = false;
         this._inputWindowO = 0;
@@ -75,13 +75,8 @@ export class Game {
     }
 
     set tempo(tempo) {
-        let tempoRatio = this._tempo / tempo;
-
         this._tempo = tempo;
         Tone.Transport.bpm.value = tempo;
-
-        this.inputWindowO = Math.round( this.inputWindowO * tempoRatio );
-        this.inputWindowC = Math.round( this.inputWindowO * tempoRatio );
     }
 
     set delay(delay) {
