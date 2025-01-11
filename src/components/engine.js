@@ -25,7 +25,7 @@ function startMetronome() {
 
 // This starts the main song track session
 // previous default input window is open = 30 (ms before), close = 90 (ms after)
-function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=40, close=130) {
+function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=85, close=85) {
     let cpuAnimations = document.getElementById('cpu-duck');
     let scoreResult = document.getElementById("scoreResult");
 
@@ -49,6 +49,12 @@ function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerE
             // beats per minute (game.tempo) always refer to how many quarter notes are in a minute
             let measureInMillis = (60000 / game.tempo) * 4;
 
+
+            // perfect score window
+            // ......
+            // great score window
+            // ...........
+            // normal score window
             game.inputWindowO = delay-open + measureInMillis + currentTime;
             game.inputWindowC = delay+close + measureInMillis + currentTime;
             game.windowKeys.push(
