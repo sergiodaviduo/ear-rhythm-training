@@ -4,7 +4,7 @@ export function setupControls(game) {
     // spacebar
 
     let duck = document.getElementById('player-duck');
-
+    
     document.addEventListener('keydown', (event) => {
         //let accuracy = 0;
     
@@ -19,39 +19,63 @@ export function setupControls(game) {
             document.getElementById('blueSquare').style.backgroundColor = 'green';
     
             keyDownTime = +new Date();
-    
-            console.log("Input recorded after ", keyDownTime - game.inputWindowO);
-            
-    
+            game.didScore = false;
+            console.log("Input recorded on: ", keyDownTime);
 
-            if ( keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC && !game.didScore ) {
-                game.didScore = true;
-                game.score++;
+            // when scored
+            // need to add logic to prevent scoring multiple points in the same window again
+            for (const noteKey in game.windowKeys) {
+                if ( keyDownTime >= game.windowKeys[noteKey].open && keyDownTime <= game.windowKeys[noteKey].close && !game.windowKeys[noteKey].scored ) {
+                    game.didScore = true;
+                    game.windowKeys[noteKey].scored = 1;
+                    game.score = game.score + 100;
+    
+                    document.getElementById("score").innerHTML = "Score: " + game.score;
+                    console.log("   ++ Scored! New score: ",game.score);
+                    console.log("   Time to spare:         ",game.windowKeys[noteKey].close - keyDownTime);
+                    document.getElementById("score").classList.add("scored");
+    
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            document.getElementById("score").classList.remove("scored");
+                            resolve(0);
+                        }, game.windowKeys[noteKey].close - +new Date());
+                    });
+                } else if (keyDownTime >= game.windowKeys[noteKey].open && keyDownTime <= game.windowKeys[noteKey].close && game.windowKeys[noteKey].scored) {
+                    game.score = game.score - 5;
+                    document.getElementById("score").innerHTML = "Score: " + game.score;
+                    console.log("-- Missed...... Score: ",game.score);
+                    document.getElementById("score").classList.add("scored");
+        
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            document.getElementById("score").classList.remove("scored");
+                            resolve(0);
+                        }, +new Date() + 200);
+                    });
+                }
+            }
 
+            if (!game.didScore) {
+                game.score = game.score - 5;
                 document.getElementById("score").innerHTML = "Score: " + game.score;
-                console.log(game.score);
-                console.log("hiiiii"+game.inputWindowC);
+                console.log("-- Missed...... Score: ",game.score);
                 document.getElementById("score").classList.add("scored");
-
+    
                 return new Promise((resolve) => {
                     setTimeout(() => {
                         document.getElementById("score").classList.remove("scored");
-                        game.didScore = false;
                         resolve(0);
-                    }, game.inputWindowC - +new Date());
+                    }, +new Date() + 200);
                 });
-            } else if (keyDownTime >= game.inputWindowO && keyDownTime <= game.inputWindowC && game.didScore) {
-                console.log("already scored :(");
             }
         }
     });
     
-    document.addEventListener('keyup', (event) => {
-        
+    document.addEventListener('keyup', (event) => {   
         if (event.key === ' ' || event.key === 'p') {
             document.getElementById('blueSquare').style.backgroundColor = 'blue';
             noteRelease(0, duck, true);
-            
         }
     });
 
@@ -89,20 +113,22 @@ async function noteRelease(milisec, subject, volume) {
     }
 }
 
-function inputOpen(delay, openTime) {
-    console.log("open");
-    openTime = +new Date();
-    openTime += delay;
-    
-    return openTime;
+function inputOpen(open) {
+    return new Promise((resolve) => {
+        setTimeout(function(){
+            console.log("open:                ", open);
+            resolve(0);
+        },open);
+    });
 }
 
-function inputClose(delay, closeTime) {
-    console.log("close");
-    closeTime = +new Date();
-    closeTime += delay;
-
-    return closeTime;
+function inputClose(close) {
+    return new Promise((resolve) => {
+        setTimeout(function(){
+            console.log("close:               ", close);
+            resolve(0);
+        },close);
+    });
 }
 
 function waitForNote(milisec) {
