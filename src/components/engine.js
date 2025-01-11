@@ -15,8 +15,6 @@ let animate = require("animate.css")*/
 //import Tone from 'tone';
 //import animate from 'animate.js';
 
-
-
 function startMetronome() {
     let metronome = fourByFour();
 
@@ -51,9 +49,11 @@ function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerE
 
 
             // perfect score window
-            // ......
+            let perfectOpen = delay-20 + measureInMillis + currentTime;
+            let perfectClose = delay+20 + measureInMillis + currentTime;
             // great score window
-            // ...........
+            let greatOpen = delay-40 + measureInMillis + currentTime;
+            let greatClose = delay+40 + measureInMillis + currentTime;
             // normal score window
             game.inputWindowO = delay-open + measureInMillis + currentTime;
             game.inputWindowC = delay+close + measureInMillis + currentTime;
