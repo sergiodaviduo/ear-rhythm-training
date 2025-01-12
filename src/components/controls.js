@@ -69,7 +69,7 @@ export function setupControls(game) {
 
                     setTimeout(() => {
                         scoreFlash.remove();
-                    }, 800);
+                    }, 1500);
 
                     // -------------------------
 
