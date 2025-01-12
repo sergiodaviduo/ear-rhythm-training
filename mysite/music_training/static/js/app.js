@@ -19802,7 +19802,7 @@
     getContext();
 
     class Game {
-        constructor(tempo=100, delay=100) {
+        constructor(tempo=120, delay=45) {
             this._score = 0;
             this._isPlaying = false;
             this._inputWindowO = 0;
@@ -19811,6 +19811,10 @@
             this._delay = delay;
             this._firstRun = true;
             this._scored = false;
+            
+            this._normalWindow = [];
+            this._greatWindow = [];
+            this._perfectWindow = [];
             this._windowKeys = [];
         }
 
@@ -19876,13 +19880,8 @@
         }
 
         set tempo(tempo) {
-            let tempoRatio = this._tempo / tempo;
-
             this._tempo = tempo;
             Transport.bpm.value = tempo;
-
-            this.inputWindowO = Math.round( this.inputWindowO * tempoRatio );
-            this.inputWindowC = Math.round( this.inputWindowO * tempoRatio );
         }
 
         set delay(delay) {
@@ -19895,6 +19894,12 @@
             } else {
                 this._isPlaying = true;
             }
+        }
+
+        measureToMillis() {
+            let measureInMillis = (60000 / this._tempo) * 4;
+
+            return measureInMillis;
         }
 
         set answerTrack(track) {
@@ -19921,8 +19926,34 @@
             this._inputWindowC = milliseconds;
         }
 
-        set windowKeys(windowKeys) {
-            this._windowKeys = windowKeys;
+        // create scoring window
+
+        addNote(currentTime, normWindow, greatWindow, perfWindow, signature=1) {
+            let measure = this.measureToMillis() * signature;
+            let normalOpen = this._delay-normWindow + measure + currentTime;
+            let normalClose = this._delay+normWindow + measure + currentTime;
+            let greatOpen = this._delay-greatWindow + measure + currentTime;
+            let greatClose = this._delay+greatWindow + measure + currentTime;
+            let perfectOpen = this._delay-perfWindow + measure + currentTime;
+            let perfectClose = this._delay+perfWindow + measure + currentTime;
+            let currentNote = measure + currentTime + this._delay;
+
+            this._windowKeys.push(
+                {
+                    nOpen: normalOpen,
+                    gOpen: greatOpen,
+                    pOpen: perfectOpen,
+                    note: currentNote,
+                    pClose: perfectClose,
+                    gClose: greatClose,
+                    nClose: normalClose,
+                    scored: 0
+                }
+            );
+        }
+
+        clearNotes() {
+            this._windowKeys = [];
         }
 
         set didScore(scored) {
@@ -20116,7 +20147,6 @@
         document.getElementById("blueSquare").style.display = "none";
 
         document.getElementById("purpleSquare").style.display = "none";
-
     }
 
     function settings(game) {
@@ -20128,7 +20158,6 @@
         for (let i = 0; i < all_elements_nl.length; i++) {
             all_elements_nl[i].style.display = "none";
         }
-
 
         document.getElementById('liveTempo').innerHTML = game.tempo;
         document.getElementById('liveTempo').value = game.tempo;
@@ -20175,6 +20204,11 @@
             //let accuracy = 0;
         
             let keyDownTime = 0;
+            let score = document.getElementById("score");
+            document.getElementById("score-window");
+            let scoreLocation = score.getBoundingClientRect();
+            let scoreFlashText = 'Good!';
+            let scoreFlashColor = 'white';
 
             if (event.key === ' ') { event.preventDefault(); }    
             if (event.key === ' ' && !event.repeat || event.key === 'p' && !event.repeat) {
@@ -20190,49 +20224,82 @@
                 // when scored
                 // need to add logic to prevent scoring multiple points in the same window again
                 for (const noteKey in game.windowKeys) {
-                    if ( keyDownTime >= game.windowKeys[noteKey].open && keyDownTime <= game.windowKeys[noteKey].close && !game.windowKeys[noteKey].scored ) {
+                    if ( keyDownTime >= game.windowKeys[noteKey].nOpen && keyDownTime <= game.windowKeys[noteKey].nClose && !game.windowKeys[noteKey].scored ) {
                         game.didScore = true;
                         game.windowKeys[noteKey].scored = 1;
-                        game.score = game.score + 100;
-        
-                        document.getElementById("score").innerHTML = "Score: " + game.score;
+
+                        // check for great score window
+                        if ( keyDownTime >= game.windowKeys[noteKey].pOpen && keyDownTime <= game.windowKeys[noteKey].pClose ) {
+                            game.score = game.score + 150;
+                            scoreFlashText = "Perfect!!";
+                            scoreFlashColor = "yellow";
+                        } else if ( keyDownTime >= game.windowKeys[noteKey].gOpen && keyDownTime <= game.windowKeys[noteKey].gClose ) {
+                            game.score = game.score + 125;
+                            scoreFlashText = "Great!";
+                            scoreFlashColor = "white";
+                        } else {
+                            game.score = game.score + 100;
+                            scoreFlashText = "Good!";
+                            scoreFlashColor = "white";
+                        }
+
+                        // show animation when scored
+                        // -------------------------
+                        let scoreFlash = document.createElement("h1");
+
+                        scoreFlash.classList.add("score-window");
+
+                        // fade in down very fast, fade in out medium fast
+                        let angle = (Math.random()*35)+25;
+                        let xOffset = (Math.random()*41)+31;
+                        let yOffset = (Math.random()*15)+5;
+                        //((Math.random)*40)+20;
+                        scoreFlash.style.top = String(scoreLocation.y - yOffset) + "px";
+                        scoreFlash.style.left = String(scoreLocation.x - xOffset) + "px";
+                        scoreFlash.style.color = scoreFlashColor;
+                        scoreFlash.innerHTML = scoreFlashText;
+                        scoreFlash.style.transform = "rotate(-"+angle+"deg)";
+                        document.body.insertBefore(scoreFlash, score);
+
+                        setTimeout(() => {
+                            scoreFlash.remove();
+                        }, 800);
+
+                        // -------------------------
+
+                        score.innerHTML = "Score: " + game.score;
+                        score.classList.add("scored");
+                        
                         console.log("   ++ Scored! New score: ",game.score);
-                        console.log("   Time to spare:         ",game.windowKeys[noteKey].close - keyDownTime);
-                        document.getElementById("score").classList.add("scored");
-        
-                        return new Promise((resolve) => {
-                            setTimeout(() => {
-                                document.getElementById("score").classList.remove("scored");
-                                resolve(0);
-                            }, game.windowKeys[noteKey].close - +new Date());
-                        });
-                    } else if (keyDownTime >= game.windowKeys[noteKey].open && keyDownTime <= game.windowKeys[noteKey].close && game.windowKeys[noteKey].scored) {
+                        console.log("   Millis off:         ",(game.windowKeys[noteKey].note - keyDownTime) * (-1));
+
+                        setTimeout(() => {
+                            score.classList.remove("scored");
+                        }, 90);
+
+                        return;
+                    } else if (keyDownTime >= game.windowKeys[noteKey].nOpen && keyDownTime <= game.windowKeys[noteKey].nClose && game.windowKeys[noteKey].scored) {
                         game.score = game.score - 5;
-                        document.getElementById("score").innerHTML = "Score: " + game.score;
-                        console.log("-- Missed...... Score: ",game.score);
-                        document.getElementById("score").classList.add("scored");
-            
-                        return new Promise((resolve) => {
-                            setTimeout(() => {
-                                document.getElementById("score").classList.remove("scored");
-                                resolve(0);
-                            }, +new Date() + 200);
-                        });
+                        score.innerHTML = "Score: " + game.score;
+                        console.log("-- Already scored...... Score: ",game.score);
+                        score.classList.add("scored");
+                        console.log("   Millis off:         ",game.windowKeys[noteKey].note - keyDownTime);
+
+                        setTimeout(() => {
+                            score.classList.remove("scored");
+                        }, 90);
                     }
                 }
 
                 if (!game.didScore) {
                     game.score = game.score - 5;
-                    document.getElementById("score").innerHTML = "Score: " + game.score;
+                    score.innerHTML = "Score: " + game.score;
                     console.log("-- Missed...... Score: ",game.score);
-                    document.getElementById("score").classList.add("scored");
+                    score.classList.add("scored");
         
-                    return new Promise((resolve) => {
-                        setTimeout(() => {
-                            document.getElementById("score").classList.remove("scored");
-                            resolve(0);
-                        }, +new Date() + 200);
-                    });
+                    setTimeout(() => {
+                        score.classList.remove("scored");
+                    }, 90);
                 }
             }
         });
@@ -20278,24 +20345,6 @@
         }
     }
 
-    function inputOpen(open) {
-        return new Promise((resolve) => {
-            setTimeout(function(){
-                console.log("open:                ", open);
-                resolve(0);
-            },open);
-        });
-    }
-
-    function inputClose(close) {
-        return new Promise((resolve) => {
-            setTimeout(function(){
-                console.log("close:               ", close);
-                resolve(0);
-            },close);
-        });
-    }
-
     function waitForNote(milisec) {
         return new Promise(resolve => {
             setTimeout(() => { resolve(''); }, milisec);
@@ -20313,8 +20362,6 @@
     //import Tone from 'tone';
     //import animate from 'animate.js';
 
-
-
     function startMetronome() {
         let metronome = fourByFour();
 
@@ -20323,7 +20370,7 @@
 
     // This starts the main song track session
     // previous default input window is open = 30 (ms before), close = 90 (ms after)
-    function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=40, close=130) {
+    function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5)) {
         let cpuAnimations = document.getElementById('cpu-duck');
         let scoreResult = document.getElementById("scoreResult");
         let delay = game.delay;
@@ -20340,27 +20387,8 @@
                 // first we get the current time in milliseconds
                 currentTime = +new Date();
 
-                // then we take this time, and add the time it takes to pass a full measure. This is assuming 4/4 time
-                // to do this, we must calculate how many milliseconds are in a measure given the current BPM
-                // beats per minute (game.tempo) always refer to how many quarter notes are in a minute
-                let measureInMillis = (60000 / game.tempo) * 4;
-
-                game.inputWindowO = delay-open + measureInMillis + currentTime;
-                game.inputWindowC = delay+close + measureInMillis + currentTime;
-                game.windowKeys.push(
-                    {
-                        open: game.inputWindowO,
-                        close: game.inputWindowC,
-                        scored: 0
-                    }
-                );
-
-                // debug, schedules console.log of each note
-                inputOpen(game.inputWindowO);
-                inputClose(game.inputWindowC);
-
-                console.log("Answer key:\n");
-                console.log(game.windowKeys);
+                // Add note to answer sheet
+                game.addNote(currentTime,85, 70, 30);
 
                 // plays animation of cpu
                 noteTrigger(delay, cpuAnimations, value.velocity);
@@ -20388,7 +20416,7 @@
             Transport.stop();
             console.log(Transport.state + " after end of song automatically");
             game.togglePlay();
-            game.windowKeys = [];
+            game.clearNotes();
         }, String(songLength+2)+":0:0");
 
         return part;
@@ -20483,6 +20511,8 @@
 
         console.log(game.answerTrack);
 
+        console.log("delay: ",game.delay);
+
         game.clickTrack= startMetronome();
 
         /*if (game.firstRun == true) {
@@ -20530,7 +20560,7 @@
 
     //const QuarterNoteTest = STATIC_LIBRARY[2];
 
-    const GameData = new Game(120, 100);
+    const GameData = new Game(120, 70);
 
     gameRoom(GameData);
 

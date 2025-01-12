@@ -317,7 +317,15 @@
  }
 
 
-
+.score-window {
+  text-align: center;
+  position: absolute;
+  margin: 0 auto;
+  max-width: 200px;
+  z-index: 100;
+  animation: fadeOut;
+  animation-duration: 1.5s;
+}
  
  #score {
   text-align: center;
@@ -327,8 +335,8 @@
  }
 
  .scored {
-  animation: pulse; /* referring directly to the animation's @keyframe declaration */
-  animation-duration: 0.09s; /* don't forget to set a duration! */
+  animation: pulse;
+  animation-duration: 0.09s;
  }
 
 #main-menu, #play-button, #settings, #high-scores, .centered, button, form {

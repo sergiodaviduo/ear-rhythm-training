@@ -1,7 +1,7 @@
 import * as Tone from 'tone';
 
 export class Game {
-    constructor(tempo=100, delay=100) {
+    constructor(tempo=120, delay=45) {
         this._score = 0;
         this._isPlaying = false;
         this._inputWindowO = 0;
@@ -10,6 +10,10 @@ export class Game {
         this._delay = delay;
         this._firstRun = true;
         this._scored = false;
+        
+        this._normalWindow = [];
+        this._greatWindow = [];
+        this._perfectWindow = [];
         this._windowKeys = [];
     }
 
@@ -75,13 +79,8 @@ export class Game {
     }
 
     set tempo(tempo) {
-        let tempoRatio = this._tempo / tempo;
-
         this._tempo = tempo;
         Tone.Transport.bpm.value = tempo;
-
-        this.inputWindowO = Math.round( this.inputWindowO * tempoRatio );
-        this.inputWindowC = Math.round( this.inputWindowO * tempoRatio );
     }
 
     set delay(delay) {
@@ -94,6 +93,12 @@ export class Game {
         } else {
             this._isPlaying = true;
         }
+    }
+
+    measureToMillis() {
+        let measureInMillis = (60000 / this._tempo) * 4;
+
+        return measureInMillis;
     }
 
     set answerTrack(track) {
@@ -120,8 +125,34 @@ export class Game {
         this._inputWindowC = milliseconds;
     }
 
-    set windowKeys(windowKeys) {
-        this._windowKeys = windowKeys;
+    // create scoring window
+
+    addNote(currentTime, normWindow, greatWindow, perfWindow, signature=1) {
+        let measure = this.measureToMillis() * signature;
+        let normalOpen = this._delay-normWindow + measure + currentTime;
+        let normalClose = this._delay+normWindow + measure + currentTime;
+        let greatOpen = this._delay-greatWindow + measure + currentTime;
+        let greatClose = this._delay+greatWindow + measure + currentTime;
+        let perfectOpen = this._delay-perfWindow + measure + currentTime;
+        let perfectClose = this._delay+perfWindow + measure + currentTime;
+        let currentNote = measure + currentTime + this._delay;
+
+        this._windowKeys.push(
+            {
+                nOpen: normalOpen,
+                gOpen: greatOpen,
+                pOpen: perfectOpen,
+                note: currentNote,
+                pClose: perfectClose,
+                gClose: greatClose,
+                nClose: normalClose,
+                scored: 0
+            }
+        );
+    }
+
+    clearNotes() {
+        this._windowKeys = [];
     }
 
     set didScore(scored) {

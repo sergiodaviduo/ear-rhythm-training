@@ -15,8 +15,6 @@ let animate = require("animate.css")*/
 //import Tone from 'tone';
 //import animate from 'animate.js';
 
-
-
 function startMetronome() {
     let metronome = fourByFour();
 
@@ -25,7 +23,7 @@ function startMetronome() {
 
 // This starts the main song track session
 // previous default input window is open = 30 (ms before), close = 90 (ms after)
-function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5), open=40, close=130) {
+function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5)) {
     let cpuAnimations = document.getElementById('cpu-duck');
     let scoreResult = document.getElementById("scoreResult");
 
@@ -44,40 +42,13 @@ function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerE
             // first we get the current time in milliseconds
             currentTime = +new Date();
 
-            // then we take this time, and add the time it takes to pass a full measure. This is assuming 4/4 time
-            // to do this, we must calculate how many milliseconds are in a measure given the current BPM
-            // beats per minute (game.tempo) always refer to how many quarter notes are in a minute
-            let measureInMillis = (60000 / game.tempo) * 4;
-
-            game.inputWindowO = delay-open + measureInMillis + currentTime;
-            game.inputWindowC = delay+close + measureInMillis + currentTime;
-            game.windowKeys.push(
-                {
-                    open: game.inputWindowO,
-                    close: game.inputWindowC,
-                    scored: 0
-                }
-            );
-
-            // debug, schedules console.log of each note
-            inputOpen(game.inputWindowO);
-            inputClose(game.inputWindowC);
-
-            console.log("Answer key:\n");
-            console.log(game.windowKeys)
+            // Add note to answer sheet
+            game.addNote(currentTime,85, 70, 30);
 
             // plays animation of cpu
             noteTrigger(delay, cpuAnimations, value.velocity);
             noteRelease(delay+50, cpuAnimations, value.velocity);
         }
-
-        // when synth is playing with no volume, so input check can be run
-        /*if (synth && value.velocity == 0) {
-            game.inputWindowO = delay-open;
-            game.inputWindowC = delay+close;
-            inputOpen(game.inputWindowO);
-            inputClose(game.inputWindowC);
-        }*/
 
         triggerNum++;
     }), song).start("2m");
@@ -102,7 +73,7 @@ function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerE
         Tone.Transport.stop();
         console.log(Tone.Transport.state + " after end of song automatically");
         game.togglePlay();
-        game.windowKeys = [];
+        game.clearNotes();
     }, String(songLength+2)+":0:0");
 
     return part;
@@ -196,6 +167,8 @@ function startGame(game) {
     Tone.Transport.bpm.value = game.tempo;
 
     console.log(game.answerTrack);
+
+    console.log("delay: ",game.delay);
 
     game.clickTrack= startMetronome();
 
