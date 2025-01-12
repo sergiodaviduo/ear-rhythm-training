@@ -9,6 +9,11 @@ export function setupControls(game) {
         //let accuracy = 0;
     
         let keyDownTime = 0;
+        let score = document.getElementById("score");
+        let scoreWindow = document.getElementById("score-window");
+        let scoreLocation = score.getBoundingClientRect();
+        let scoreFlashText = 'Good!';
+        let scoreFlashColor = 'white';
 
         if (event.key === ' ') { event.preventDefault(); };
     
@@ -29,54 +34,78 @@ export function setupControls(game) {
                     game.didScore = true;
                     game.windowKeys[noteKey].scored = 1;
 
-                    //check for great score window
+                    // check for great score window
                     if ( keyDownTime >= game.windowKeys[noteKey].pOpen && keyDownTime <= game.windowKeys[noteKey].pClose ) {
                         game.score = game.score + 150;
+                        scoreFlashText = "Perfect!!";
+                        scoreFlashColor = "yellow";
                     } else if ( keyDownTime >= game.windowKeys[noteKey].gOpen && keyDownTime <= game.windowKeys[noteKey].gClose ) {
                         game.score = game.score + 125;
+                        scoreFlashText = "Great!";
+                        scoreFlashColor = "white";
                     } else {
                         game.score = game.score + 100;
+                        scoreFlashText = "Good!";
+                        scoreFlashColor = "white";
                     }
-    
-                    document.getElementById("score").innerHTML = "Score: " + game.score;
+
+                    // show animation when scored
+                    // -------------------------
+                    let scoreFlash = document.createElement("h1");
+
+                    scoreFlash.classList.add("score-window");
+
+                    // fade in down very fast, fade in out medium fast
+                    let angle = (Math.random()*35)+25;
+                    let xOffset = (Math.random()*41)+31;
+                    let yOffset = (Math.random()*15)+5;
+                    //((Math.random)*40)+20;
+                    scoreFlash.style.top = String(scoreLocation.y - yOffset) + "px";
+                    scoreFlash.style.left = String(scoreLocation.x - xOffset) + "px";
+                    scoreFlash.style.color = scoreFlashColor;
+                    scoreFlash.innerHTML = scoreFlashText;
+                    scoreFlash.style.transform = "rotate(-"+angle+"deg)";
+                    document.body.insertBefore(scoreFlash, score);
+
+                    setTimeout(() => {
+                        scoreFlash.remove();
+                    }, 800);
+
+                    // -------------------------
+
+                    score.innerHTML = "Score: " + game.score;
+                    score.classList.add("scored");
+                    
                     console.log("   ++ Scored! New score: ",game.score);
-                    document.getElementById("score").classList.add("scored");
                     console.log("   Millis off:         ",(game.windowKeys[noteKey].note - keyDownTime) * (-1));
-    
-                    return new Promise((resolve) => {
-                        setTimeout(() => {
-                            document.getElementById("score").classList.remove("scored");
-                            resolve(0);
-                        }, game.windowKeys[noteKey].close - +new Date());
-                    });
+
+                    setTimeout(() => {
+                        score.classList.remove("scored");
+                    }, 90);
+
+                    return;
                 } else if (keyDownTime >= game.windowKeys[noteKey].nOpen && keyDownTime <= game.windowKeys[noteKey].nClose && game.windowKeys[noteKey].scored) {
                     game.score = game.score - 5;
-                    document.getElementById("score").innerHTML = "Score: " + game.score;
+                    score.innerHTML = "Score: " + game.score;
                     console.log("-- Already scored...... Score: ",game.score);
-                    document.getElementById("score").classList.add("scored");
+                    score.classList.add("scored");
                     console.log("   Millis off:         ",game.windowKeys[noteKey].note - keyDownTime);
 
-                    return new Promise((resolve) => {
-                        setTimeout(() => {
-                            document.getElementById("score").classList.remove("scored");
-                            resolve(0);
-                        }, +new Date() + 200);
-                    });
+                    setTimeout(() => {
+                        score.classList.remove("scored");
+                    }, 90);
                 }
             }
 
             if (!game.didScore) {
                 game.score = game.score - 5;
-                document.getElementById("score").innerHTML = "Score: " + game.score;
+                score.innerHTML = "Score: " + game.score;
                 console.log("-- Missed...... Score: ",game.score);
-                document.getElementById("score").classList.add("scored");
+                score.classList.add("scored");
     
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        document.getElementById("score").classList.remove("scored");
-                        resolve(0);
-                    }, +new Date() + 200);
-                });
+                setTimeout(() => {
+                    score.classList.remove("scored");
+                }, 90);
             }
         }
     });

@@ -91,7 +91,6 @@ export function playGame() {
     document.getElementById("blueSquare").style.display = "none";
 
     document.getElementById("purpleSquare").style.display = "none";
-
 }
 
 export function settings(game) {
@@ -103,7 +102,6 @@ export function settings(game) {
     for (let i = 0; i < all_elements_nl.length; i++) {
         all_elements_nl[i].style.display = "none";
     }
-
 
     document.getElementById('liveTempo').innerHTML = game.tempo;
     document.getElementById('liveTempo').value = game.tempo;
