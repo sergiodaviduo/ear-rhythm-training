@@ -1,8 +1,11 @@
 import { randomizerExtender } from './generators.js';
 import { fourByFour } from './instruments.js';
-import { menu, playGame, settings, showScoreSubmitMenu, endOfSong } from '../navigation/menu.js';
+import { menu, playGame, settings, showScoreSubmitMenu, endOfSong, calibrateIntro } from '../navigation/menu.js';
 import { setupControls, inputClose, inputOpen, noteRelease, noteTrigger } from '../components/controls.js';
+import { STATIC_LIBRARY } from "../constants/notes.js";
 import * as Tone from 'tone';
+
+const QUARTER_NOTES = STATIC_LIBRARY[2];
 
 // import party from "party-js";
 
@@ -22,8 +25,10 @@ function startMetronome() {
 }
 
 // This starts the main song track session
-// previous default input window is open = 30 (ms before), close = 90 (ms after)
-function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5)) {
+
+function answerTrack(game, songLength=4, song=randomizerExtender(songLength, 5)) {
+    game.instrument = new Tone.Synth();
+    let synth = game.instrument;
     let cpuAnimations = document.getElementById('cpu-duck');
     let scoreResult = document.getElementById("scoreResult");
 
@@ -79,11 +84,67 @@ function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerE
     return part;
 }
 
+function calibrateOnly(game) {
+    game.instrument = new Tone.Synth();
+    game.answerTrack = QUARTER_NOTES;
+    let tempTempo = game.tempo;
+    let song = game.answerTrack;
+    let songLength = 2;
+    let synth = game.instrument;
+    let cpuAnimations = document.getElementById('cpu-duck');
+;
+    let tempDelay = game.delay;
+    game.delay = 0;
+    game.tempo = 120;
+    let currentTime = 0;
+
+    game.notesInMeasure = 5;
+
+    synth.toDestination();
+
+    let part = new Tone.Part(((time, value) => {
+        synth.triggerAttackRelease(value.note, "16n", time, 0);
+
+        // first we get the current time in milliseconds
+        currentTime = +new Date();
+
+        // Add note to answer sheet
+        console.log("added note");
+        game.addNote(currentTime,85, 70, 30, 0);
+
+        // plays animation of cpu
+        noteTrigger(0, cpuAnimations, value.velocity);
+        noteRelease(50, cpuAnimations, value.velocity);
+
+    }), song).start("2m");
+
+    // at end of song
+    Tone.Transport.schedule(function(time){
+        endOfSong();
+        synth.dispose();
+        part.dispose();
+        Tone.Transport.stop();
+        console.log("Average time: " + game.calibratedDiffAvg());
+        console.log("Answer notes: " + game.getWindowKeyNotes());
+        console.log("Player notes: " + game.playerNotes);
+        game.togglePlay();
+        game.clearNotes();
+        game.playerNotes = [];
+        game.delay = tempDelay;
+        game.tempo = tempTempo;
+    }, String(songLength+2)+":0:0");
+
+    return part;
+}
+
 export function gameRoom(game) {
     menu();
 
     let delaySlider = document.getElementById("delay");
     let tempoSlider = document.getElementById("tempo");
+    let calibrateMenu = document.getElementById("calibrate-delay");
+    let calibrateMenuStart = document.getElementById("calibrate-start");
+
     document.getElementById('liveDelay').innerHTML = game.delay;
     document.getElementById('liveTempo').innerHTML = game.tempo;
     delaySlider.value = game.delay;
@@ -97,8 +158,26 @@ export function gameRoom(game) {
         console.log("delay set to: ", game.delay);
         document.getElementById('liveDelay').innerHTML = game.delay;
     })
+
+    // calibrate button
+    calibrateMenu.addEventListener("click", event => {
+        calibrateIntro();
+    })
+
+    calibrateMenuStart.addEventListener("click", async () => {
+        if (game.firstRun) {
+            await Tone.start();
+            game.firstRun = false;
+        }
+        
+        playGame(); //turn this into a menu object at some point, just for the logic, since this just changes the menu
+
+        game.answerTrack = calibrateOnly(game);
+
+        startGame(game);
+    })
     
-    //setup tempo slider
+    // setup tempo slider
     tempoSlider.addEventListener('change', function() { 
         game.tempo = Number(tempoSlider.value);
         document.getElementById('liveTempo').innerHTML = game.tempo;
@@ -108,18 +187,20 @@ export function gameRoom(game) {
     document.getElementById("play-button").addEventListener("click", async () => {
         if (game.firstRun) {
             await Tone.start();
-            console.log("");
             game.firstRun = false;
         }
         
         playGame(); //turn this into a menu object at some point, just for the logic, since this just changes the menu
 
-        startGame(game, game.answerTrack);
+        game.answerTrack = answerTrack(game);
+
+        startGame(game);
      });
 
     // Play again button
     document.getElementById("play-again").addEventListener("click", event => {
         stopGame(game);
+        game.answerTrack = answerTrack(game);
         startGame(game);
         document.getElementById("play-again").style.display = "none";
     })
@@ -130,6 +211,7 @@ export function gameRoom(game) {
         if (game.answerTrack) {
             stopGame(game);
         }
+        document.getElementById("settings").innerHTML = "<button class=\"centered\">Settings</button>";
     })
 
     // Submit Score Menu
@@ -142,6 +224,7 @@ export function gameRoom(game) {
 
     document.getElementById("settings").addEventListener("click", event => {
         settings(game);
+        document.getElementById("settings").innerHTML = "<button class=\"centered\">Settings</button>";
     })
 
     // set to default
@@ -161,9 +244,6 @@ function startGame(game) {
     game.score = 0;
     game.togglePlay();
 
-    game.instrument = new Tone.Synth();
-
-    game.answerTrack = answerTrack(game);
     Tone.Transport.bpm.value = game.tempo;
 
     console.log(game.answerTrack);

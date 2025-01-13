@@ -112,6 +112,7 @@ export function settings(game) {
     document.getElementById("tempo").style.display = "block";
     document.getElementById("liveTempo").style.display = "block";
     document.getElementById("liveDelay").style.display = "block";
+    document.getElementById("calibrate-delay").style.display = "block";
     document.getElementById("default-settings").style.display = "block";
 }
 
@@ -138,3 +139,34 @@ export function endOfSong() {
     document.getElementById("back-to-menu").style.display = "block";
     document.getElementById("high-score-submission").style.display = "block";
 }
+
+export function calibrateIntro() {
+    let all_elements_nl = document.querySelectorAll('*[id]');
+
+    for (let i = 0; i < all_elements_nl.length - 2; i++) {
+        all_elements_nl[i].style.display = "none";
+    }
+
+    document.getElementById("blueSquare").style.display = "block";
+    document.getElementById("purpleSquare").style.display = "block";
+    document.getElementById("calibrate-start").style.display = "block";
+    document.getElementById("main-menu").style.display = "block";
+    document.getElementById("back-to-menu").style.display = "block";
+    document.getElementById("settings").innerHTML = "<button class=\"centered\">Back to Settings</button>";
+}
+
+export function calibrate() {
+    let all_elements_nl = document.querySelectorAll('*[id]');
+
+    for (let i = 0; i < all_elements_nl.length - 2; i++) {
+        all_elements_nl[i].style.display = "none";
+    }
+
+    document.getElementById("blueSquare").style.display = "block";
+    document.getElementById("purpleSquare").style.display = "block";
+    document.getElementById("calibrate-start").style.display = "block";
+    document.getElementById("main-menu").style.display = "block";
+    document.getElementById("back-to-menu").style.display = "block";
+    document.getElementById("settings").innerHTML = "<button class=\"centered\">Back to Settings</button>";
+}
+
