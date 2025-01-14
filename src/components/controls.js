@@ -26,7 +26,10 @@ export function setupControls(game) {
             keyDownTime = +new Date();
             game.didScore = false;
             console.log("Input recorded on: ", keyDownTime);
-            game.addPlayerNote(keyDownTime);
+            
+            if (game.playerNotes.length < game.totalSongNotes+1) {
+                game.addPlayerNote(keyDownTime);
+            }
 
             // when scored
             // need to add logic to prevent scoring multiple points in the same window again

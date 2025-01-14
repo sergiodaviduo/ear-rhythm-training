@@ -6,7 +6,7 @@ import { Game } from "./components/game.js";
 
 import { gameRoom } from './components/engine.js';
 
-const GameData = new Game(120, 70);
+const GameData = new Game(120, 150);
 
 gameRoom(GameData);
 

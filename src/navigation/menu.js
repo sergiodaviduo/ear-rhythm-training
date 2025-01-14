@@ -78,6 +78,8 @@ export function playGame() {
         all_elements_nl[i].style.display = "block";
     }
 
+
+    document.getElementById("calibration").style.display = "none";
     document.getElementById("play-button").style.display = "none";
     document.getElementById("settings").style.display = "none";
     document.getElementById("high-scores").style.display = "none";
@@ -94,7 +96,7 @@ export function playGame() {
 }
 
 export function settings(game) {
-
+    document.getElementById("settings").innerHTML = "<button class=\"centered\">Settings</button>";
     console.log("opened settings");
 
     let all_elements_nl = document.querySelectorAll('*[id]');
@@ -147,26 +149,37 @@ export function calibrateIntro() {
         all_elements_nl[i].style.display = "none";
     }
 
-    document.getElementById("blueSquare").style.display = "block";
-    document.getElementById("purpleSquare").style.display = "block";
+    document.getElementById("calibration").style.display = "block";
+    document.getElementById("calibration-menu").style.display = "block";
     document.getElementById("calibrate-start").style.display = "block";
+    document.getElementById("settings").style.display = "block";
     document.getElementById("main-menu").style.display = "block";
-    document.getElementById("back-to-menu").style.display = "block";
-    document.getElementById("settings").innerHTML = "<button class=\"centered\">Back to Settings</button>";
+    document.getElementById("settings").innerHTML = "<button class=\"centered\">Back</button>";
 }
 
 export function calibrate() {
     let all_elements_nl = document.querySelectorAll('*[id]');
 
     for (let i = 0; i < all_elements_nl.length - 2; i++) {
-        all_elements_nl[i].style.display = "none";
+        all_elements_nl[i].style.display = "block";
     }
 
-    document.getElementById("blueSquare").style.display = "block";
-    document.getElementById("purpleSquare").style.display = "block";
-    document.getElementById("calibrate-start").style.display = "block";
-    document.getElementById("main-menu").style.display = "block";
-    document.getElementById("back-to-menu").style.display = "block";
-    document.getElementById("settings").innerHTML = "<button class=\"centered\">Back to Settings</button>";
+    document.getElementById("after-calibration").style.display = "none";
+    document.getElementById("calibration-menu").style.display = "none";
+    document.getElementById("calibrate-start").style.display = "none";
+    document.getElementById("play-button").style.display = "none";
+    document.getElementById("score").style.display = "none";
+    document.getElementById("settings").style.display = "none";
+    document.getElementById("high-scores").style.display = "none";
+    document.getElementById("main-menu").style.display = "none";
+    document.getElementById("play-again").style.display = "none";
+    document.getElementById("high-score-submission").style.display = "none";
+    document.getElementById("submit-score").style.display = "none";
+    document.getElementById("title").innerHTML = "<h1>Wait 8 beats</h1>";
+
+    document.getElementById("settings-values").style.display = "none";
+    document.getElementById("blueSquare").style.display = "none";
+
+    document.getElementById("purpleSquare").style.display = "none";
 }
 

@@ -3,6 +3,7 @@ import * as Tone from 'tone';
 export class Game {
     constructor(tempo=120, delay=45) {
         this._score = 0;
+        this._totalSongNotes = 0;
         this._isPlaying = false;
         this._inputWindowO = 0;
         this._inputWindowC = 0;
@@ -21,6 +22,10 @@ export class Game {
 
     get score() {
         return this._score;
+    }
+
+    get totalSongNotes() {
+        return this._totalSongNotes;
     }
 
     get tempo() {
@@ -80,12 +85,18 @@ export class Game {
         document.getElementById("score").innerHTML = "Score: " + score;
     }
 
+    set totalSongNotes(totalSongNotes) {
+        this._totalSongNotes = totalSongNotes;
+    }
+
     set tempo(tempo) {
         this._tempo = tempo;
         Tone.Transport.bpm.value = tempo;
     }
 
     set delay(delay) {
+        document.getElementById('liveDelay').innerHTML = delay;
+        document.getElementById('delay').value = delay;
         this._delay = delay;
     }
 
@@ -188,8 +199,10 @@ export class Game {
 
     clearNotes() {
         this._windowKeys = [];
+        this._playerNotes = [];
     }
 
+    // return array of just the correct note timings
     getWindowKeyNotes() {
         let noteKeys = [];
         this._windowKeys.forEach((key) => {
