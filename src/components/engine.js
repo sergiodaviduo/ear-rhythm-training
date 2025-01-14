@@ -18,12 +18,6 @@ let animate = require("animate.css")*/
 //import Tone from 'tone';
 //import animate from 'animate.js';
 
-function startMetronome() {
-    let metronome = fourByFour();
-
-    return metronome;
-}
-
 // This starts the main song track session
 
 function answerTrack(game, songLength=4, song=randomizerExtender(songLength, 5)) {
@@ -282,7 +276,7 @@ function startGame(game) {
 
     console.log("delay: ",game.delay);
 
-    game.clickTrack = startMetronome(game);
+    game.clickTrack = metronome(game);
 
     /*if (game.firstRun == true) {
         console.log("first run");

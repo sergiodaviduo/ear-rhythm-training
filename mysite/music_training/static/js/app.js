@@ -20097,20 +20097,6 @@
         return noteGroup;
     }
 
-    function fourByFour() {
-        const kickDrum = new MembraneSynth({
-            volume: 4
-        }).toDestination();
-
-        const kickPart = new Part(function(time) {
-            kickDrum.triggerAttackRelease('C1', '8n', time);
-        }, [{ time: '0:0' },{ time: '0:1' },{ time: '0:2' },{ time: '0:3' }]).start(0);
-
-        kickPart.loop = true;
-
-        return kickPart;
-    }
-
     function menu() {
 
         in_menu();
@@ -20492,12 +20478,6 @@
     //import Tone from 'tone';
     //import animate from 'animate.js';
 
-    function startMetronome() {
-        let metronome = fourByFour();
-
-        return metronome;
-    }
-
     // This starts the main song track session
 
     function answerTrack(game, songLength=4, song=randomizerExtender(songLength, 5)) {
@@ -20752,7 +20732,7 @@
 
         console.log("delay: ",game.delay);
 
-        game.clickTrack = startMetronome();
+        game.clickTrack = metronome(game);
 
         /*if (game.firstRun == true) {
             console.log("first run");
