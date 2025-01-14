@@ -1,5 +1,5 @@
 import { randomizerExtender } from './generators.js';
-import { fourByFour } from './instruments.js';
+import { metronome } from './instruments.js';
 import { menu, playGame, settings, showScoreSubmitMenu, endOfSong, calibrateIntro, calibrate } from '../navigation/menu.js';
 import { setupControls, inputClose, inputOpen, noteRelease, noteTrigger } from '../components/controls.js';
 import { STATIC_LIBRARY } from "../constants/notes.js";
@@ -264,6 +264,29 @@ export function gameRoom(game) {
     });
 }
 
+function gameCountDown(game, i=0) {
+    switch(i) {
+        case 1:
+            console.log("1");
+            break;
+        case 3:
+            console.log("2");
+            break;
+        case 5:
+            console.log("1");
+            break;
+        case 6:
+            console.log("2");
+            break;
+        case 7:
+            console.log("3");
+            break;
+        case 8:
+            console.log("4");
+            break;
+        default:
+    }
+}
 
 // Starts or stops all songs / gameplay
 function startGame(game) {
@@ -276,7 +299,7 @@ function startGame(game) {
 
     console.log("delay: ",game.delay);
 
-    game.clickTrack = metronome(game);
+    game.clickTrack = metronome(game, gameCountDown);
 
     /*if (game.firstRun == true) {
         console.log("first run");

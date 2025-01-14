@@ -1,6 +1,6 @@
 import * as Tone from 'tone';
 
-function keyboard(tempo) {
+export function keyboard(tempo) {
     let synth = new Tone.Synth().toDestination();
 
     const reverb = new Tone.Reverb({
@@ -38,13 +38,16 @@ function keyboard(tempo) {
     return synth;
 }
 
-function metronome(game, actionCallback = () => {}) {
+export function metronome(game, actionCallback = (game, i) => {}) {
+    let i = 0;
+
     const kickDrum = new Tone.MembraneSynth({
         volume: 4
     }).toDestination();
 
     const kickPart = new Tone.Part(function(time) {
-        actionCallback();
+        i++;
+        actionCallback(game, i);
         kickDrum.triggerAttackRelease('C1', '8n', time);
     }, [{ time: '0:0' },{ time: '0:1' },{ time: '0:2' },{ time: '0:3' }]).start(0);
 
@@ -53,4 +56,4 @@ function metronome(game, actionCallback = () => {}) {
     return kickPart;
 }
 
-export { keyboard, metronome };
+// export { keyboard, metronome };

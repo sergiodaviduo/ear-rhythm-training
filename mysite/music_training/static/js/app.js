@@ -20097,6 +20097,26 @@
         return noteGroup;
     }
 
+    function metronome(game, actionCallback = (game, i) => {}) {
+        let i = 0;
+
+        const kickDrum = new MembraneSynth({
+            volume: 4
+        }).toDestination();
+
+        const kickPart = new Part(function(time) {
+            i++;
+            actionCallback(game, i);
+            kickDrum.triggerAttackRelease('C1', '8n', time);
+        }, [{ time: '0:0' },{ time: '0:1' },{ time: '0:2' },{ time: '0:3' }]).start(0);
+
+        kickPart.loop = true;
+
+        return kickPart;
+    }
+
+    // export { keyboard, metronome };
+
     function menu() {
 
         in_menu();
@@ -20720,6 +20740,28 @@
         });
     }
 
+    function gameCountDown(game, i=0) {
+        switch(i) {
+            case 1:
+                console.log("1");
+                break;
+            case 3:
+                console.log("2");
+                break;
+            case 5:
+                console.log("1");
+                break;
+            case 6:
+                console.log("2");
+                break;
+            case 7:
+                console.log("3");
+                break;
+            case 8:
+                console.log("4");
+                break;
+        }
+    }
 
     // Starts or stops all songs / gameplay
     function startGame(game) {
@@ -20732,7 +20774,7 @@
 
         console.log("delay: ",game.delay);
 
-        game.clickTrack = metronome(game);
+        game.clickTrack = metronome(game, gameCountDown);
 
         /*if (game.firstRun == true) {
             console.log("first run");
