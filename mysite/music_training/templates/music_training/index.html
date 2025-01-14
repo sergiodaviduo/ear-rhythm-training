@@ -54,11 +54,37 @@
    <!-- Settings -->
   <div id="settings-values" class="centered">
     <h2>Adjust delay: </h2><h2 id="liveDelay">70</h2>
-    <input id="delay" type="range" min="50" max="300" value="70" class="centered">
+    <input id="delay" type="range" min="20" max="300" value="70" class="centered">
     <br><br>
     <h2>Tempo: </h2><h2 id="liveTempo">100</h2>
     <input id="tempo" type="range" min="50" max="190" value="100" class="centered">
+    <br>
+    <br>
+    <br>
+    <button id="calibrate-delay">Calibrate Delay</button>
+    <br>
+    <br>
+    <br>
     <button id="default-settings">Reset to Default</button>
+  </div>
+  <!-- Calibration -->
+  <div id="calibration">
+    <div id="calibration-menu" class="centered">
+      <h2>Calibrate the time between when you hear the note, and when input is detected here.</h2>
+      <h2>Wait for 8 beats to pass, then start tapping to the metrononme for 8 beats.</h2>
+      <br>
+      <h2>When you're ready, hit "Start Calibration."</h2>
+      <br>
+      <br>
+      <button id="calibrate-start">Start Calibration</button>
+    </div>
+    <div id="after-calibration" class="centered" style="z-index: 100; position: relative;">
+      <h1>Delay calibrated to:</h1>
+      <h1 id="found-delay"></h1>
+      <div id="calibrate-notes"></div>
+      <button id="calibration-redo">Repeat Calibration</button>
+      <button id="calibration-to-settings">Back to Settings</button>
+    </div>
   </div>
   <br><br><br>
 

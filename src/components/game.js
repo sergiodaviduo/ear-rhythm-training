@@ -3,6 +3,7 @@ import * as Tone from 'tone';
 export class Game {
     constructor(tempo=120, delay=45) {
         this._score = 0;
+        this._totalSongNotes = 0;
         this._isPlaying = false;
         this._inputWindowO = 0;
         this._inputWindowC = 0;
@@ -11,10 +12,8 @@ export class Game {
         this._firstRun = true;
         this._scored = false;
         
-        this._normalWindow = [];
-        this._greatWindow = [];
-        this._perfectWindow = [];
         this._windowKeys = [];
+        this._playerNotes = [];
     }
 
     get firstRun() {
@@ -23,6 +22,10 @@ export class Game {
 
     get score() {
         return this._score;
+    }
+
+    get totalSongNotes() {
+        return this._totalSongNotes;
     }
 
     get tempo() {
@@ -43,6 +46,10 @@ export class Game {
 
     get instrument() {
         return this._instrument;
+    }
+
+    get playerNotes() {
+        return this._playerNotes;
     }
 
     get inputWindowO() {
@@ -78,12 +85,18 @@ export class Game {
         document.getElementById("score").innerHTML = "Score: " + score;
     }
 
+    set totalSongNotes(totalSongNotes) {
+        this._totalSongNotes = totalSongNotes;
+    }
+
     set tempo(tempo) {
         this._tempo = tempo;
         Tone.Transport.bpm.value = tempo;
     }
 
     set delay(delay) {
+        document.getElementById('liveDelay').innerHTML = delay;
+        document.getElementById('delay').value = delay;
         this._delay = delay;
     }
 
@@ -111,6 +124,39 @@ export class Game {
 
     set instrument(instrument) {
         this._instrument = instrument;
+    }
+
+    set playerNotes(playerNotes) {
+        this._playerNotes = playerNotes;
+    }
+
+    addPlayerNote(note) {
+        this._playerNotes.push(note);
+    }
+
+    // make array of all diffs with player and answer notes
+    calibratedDiffAvg() {
+        let i = 0;
+        // stores an int variable in array for each difference between player note, and answer note
+
+        let playerDiffs = [];
+        let currentDiff = 0;
+        this._playerNotes.forEach((playerNote) => {
+            currentDiff = playerNote - this._windowKeys[i].note;
+            playerDiffs.push(currentDiff);
+            console.log("Pushed note diff: ",currentDiff);
+            console.log("   Player note: ",playerNote);
+            console.log("   Correct note: ",this._windowKeys[i].note);
+            i++;
+        });
+    
+        // calculate average diff
+        let total = 0;
+        playerDiffs.forEach((noteDiff) => {
+            total += noteDiff;
+        });
+        let avg = total / playerDiffs.length;
+        return avg;
     }
 
     set notesInMeasure(notes) {
@@ -153,6 +199,17 @@ export class Game {
 
     clearNotes() {
         this._windowKeys = [];
+        this._playerNotes = [];
+    }
+
+    // return array of just the correct note timings
+    getWindowKeyNotes() {
+        let noteKeys = [];
+        this._windowKeys.forEach((key) => {
+            noteKeys.push(key.note);
+        });
+
+        return noteKeys;
     }
 
     set didScore(scored) {

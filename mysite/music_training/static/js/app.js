@@ -19804,6 +19804,7 @@
     class Game {
         constructor(tempo=120, delay=45) {
             this._score = 0;
+            this._totalSongNotes = 0;
             this._isPlaying = false;
             this._inputWindowO = 0;
             this._inputWindowC = 0;
@@ -19812,10 +19813,8 @@
             this._firstRun = true;
             this._scored = false;
             
-            this._normalWindow = [];
-            this._greatWindow = [];
-            this._perfectWindow = [];
             this._windowKeys = [];
+            this._playerNotes = [];
         }
 
         get firstRun() {
@@ -19824,6 +19823,10 @@
 
         get score() {
             return this._score;
+        }
+
+        get totalSongNotes() {
+            return this._totalSongNotes;
         }
 
         get tempo() {
@@ -19844,6 +19847,10 @@
 
         get instrument() {
             return this._instrument;
+        }
+
+        get playerNotes() {
+            return this._playerNotes;
         }
 
         get inputWindowO() {
@@ -19879,12 +19886,18 @@
             document.getElementById("score").innerHTML = "Score: " + score;
         }
 
+        set totalSongNotes(totalSongNotes) {
+            this._totalSongNotes = totalSongNotes;
+        }
+
         set tempo(tempo) {
             this._tempo = tempo;
             Transport.bpm.value = tempo;
         }
 
         set delay(delay) {
+            document.getElementById('liveDelay').innerHTML = delay;
+            document.getElementById('delay').value = delay;
             this._delay = delay;
         }
 
@@ -19912,6 +19925,39 @@
 
         set instrument(instrument) {
             this._instrument = instrument;
+        }
+
+        set playerNotes(playerNotes) {
+            this._playerNotes = playerNotes;
+        }
+
+        addPlayerNote(note) {
+            this._playerNotes.push(note);
+        }
+
+        // make array of all diffs with player and answer notes
+        calibratedDiffAvg() {
+            let i = 0;
+            // stores an int variable in array for each difference between player note, and answer note
+
+            let playerDiffs = [];
+            let currentDiff = 0;
+            this._playerNotes.forEach((playerNote) => {
+                currentDiff = playerNote - this._windowKeys[i].note;
+                playerDiffs.push(currentDiff);
+                console.log("Pushed note diff: ",currentDiff);
+                console.log("   Player note: ",playerNote);
+                console.log("   Correct note: ",this._windowKeys[i].note);
+                i++;
+            });
+        
+            // calculate average diff
+            let total = 0;
+            playerDiffs.forEach((noteDiff) => {
+                total += noteDiff;
+            });
+            let avg = total / playerDiffs.length;
+            return avg;
         }
 
         set notesInMeasure(notes) {
@@ -19954,6 +20000,17 @@
 
         clearNotes() {
             this._windowKeys = [];
+            this._playerNotes = [];
+        }
+
+        // return array of just the correct note timings
+        getWindowKeyNotes() {
+            let noteKeys = [];
+            this._windowKeys.forEach((key) => {
+                noteKeys.push(key.note);
+            });
+
+            return noteKeys;
         }
 
         set didScore(scored) {
@@ -20134,6 +20191,8 @@
             all_elements_nl[i].style.display = "block";
         }
 
+
+        document.getElementById("calibration").style.display = "none";
         document.getElementById("play-button").style.display = "none";
         document.getElementById("settings").style.display = "none";
         document.getElementById("high-scores").style.display = "none";
@@ -20150,7 +20209,7 @@
     }
 
     function settings(game) {
-
+        document.getElementById("settings").innerHTML = "<button class=\"centered\">Settings</button>";
         console.log("opened settings");
 
         let all_elements_nl = document.querySelectorAll('*[id]');
@@ -20168,6 +20227,7 @@
         document.getElementById("tempo").style.display = "block";
         document.getElementById("liveTempo").style.display = "block";
         document.getElementById("liveDelay").style.display = "block";
+        document.getElementById("calibrate-delay").style.display = "block";
         document.getElementById("default-settings").style.display = "block";
     }
 
@@ -20195,6 +20255,47 @@
         document.getElementById("high-score-submission").style.display = "block";
     }
 
+    function calibrateIntro() {
+        let all_elements_nl = document.querySelectorAll('*[id]');
+
+        for (let i = 0; i < all_elements_nl.length - 2; i++) {
+            all_elements_nl[i].style.display = "none";
+        }
+
+        document.getElementById("calibration").style.display = "block";
+        document.getElementById("calibration-menu").style.display = "block";
+        document.getElementById("calibrate-start").style.display = "block";
+        document.getElementById("settings").style.display = "block";
+        document.getElementById("main-menu").style.display = "block";
+        document.getElementById("settings").innerHTML = "<button class=\"centered\">Back</button>";
+    }
+
+    function calibrate() {
+        let all_elements_nl = document.querySelectorAll('*[id]');
+
+        for (let i = 0; i < all_elements_nl.length - 2; i++) {
+            all_elements_nl[i].style.display = "block";
+        }
+
+        document.getElementById("after-calibration").style.display = "none";
+        document.getElementById("calibration-menu").style.display = "none";
+        document.getElementById("calibrate-start").style.display = "none";
+        document.getElementById("play-button").style.display = "none";
+        document.getElementById("score").style.display = "none";
+        document.getElementById("settings").style.display = "none";
+        document.getElementById("high-scores").style.display = "none";
+        document.getElementById("main-menu").style.display = "none";
+        document.getElementById("play-again").style.display = "none";
+        document.getElementById("high-score-submission").style.display = "none";
+        document.getElementById("submit-score").style.display = "none";
+        document.getElementById("title").innerHTML = "<h1>Wait 8 beats</h1>";
+
+        document.getElementById("settings-values").style.display = "none";
+        document.getElementById("blueSquare").style.display = "none";
+
+        document.getElementById("purpleSquare").style.display = "none";
+    }
+
     function setupControls(game) {
         // spacebar
 
@@ -20220,6 +20321,10 @@
                 keyDownTime = +new Date();
                 game.didScore = false;
                 console.log("Input recorded on: ", keyDownTime);
+                
+                if (game.playerNotes.length < game.totalSongNotes+1) {
+                    game.addPlayerNote(keyDownTime);
+                }
 
                 // when scored
                 // need to add logic to prevent scoring multiple points in the same window again
@@ -20249,7 +20354,6 @@
 
                         scoreFlash.classList.add("score-window");
 
-                        // fade in down very fast, fade in out medium fast
                         let angle = (Math.random()*35)+25;
                         let xOffset = (Math.random()*41)+31;
                         let yOffset = (Math.random()*15)+5;
@@ -20271,7 +20375,10 @@
                         score.classList.add("scored");
                         
                         console.log("   ++ Scored! New score: ",game.score);
-                        console.log("   Millis off:         ",(game.windowKeys[noteKey].note - keyDownTime) * (-1));
+
+                        let noteDiff = (game.windowKeys[noteKey].note - keyDownTime) * (-1);
+
+                        console.log("   Millis off:         ",noteDiff);
 
                         setTimeout(() => {
                             score.classList.remove("scored");
@@ -20351,6 +20458,29 @@
         })
     }
 
+    const AMinorScale = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    const AllNotes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+    const FourOnTheFloorTest = [
+       { time: "0:0:0", note: "C4", velocity: 0.9 },
+       { time: "0:1:0", note: "C4", velocity: 0.9 },
+       { time: "0:2:0", note: "C4", velocity: 0.9 },
+       { time: "0:3:0", note: "C4", velocity: 0.9 },
+       { time: "1:0:0", note: "C4", velocity: 0.9 },
+       { time: "1:1:0", note: "C4", velocity: 0.9 },
+       { time: "1:2:0", note: "C4", velocity: 0.9 },
+       { time: "1:3:0", note: "C4", velocity: 0.9 }
+    ];
+    const StaticNotes = [
+        { time: 0, note: "C3", velocity: 0.9 },
+        { time: "0:2", note: "G3", velocity: 0.5 },
+        { time: "0:3:1", note: "C4", velocity: 0.5 },
+        { time: "0:3:3", note: "C4", velocity: 0.5 }
+    ];
+
+    const STATIC_LIBRARY = [AMinorScale, AllNotes, FourOnTheFloorTest, StaticNotes];
+
+    const QUARTER_NOTES = STATIC_LIBRARY[2];
+
     // import party from "party-js";
 
 
@@ -20369,10 +20499,12 @@
     }
 
     // This starts the main song track session
-    // previous default input window is open = 30 (ms before), close = 90 (ms after)
-    function answerTrack(game, synth=game.instrument, songLength=4, song=randomizerExtender(songLength, 5)) {
-        let cpuAnimations = document.getElementById('cpu-duck');
-        let scoreResult = document.getElementById("scoreResult");
+
+    function answerTrack(game, songLength=4, song=randomizerExtender(songLength, 5)) {
+        game.instrument = new Synth();
+        let synth = game.instrument;
+        let cpuAnimations = document.getElementById("cpu-duck");
+        document.getElementById("scoreResult");
         let delay = game.delay;
         let currentTime = 0;
 
@@ -20397,7 +20529,7 @@
         }), song).start("2m");
 
         //callback functions in-between every other measure
-        Transport.scheduleRepeat((time) => {
+        /*Tone.Transport.scheduleRepeat((time) => {
             if ( score > game.notesInMeasure * 7 ) {
                 party.confetti(document.getElementById("score"), {
                     count: party.variation.range(20, 40),
@@ -20406,17 +20538,84 @@
                 score = 0;
             }
             
-        }, String(songLength+3)+"m", "0m");
+        }, String(songLength+3)+"m", "0m");*/
 
         // at end of song
         Transport.schedule(function(time){
             endOfSong();
             synth.dispose();
             part.dispose();
-            Transport.stop();
             console.log(Transport.state + " after end of song automatically");
             game.togglePlay();
             game.clearNotes();
+            Transport.stop();
+            Transport.cancel();
+        }, String(songLength+2)+":0:0");
+
+        return part;
+    }
+
+    function calibrateOnly(game) {
+        calibrate();
+
+        let songLength = 2;
+        let currentTime = 0;
+        let tempTempo = game.tempo;
+
+        game.instrument = new Synth();
+        let synth = game.instrument;
+        game.answerTrack = QUARTER_NOTES;
+        let song = game.answerTrack;
+        game.totalSongNotes = 8;
+        game.delay = 0;
+        game.tempo = 120;
+
+        game.notesInMeasure = 5;
+
+        synth.toDestination();
+
+        let part = new Part(((time, value) => {
+            synth.triggerAttackRelease(value.note, "16n", time, 0);
+
+            // first we get the current time in milliseconds
+            currentTime = +new Date();
+
+            // Add note to answer sheet
+            game.addNote(currentTime,85, 70, 30, 0);
+            document.getElementById("title").innerHTML = "<h1>Tap 8 times to the beat</h1>";
+        }), song).start("2m");
+
+        // after calibration
+        Transport.schedule(function(time){
+            console.log("plauer notes: ");
+            let newDelay = Math.floor(game.calibratedDiffAvg());
+            synth.dispose();
+            part.dispose();
+            console.log("Average time: " + game.calibratedDiffAvg());
+            console.log("Answer notes: " + game.getWindowKeyNotes());
+            console.log("Player notes: " + game.playerNotes);
+            document.getElementById("calibrate-notes").innerHTML = "";
+            if (newDelay > 300 || newDelay < 80) {
+                document.getElementById("found-delay").innerHTML = newDelay+" milliseconds";
+                document.getElementById("calibrate-notes").innerHTML = `
+            <h2>Notes may have been missed, or you have significant input delay.</h2>
+            <h2>Try calibration again, or go back to settings to set manually.</h2>
+            `;
+                game.delay = 150;
+            } else {
+                document.getElementById("found-delay").innerHTML = newDelay+" milliseconds";
+                game.delay = newDelay;
+            }
+            
+            document.getElementById("after-calibration").style.display = "block";
+            document.getElementById("title").style.display = "none";
+            game.togglePlay();
+            game.clearNotes();
+            game.playerNotes = [];
+            game.tempo = tempTempo;
+            game.totalSongNotes = 0;
+            Transport.stop();
+            Transport.cancel();
         }, String(songLength+2)+":0:0");
 
         return part;
@@ -20427,6 +20626,9 @@
 
         let delaySlider = document.getElementById("delay");
         let tempoSlider = document.getElementById("tempo");
+        let calibrateMenu = document.getElementById("calibrate-delay");
+        let calibrateMenuStart = document.getElementById("calibrate-start");
+
         document.getElementById('liveDelay').innerHTML = game.delay;
         document.getElementById('liveTempo').innerHTML = game.tempo;
         delaySlider.value = game.delay;
@@ -20438,10 +20640,40 @@
         delaySlider.addEventListener('change', function() { 
             game.delay = Number(delaySlider.value);
             console.log("delay set to: ", game.delay);
-            document.getElementById('liveDelay').innerHTML = game.delay;
+        });
+
+        // calibration
+        calibrateMenu.addEventListener("click", event => {
+            calibrateIntro();
+        });
+
+        calibrateMenuStart.addEventListener("click", async () => {
+            if (game.firstRun) {
+                await start();
+                game.firstRun = false;
+            }
+            
+            game.answerTrack = calibrateOnly(game);
+
+            startGame(game);
+        });
+
+        document.getElementById("calibration-redo").addEventListener("click", async () => {
+            if (game.firstRun) {
+                await start();
+                game.firstRun = false;
+            }
+            
+            game.answerTrack = calibrateOnly(game);
+
+            startGame(game);
+        });
+
+        document.getElementById("calibration-to-settings").addEventListener("click", event => {
+            settings(game);
         });
         
-        //setup tempo slider
+        // setup tempo slider
         tempoSlider.addEventListener('change', function() { 
             game.tempo = Number(tempoSlider.value);
             document.getElementById('liveTempo').innerHTML = game.tempo;
@@ -20451,18 +20683,20 @@
         document.getElementById("play-button").addEventListener("click", async () => {
             if (game.firstRun) {
                 await start();
-                console.log("");
                 game.firstRun = false;
             }
             
             playGame(); //turn this into a menu object at some point, just for the logic, since this just changes the menu
 
-            startGame(game, game.answerTrack);
-         });
+            game.answerTrack = answerTrack(game);
+
+            startGame(game);
+        });
 
         // Play again button
         document.getElementById("play-again").addEventListener("click", event => {
             stopGame(game);
+            game.answerTrack = answerTrack(game);
             startGame(game);
             document.getElementById("play-again").style.display = "none";
         });
@@ -20473,6 +20707,14 @@
             if (game.answerTrack) {
                 stopGame(game);
             }
+            
+            document.getElementById("settings").innerHTML = "<button class=\"centered\">Settings</button>";
+            let defaultTitle = `<h1 class="centered">~ Rhythm Training ~</h1>
+                <h3 class="centered">Simon says, but with randomly generated notes</h3> 
+                <br>
+                <br>`;
+
+            document.getElementById("title").innerHTML = defaultTitle;
         });
 
         // Submit Score Menu
@@ -20487,14 +20729,14 @@
             settings(game);
         });
 
+        
+
         // set to default
         document.getElementById("default-settings").addEventListener("click", event => {
-            game.tempo = 100;
-            game.delay = 100;
+            game.tempo = 120;
+            game.delay = 150;
             document.getElementById('liveTempo').innerHTML = game.tempo;
             document.getElementById('tempo').value = game.tempo;
-            document.getElementById('liveDelay').innerHTML = game.delay;
-            document.getElementById('delay').value = game.delay;
         });
     }
 
@@ -20504,16 +20746,13 @@
         game.score = 0;
         game.togglePlay();
 
-        game.instrument = new Synth();
-
-        game.answerTrack = answerTrack(game);
         Transport.bpm.value = game.tempo;
 
         console.log(game.answerTrack);
 
         console.log("delay: ",game.delay);
 
-        game.clickTrack= startMetronome();
+        game.clickTrack = startMetronome();
 
         /*if (game.firstRun == true) {
             console.log("first run");
@@ -20525,23 +20764,22 @@
             console.log("-- new session --\n\n");
         }
 
-        if (game.answerTrack.disposed && !game.firstRun) {
-            Transport.bpm.value = game.tempo;
+        /*if (game.answerTrack.disposed && !game.firstRun) {
+            Tone.Transport.bpm.value = game.tempo;
             console.log("restarting mainTrack");
             game.answerTrack = answerTrack(game);
-        }
+        }*/
 
         Transport.toggle();
         console.log(Transport.state);
 
-        if (!game.answerTrack.disposed && !game.firstRun && Transport.state === "stopped") {
-
+        /*if (!game.answerTrack.disposed && !game.firstRun && Tone.Transport.state === "stopped") {
             game.answerTrack.dispose();
-            document.getElementById('paw-left').style.backgroundPositionX = '0px';
+            //document.getElementById('paw-left').style.backgroundPositionX = '0px';
             game.score = 0;
-        }
+        }*/
 
-        return []
+        return [];
     }
 
     function stopGame(game) {
@@ -20558,9 +20796,7 @@
     // this visual library would be wild with this: https://ptsjs.org/
 
 
-    //const QuarterNoteTest = STATIC_LIBRARY[2];
-
-    const GameData = new Game(120, 70);
+    const GameData = new Game(120, 150);
 
     gameRoom(GameData);
 

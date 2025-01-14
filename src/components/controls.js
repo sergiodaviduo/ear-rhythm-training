@@ -26,6 +26,10 @@ export function setupControls(game) {
             keyDownTime = +new Date();
             game.didScore = false;
             console.log("Input recorded on: ", keyDownTime);
+            
+            if (game.playerNotes.length < game.totalSongNotes+1) {
+                game.addPlayerNote(keyDownTime);
+            }
 
             // when scored
             // need to add logic to prevent scoring multiple points in the same window again
@@ -55,7 +59,6 @@ export function setupControls(game) {
 
                     scoreFlash.classList.add("score-window");
 
-                    // fade in down very fast, fade in out medium fast
                     let angle = (Math.random()*35)+25;
                     let xOffset = (Math.random()*41)+31;
                     let yOffset = (Math.random()*15)+5;
@@ -77,7 +80,10 @@ export function setupControls(game) {
                     score.classList.add("scored");
                     
                     console.log("   ++ Scored! New score: ",game.score);
-                    console.log("   Millis off:         ",(game.windowKeys[noteKey].note - keyDownTime) * (-1));
+
+                    let noteDiff = (game.windowKeys[noteKey].note - keyDownTime) * (-1);
+
+                    console.log("   Millis off:         ",noteDiff);
 
                     setTimeout(() => {
                         score.classList.remove("scored");

@@ -5,10 +5,10 @@ const FourOnTheFloorTest = [
    { time: "0:1:0", note: "C4", velocity: 0.9 },
    { time: "0:2:0", note: "C4", velocity: 0.9 },
    { time: "0:3:0", note: "C4", velocity: 0.9 },
-   { time: "1:0:0", note: "C4", velocity: 0.0 },
-   { time: "1:1:0", note: "C4", velocity: 0.0 },
-   { time: "1:2:0", note: "C4", velocity: 0.0 },
-   { time: "1:3:0", note: "C4", velocity: 0.0 }
+   { time: "1:0:0", note: "C4", velocity: 0.9 },
+   { time: "1:1:0", note: "C4", velocity: 0.9 },
+   { time: "1:2:0", note: "C4", velocity: 0.9 },
+   { time: "1:3:0", note: "C4", velocity: 0.9 }
 ];
 const StaticNotes = [
     { time: 0, note: "C3", velocity: 0.9 },
@@ -17,4 +17,4 @@ const StaticNotes = [
     { time: "0:3:3", note: "C4", velocity: 0.5 }
 ];
 
-export const STATIC_LIBRARY = [AMinorScale, AllNotes, FourOnTheFloorTest, StaticNotes]
+export const STATIC_LIBRARY = [AMinorScale, AllNotes, FourOnTheFloorTest, StaticNotes];
