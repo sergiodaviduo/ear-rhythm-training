@@ -125,7 +125,7 @@ function calibrateOnly(game) {
         console.log("Answer notes: " + game.getWindowKeyNotes());
         console.log("Player notes: " + game.playerNotes);
         document.getElementById("calibrate-notes").innerHTML = "";
-        if (newDelay > 300 || newDelay < 80) {
+        if (newDelay < 80) {
             document.getElementById("found-delay").innerHTML = newDelay+" milliseconds";
             document.getElementById("calibrate-notes").innerHTML = `
             <h2>Notes may have been missed, or you have significant input delay.</h2>
