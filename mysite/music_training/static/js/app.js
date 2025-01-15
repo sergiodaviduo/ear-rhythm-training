@@ -20212,6 +20212,8 @@
         document.getElementById("blueSquare").style.display = "none";
 
         document.getElementById("purpleSquare").style.display = "none";
+        document.getElementById("tutorial").style.display = "none";
+        document.getElementById("start-game-from-tutorial").style.display = "none";
     }
 
     function settings(game) {
@@ -20300,6 +20302,17 @@
         document.getElementById("blueSquare").style.display = "none";
 
         document.getElementById("purpleSquare").style.display = "none";
+    }
+
+    function tutorial() {
+        let all_elements_nl = document.querySelectorAll('*[id]');
+
+        for (let i = 0; i < all_elements_nl.length - 2; i++) {
+            all_elements_nl[i].style.display = "none";
+        }
+
+        document.getElementById("tutorial").style.display = "block";
+        document.getElementById("start-game-from-tutorial").style.display = "block";
     }
 
     function setupControls(game) {
@@ -20684,13 +20697,17 @@
             if (game.firstRun) {
                 await start();
                 game.firstRun = false;
+
+                tutorial();
+
+                return;
+            } else {
+                playGame(); //turn this into a menu object at some point, just for the logic, since this just changes the menu
+
+                game.answerTrack = answerTrack(game);
+
+                startGame(game);
             }
-            
-            playGame(); //turn this into a menu object at some point, just for the logic, since this just changes the menu
-
-            game.answerTrack = answerTrack(game);
-
-            startGame(game);
         });
 
         // Play again button
@@ -20699,6 +20716,15 @@
             game.answerTrack = answerTrack(game);
             startGame(game);
             document.getElementById("play-again").style.display = "none";
+        });
+
+        // Play from tutorial
+        document.getElementById("start-game-from-tutorial").addEventListener("click", async () => {
+            playGame(); //turn this into a menu object at some point, just for the logic, since this just changes the menu
+
+            game.answerTrack = answerTrack(game);
+
+            startGame(game);
         });
 
         // Back to menu (while in game)

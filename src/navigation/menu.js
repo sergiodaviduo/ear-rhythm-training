@@ -93,6 +93,8 @@ export function playGame() {
     document.getElementById("blueSquare").style.display = "none";
 
     document.getElementById("purpleSquare").style.display = "none";
+    document.getElementById("tutorial").style.display = "none";
+    document.getElementById("start-game-from-tutorial").style.display = "none";
 }
 
 export function settings(game) {
@@ -183,3 +185,13 @@ export function calibrate() {
     document.getElementById("purpleSquare").style.display = "none";
 }
 
+export function tutorial() {
+    let all_elements_nl = document.querySelectorAll('*[id]');
+
+    for (let i = 0; i < all_elements_nl.length - 2; i++) {
+        all_elements_nl[i].style.display = "none";
+    }
+
+    document.getElementById("tutorial").style.display = "block";
+    document.getElementById("start-game-from-tutorial").style.display = "block";
+}
