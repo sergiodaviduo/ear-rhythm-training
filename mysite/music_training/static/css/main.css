@@ -14,10 +14,13 @@
   overflow-x:hidden;
   margin:0
  }
+ h1, h2, h3, div {
+  color: white;
+ }
  body {
   height:100%;
   width:100%;
-  background-color:#fff;
+  background-color:#000;
   -moz-user-select:none;
   -khtml-user-select:none;
   -webkit-user-select:none;
@@ -45,47 +48,6 @@
   margin:0 7px
  }
 
- a#github {
-  z-index:1000
- }
- svg#github {
-  fill:#000;
-  color:#fff;
-  position:absolute;
-  top:0;
-  border:0;
-  right:0;
-  z-index:1000
- }
- svg#github:hover .octo-arm {
-  animation:wave 560ms ease-in-out
- }
- select#select-instrument {
-  position:relative;
-  width:240px;
-  height:60px;
-  margin:5px 2px;
-  padding:0 15px;
-  font-size:30px;
-  color:inherit;
-  text-align-last:center;
-  background:rgba(0,0,0,.2);
-  box-shadow:inset 0 0 0 4px rgba(0,0,0,.1);
-  border:0;
-  border-radius:5px;
-  transition:all .2s ease-out;
-  outline:none;
-  -webkit-appearance:none;
-  -moz-appearance:none;
-  appearance:none;
-  z-index:1000
- }
- select#select-instrument option {
-  color:inherit;
-  background:#fff;
-  border:0;
-  outline:none
- }
  #container {
   position:absolute;
   top:50%;
@@ -102,220 +64,11 @@
   width:100%;
   background-repeat:no-repeat
  }
- #touch {
-  display:none
- }
- #keys>div {
-  display:inline-block;
-  padding:0 8px
- }
- #keys>div span {
-  display:block;
-  margin:0 4px 8px
- }
- #taps,
- #layers {
-  position:absolute;
-  width:100%;
-  font-size:30px;
-  text-align:center;
-  color:#fff;
-  z-index:1000
- }
- #layers {
-  top:0
- }
- #taps {
-  bottom:0;
-  margin-bottom:50px
- }
- #taps .tap {
-  position:relative;
-  display:inline-block;
-  width:60px;
-  height:60px;
-  margin:5px 2px
- }
- #tap-left,
- #tap-right {
-  width:calc(2.5 * 60px + 18px)!important;
-  height:calc(2 * 60px + 10px)!important
- }
- #tap-space {
-  width:calc(300px + 45px)!important;
-  height:calc(2 * 60px + 10px)!important
- }
- .highlight {
-  background:rgba(119,158,203,.6)!important;
-  transition:none!important;
-  transform:scale(.95);
-  transform-origin:50% 50%
- }
- .octo-arm {
-  transform-origin:130px 106px
- }
- .key {
-  display:inline-block!important;
-  min-width:35px;
-  height:35px;
-  padding:4px 0 0 6px;
-  background:#f5f5f5;
-  border:2px solid #b3b3b3;
-  border-radius:6px;
-  box-shadow:inset -6px -4px 0 0 #ccc;
-  text-align:left;
-  font-size:15px
- }
- .key-wide {
-  min-width:135px!important
- }
- .tap {
-  background:rgba(0,0,0,.2);
-  box-shadow:inset 0 0 0 4px rgba(0,0,0,.1);
-  width:60px;
-  height:135px;
-  border-radius:5px;
-  text-align:center;
-  transition:all .2s ease-out;
-  z-index:1000
- }
- .tap span {
-  display:block;
-  position:relative;
-  font-size:30px;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  color:#fff;
-  text-shadow:1px 1px 1px rgba(0,0,0,.2);
-  pointer-events:none
- }
- .cat div {
-  background-position-y:0;
-  background-position-x:0
- }
- .cat>#head {
-  background-image:url(https://bongo.cat/images/cat.png);
-  z-index:10
- }
- /*.cat>#u-head {
-  background-image:url(https://bongo.cat/images/cat.png);
-  z-index:10;
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
- }*/
- .cat>#mouth {
-  background-image:url(https://bongo.cat/images/mouth.png);
-  z-index:20;
- }
- /*.cat>#u-mouth {
-  background-image:url(https://bongo.cat/images/mouth.png);
-  z-index:20;
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
- }*/
- .cat>#paw-left {
-  background-image:url(https://bongo.cat/images/paw-left.png);
-  z-index:30
- }
- .cat>#paw-right {
-  background-image:url(https://bongo.cat/images/paw-right.png);
-  z-index:30
- }
- /*.cat>#u-paw-left {
-  background-image:url(https://bongo.cat/images/paw-left.png);
-  z-index:30;
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
- }
- .cat>#u-paw-right {
-  background-image:url(https://bongo.cat/images/paw-right.png);
-  z-index:30;
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
- }*/
-
-
 
  .instruments {
   z-index:20;
   top: 0;
  }
- .instruments>#bongo,
- #layer-bongo {
-  background-image:url(../images/bongo.png)
- }
- .instruments>.keyboard,
- #layer-keyboard {
-  background-image:url(https://bongo.cat/images/keyboard.png)
- }
- .instruments-player>.keyboard,
- #layer-keyboard {
-  background-image:url(https://bongo.cat/images/keyboard.png);
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
- }
- .instruments>#cymbal,
- #layer-cymbal {
-  background-image:url(../images/cymbal.png)
- }
- .instruments>#marimba,
- #layer-marimba {
-  background-image:url(../images/marimba.png)
- }
- .instruments>#tambourine,
- #layer-tambourine {
-  background-image:url(../images/tambourine.png)
- }
- .instruments>#cowbell,
- #layer-cowbell {
-  background-image:url(../images/cowbell.png)
- }
- .instruments>.keyboard,
- .instruments>#cymbal,
- .instruments>#marimba,
- .instruments>#tambourine,
- .instruments>#cowbell {
-  visibility:hidden
- }
-
- @media(prefers-color-scheme:dark) {
-  body {
-   background-color:#000!important;
-   color:#fff!important
-  }
-  header a,
-  footer a {
-   color:#fff!important
-  }
-  hr {
-   background:#fff!important
-  }
-
-  .key {
-   background:#333;
-   border:2px solid #252525;
-   box-shadow:inset -6px -4px 0 0 #1b1b1b
-  }
-  select#select-instrument,
-  .tap {
-   background:rgba(255,255,255,.2);
-   box-shadow:inset 0 0 0 4px rgba(255,255,255,.1)
-  }
-  select#select-instrument option {
-   background:#000
-  }
-  .tap span {
-   text-shadow:none
-  }
-  .cat div {
-   background-position-y:-450px
-  }
-  .cc-window {
-   border:1px solid rgba(255,255,255,.2)!important
-  }
- }
-
 
 .score-window {
   text-align: center;
@@ -355,7 +108,6 @@ button {
   cursor: pointer;
   box-sizing: border-box;
   width: 154px;
-  /*height: 49px;*/
   color: #fff;
   border: none;
   font-size: 20px;
@@ -413,8 +165,6 @@ button:hover::before {
 .keyboard-rainbow {
   top: 70%;
   left: 10%;
-  /*transform: skewX(60deg) rotate(-13.5deg) scaleY(-1) scaleX(-3);*/
-  /*transform: rotate3d(-2, -0.3, 0.5, -60deg);*/
   transform: rotate3d(-2, -0.3, 0.5, 281deg) scaleY(-2) scaleX(2);
   background-image: url(../images/piano1.png);
   max-width: 256px;
@@ -424,7 +174,6 @@ button:hover::before {
 .keyboard-rainbow-cpu {
   top: 74%;
   left: -5%;
-  /*transform: skewX(60deg) rotate(-13.5deg) scaleY(-1) scaleX(3);*/
   transform: rotate3d(-2, 0.3, -0.5, 281deg) scaleY(-2) scaleX(2);
   background-image: url(../images/piano1.png);
   max-width: 256px;
