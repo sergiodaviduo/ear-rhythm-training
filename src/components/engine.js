@@ -265,24 +265,53 @@ export function gameRoom(game) {
 }
 
 function gameCountDown(game, i=0) {
+    let count = null;
+    let animateCountDown = () => {
+        let countNode = document.getElementById("count");
+        let countClone = countNode.cloneNode(true);
+        countClone.style.display = "block";
+        countClone.classList.add("count-down-beg");
+        countClone.style.top = String(window.screen.height / 2) + "px";
+        countClone.style.left = String(window.screen.width / 2) + "px";;
+        countClone.addEventListener('animationend', () => {
+            countClone.classList.remove("count-down-beg");
+            countClone.classList.add("count-down-end");
+            countClone.addEventListener('animationend', () => {
+                countClone.remove();
+            });
+        });
+
+        document.getElementById("countdown").appendChild(countClone);
+        
+        return countClone;
+    }
+    
     switch(i) {
         case 1:
-            console.log("1");
+            count = animateCountDown();
+            count.innerHTML = "1";
             break;
         case 3:
-            console.log("2");
+            count = animateCountDown();
+            count.innerHTML = "2";
             break;
         case 5:
-            console.log("1");
+            count = animateCountDown();
+            count.innerHTML = "1";
             break;
         case 6:
-            console.log("2");
+            count = animateCountDown();
+            count.innerHTML = "2";
             break;
         case 7:
-            console.log("3");
+            count = animateCountDown();
+            count.innerHTML = "3";
             break;
         case 8:
-            console.log("4");
+            count = animateCountDown();
+            count.innerHTML = "4";
+            break;
+        case 9:
             break;
         default:
     }
