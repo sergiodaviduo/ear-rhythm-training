@@ -20517,7 +20517,8 @@
         game.instrument = new Synth();
         let synth = game.instrument;
         let cpuAnimations = document.getElementById("cpu-duck");
-        document.getElementById("scoreResult");
+        let eightNoteInMillis = game.measureToMillis() / 8;
+        console.log("milliseconds in an 8th note: "+eightNoteInMillis);
         let delay = game.delay;
         let currentTime = 0;
 
@@ -20536,8 +20537,13 @@
                 game.addNote(currentTime,85, 70, 30);
 
                 // plays animation of cpu
-                noteTrigger(delay, cpuAnimations, value.velocity);
-                noteRelease(delay+50, cpuAnimations, value.velocity);
+                if(eightNoteInMillis < 200) {
+                    noteTrigger(delay-50, cpuAnimations, value.velocity);
+                    noteRelease(delay-20, cpuAnimations, value.velocity);
+                } else {
+                    noteTrigger(delay, cpuAnimations, value.velocity);
+                    noteRelease(delay+50, cpuAnimations, value.velocity);
+                }
             }
         }), song).start("2m");
 
