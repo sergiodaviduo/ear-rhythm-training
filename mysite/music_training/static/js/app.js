@@ -20302,6 +20302,8 @@
         document.getElementById("blueSquare").style.display = "none";
 
         document.getElementById("purpleSquare").style.display = "none";
+        document.getElementById("tutorial").style.display = "none";
+        document.getElementById("start-game-from-tutorial").style.display = "none";
     }
 
     function tutorial() {
