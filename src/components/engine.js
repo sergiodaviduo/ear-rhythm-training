@@ -1,6 +1,6 @@
 import { randomizerExtender } from './generators.js';
 import { metronome } from './instruments.js';
-import { menu, playGame, settings, showScoreSubmitMenu, endOfSong, calibrateIntro, calibrate } from '../navigation/menu.js';
+import { menu, playGame, settings, showScoreSubmitMenu, endOfSong, calibrateIntro, calibrate, tutorial } from '../navigation/menu.js';
 import { setupControls, inputClose, inputOpen, noteRelease, noteTrigger } from '../components/controls.js';
 import { STATIC_LIBRARY } from "../constants/notes.js";
 import * as Tone from 'tone';
@@ -208,13 +208,17 @@ export function gameRoom(game) {
         if (game.firstRun) {
             await Tone.start();
             game.firstRun = false;
+
+            tutorial()
+
+            return;
+        } else {
+            playGame(); //turn this into a menu object at some point, just for the logic, since this just changes the menu
+
+            game.answerTrack = answerTrack(game);
+
+            startGame(game);
         }
-        
-        playGame(); //turn this into a menu object at some point, just for the logic, since this just changes the menu
-
-        game.answerTrack = answerTrack(game);
-
-        startGame(game);
     });
 
     // Play again button
@@ -223,6 +227,15 @@ export function gameRoom(game) {
         game.answerTrack = answerTrack(game);
         startGame(game);
         document.getElementById("play-again").style.display = "none";
+    });
+
+    // Play from tutorial
+    document.getElementById("start-game-from-tutorial").addEventListener("click", async () => {
+        playGame(); //turn this into a menu object at some point, just for the logic, since this just changes the menu
+
+        game.answerTrack = answerTrack(game);
+
+        startGame(game);
     });
 
     // Back to menu (while in game)
