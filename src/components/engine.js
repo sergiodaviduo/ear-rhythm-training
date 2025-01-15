@@ -24,7 +24,8 @@ function answerTrack(game, songLength=4, song=randomizerExtender(songLength, 5))
     game.instrument = new Tone.Synth();
     let synth = game.instrument;
     let cpuAnimations = document.getElementById("cpu-duck");
-    let scoreResult = document.getElementById("scoreResult");
+    let eightNoteInMillis = game.measureToMillis() / 8;
+    console.log("milliseconds in an 8th note: "+eightNoteInMillis);
 
     let triggerNum = 0;
     let delay = game.delay;
@@ -45,8 +46,13 @@ function answerTrack(game, songLength=4, song=randomizerExtender(songLength, 5))
             game.addNote(currentTime,85, 70, 30);
 
             // plays animation of cpu
-            noteTrigger(delay, cpuAnimations, value.velocity);
-            noteRelease(delay+50, cpuAnimations, value.velocity);
+            if(eightNoteInMillis < 200) {
+                noteTrigger(delay-50, cpuAnimations, value.velocity);
+                noteRelease(delay-20, cpuAnimations, value.velocity);
+            } else {
+                noteTrigger(delay, cpuAnimations, value.velocity);
+                noteRelease(delay+50, cpuAnimations, value.velocity);
+            }
         }
 
         triggerNum++;
