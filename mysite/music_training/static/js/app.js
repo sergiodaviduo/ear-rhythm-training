@@ -20097,12 +20097,16 @@
         return noteGroup;
     }
 
-    function fourByFour() {
+    function metronome(game, actionCallback = (game, i) => {}) {
+        let i = 0;
+
         const kickDrum = new MembraneSynth({
             volume: 4
         }).toDestination();
 
         const kickPart = new Part(function(time) {
+            i++;
+            actionCallback(game, i);
             kickDrum.triggerAttackRelease('C1', '8n', time);
         }, [{ time: '0:0' },{ time: '0:1' },{ time: '0:2' },{ time: '0:3' }]).start(0);
 
@@ -20110,6 +20114,8 @@
 
         return kickPart;
     }
+
+    // export { keyboard, metronome };
 
     function menu() {
 
@@ -20492,12 +20498,6 @@
     //import Tone from 'tone';
     //import animate from 'animate.js';
 
-    function startMetronome() {
-        let metronome = fourByFour();
-
-        return metronome;
-    }
-
     // This starts the main song track session
 
     function answerTrack(game, songLength=4, song=randomizerExtender(songLength, 5)) {
@@ -20740,6 +20740,54 @@
         });
     }
 
+    function gameCountDown(game, i=0) {
+        let count = null;
+        let animateCountDown = () => {
+            let countNode = document.getElementById("count");
+            let countClone = countNode.cloneNode(true);
+            countClone.style.display = "block";
+            countClone.classList.add("count-down-beg");
+            countClone.style.top = String(window.screen.height / 2) + "px";
+            countClone.style.left = String(window.screen.width / 2) + "px";        countClone.addEventListener('animationend', () => {
+                countClone.classList.remove("count-down-beg");
+                countClone.classList.add("count-down-end");
+                countClone.addEventListener('animationend', () => {
+                    countClone.remove();
+                });
+            });
+
+            document.getElementById("countdown").appendChild(countClone);
+            
+            return countClone;
+        };
+        
+        switch(i) {
+            case 1:
+                count = animateCountDown();
+                count.innerHTML = "1";
+                break;
+            case 3:
+                count = animateCountDown();
+                count.innerHTML = "2";
+                break;
+            case 5:
+                count = animateCountDown();
+                count.innerHTML = "1";
+                break;
+            case 6:
+                count = animateCountDown();
+                count.innerHTML = "2";
+                break;
+            case 7:
+                count = animateCountDown();
+                count.innerHTML = "3";
+                break;
+            case 8:
+                count = animateCountDown();
+                count.innerHTML = "4";
+                break;
+        }
+    }
 
     // Starts or stops all songs / gameplay
     function startGame(game) {
@@ -20752,7 +20800,7 @@
 
         console.log("delay: ",game.delay);
 
-        game.clickTrack = startMetronome();
+        game.clickTrack = metronome(game, gameCountDown);
 
         /*if (game.firstRun == true) {
             console.log("first run");

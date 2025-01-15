@@ -1,5 +1,5 @@
 import { randomizerExtender } from './generators.js';
-import { fourByFour } from './instruments.js';
+import { metronome } from './instruments.js';
 import { menu, playGame, settings, showScoreSubmitMenu, endOfSong, calibrateIntro, calibrate } from '../navigation/menu.js';
 import { setupControls, inputClose, inputOpen, noteRelease, noteTrigger } from '../components/controls.js';
 import { STATIC_LIBRARY } from "../constants/notes.js";
@@ -17,12 +17,6 @@ let animate = require("animate.css")*/
 //import party from 'party-js';
 //import Tone from 'tone';
 //import animate from 'animate.js';
-
-function startMetronome() {
-    let metronome = fourByFour();
-
-    return metronome;
-}
 
 // This starts the main song track session
 
@@ -270,6 +264,58 @@ export function gameRoom(game) {
     });
 }
 
+function gameCountDown(game, i=0) {
+    let count = null;
+    let animateCountDown = () => {
+        let countNode = document.getElementById("count");
+        let countClone = countNode.cloneNode(true);
+        countClone.style.display = "block";
+        countClone.classList.add("count-down-beg");
+        countClone.style.top = String(window.screen.height / 2) + "px";
+        countClone.style.left = String(window.screen.width / 2) + "px";;
+        countClone.addEventListener('animationend', () => {
+            countClone.classList.remove("count-down-beg");
+            countClone.classList.add("count-down-end");
+            countClone.addEventListener('animationend', () => {
+                countClone.remove();
+            });
+        });
+
+        document.getElementById("countdown").appendChild(countClone);
+        
+        return countClone;
+    }
+    
+    switch(i) {
+        case 1:
+            count = animateCountDown();
+            count.innerHTML = "1";
+            break;
+        case 3:
+            count = animateCountDown();
+            count.innerHTML = "2";
+            break;
+        case 5:
+            count = animateCountDown();
+            count.innerHTML = "1";
+            break;
+        case 6:
+            count = animateCountDown();
+            count.innerHTML = "2";
+            break;
+        case 7:
+            count = animateCountDown();
+            count.innerHTML = "3";
+            break;
+        case 8:
+            count = animateCountDown();
+            count.innerHTML = "4";
+            break;
+        case 9:
+            break;
+        default:
+    }
+}
 
 // Starts or stops all songs / gameplay
 function startGame(game) {
@@ -282,7 +328,7 @@ function startGame(game) {
 
     console.log("delay: ",game.delay);
 
-    game.clickTrack = startMetronome(game);
+    game.clickTrack = metronome(game, gameCountDown);
 
     /*if (game.firstRun == true) {
         console.log("first run");
