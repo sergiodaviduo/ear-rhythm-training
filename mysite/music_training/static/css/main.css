@@ -382,8 +382,13 @@ button:hover::before {
 }
 
 .player {
-  top: 60%;
-  left: -131%;
+  top: 61%;
+  left: -76%;
+}
+
+.duck {
+  max-width: 274px;
+  max-height: 201px;
 }
 
 .duck>#player-duck {
@@ -406,17 +411,24 @@ button:hover::before {
 }
 
 .keyboard-rainbow {
-  top: 7%;
-  left: -50%;
-  transform: skewX(60deg) rotate(-13.5deg) scaleY(-1) scaleX(-3);
+  top: 70%;
+  left: 10%;
+  /*transform: skewX(60deg) rotate(-13.5deg) scaleY(-1) scaleX(-3);*/
+  /*transform: rotate3d(-2, -0.3, 0.5, -60deg);*/
+  transform: rotate3d(-2, -0.3, 0.5, 281deg) scaleY(-2) scaleX(2);
   background-image: url(../images/piano1.png);
+  max-width: 256px;
+  max-height: 84px;
 }
 
 .keyboard-rainbow-cpu {
-  top: 6%;
-  left: -120%;
-  transform: skewX(60deg) rotate(-13.5deg) scaleY(-1) scaleX(-3);
+  top: 74%;
+  left: -5%;
+  /*transform: skewX(60deg) rotate(-13.5deg) scaleY(-1) scaleX(3);*/
+  transform: rotate3d(-2, 0.3, -0.5, 281deg) scaleY(-2) scaleX(2);
   background-image: url(../images/piano1.png);
+  max-width: 256px;
+  max-height: 84px;
 }
 
 .instruments-player {
