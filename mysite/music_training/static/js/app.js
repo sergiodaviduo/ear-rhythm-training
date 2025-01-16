@@ -19940,8 +19940,6 @@
             this._notesInMeasure = notes;
         }
 
-        // create scoring window
-
         addNote(currentTime, normWindow, greatWindow, perfWindow, signature=1) {
             let measure = this.measureToMillis() * signature;
             let normalOpen = this._delay-normWindow + measure + currentTime;

@@ -128,3 +128,45 @@ test('togglePlay()', () => {
 
     expect(Mock.isPlaying).to.equal(false);
 });
+
+// addNote() adds the expected note to windowKeys
+test('addNote() adds the expected note to windowKeys', () => {
+    new Spy();
+    const Mock1 = Spy.mock.results[4].value;
+
+    Mock1.addNote(1000000, 80, 60, 40);
+
+    expect(Mock1.windowKeys).toHaveLength(1);
+    expect(Mock1.windowKeys[0]).toContain(
+        {
+            nOpen: 1002070,
+            gOpen: 1002090,
+            pOpen: 1002110,
+            note: 1002150,
+            pClose: 1002190,
+            gClose: 1002210,
+            nClose: 1002230,
+            scored: 0
+        }
+    );
+
+    new Spy();
+
+    const currentTime = +new Date();
+    const Mock2 = Spy.mock.results[5].value;
+
+    Mock2.addNote(currentTime, 80, 60, 40);
+
+    expect(Mock2.windowKeys[0]).toContain(
+        {
+            nOpen: currentTime + 2070,
+            gOpen: currentTime + 2090,
+            pOpen: currentTime + 2110,
+            note: currentTime + 2150,
+            pClose: currentTime + 2190,
+            gClose: currentTime + 2210,
+            nClose: currentTime + 2230,
+            scored: 0
+        }
+    );
+});
