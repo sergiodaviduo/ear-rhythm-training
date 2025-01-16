@@ -12,8 +12,8 @@ test('Game constructor returns expected defaults', () => {
         _score: 0,
         _totalSongNotes: 0,
         _isPlaying: false,
-        _tempo: 100,
-        _delay: 100,
+        _tempo: 120,
+        _delay: 150,
         _firstRun: true,
         _scored: false,
         
