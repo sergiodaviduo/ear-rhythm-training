@@ -9,7 +9,7 @@ Requires at least Django 4.2.0, psycopg2 2.9, Node.js 19, and python 3.12. Teste
 
 Install with "npm install".
 
-Then, run "npm run js" to package JS changes made in /src, and to bundle JS make live changes to JS app.
+Then, run "npm run js" to package JS modules and files in /src into one "app.js", and to bundle JS & make live changes to JS app.
 
 Finally, start web server with "npm start".
 
