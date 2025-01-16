@@ -19802,17 +19802,19 @@
     getContext();
 
     class Game {
-        constructor(tempo=120, delay=45) {
+        constructor(tempo=120, delay=150) {
             this._score = 0;
             this._totalSongNotes = 0;
-            this._isPlaying = false;
-            this._inputWindowO = 0;
-            this._inputWindowC = 0;
+            this._notesInMeasure = 0;
             this._tempo = tempo;
             this._delay = delay;
+            this._isPlaying = false;
+            this._didScore = false;
             this._firstRun = true;
-            this._scored = false;
-            
+
+            this._instrument = null;
+            this._clickTrack = null;
+            this._answerTrack = null;
             this._windowKeys = [];
             this._playerNotes = [];
         }
@@ -19853,14 +19855,6 @@
             return this._playerNotes;
         }
 
-        get inputWindowO() {
-            return this._inputWindowO;
-        }
-
-        get inputWindowC() {
-            return this._inputWindowC;
-        }
-
         get windowKeys() {
             return this._windowKeys;
         }
@@ -19874,7 +19868,7 @@
         }
 
         get didScore() {
-            return this._scored;
+            return this._didScore;
         }
 
         set firstRun(firstRun) {
@@ -19883,7 +19877,6 @@
 
         set score(score) {
             this._score = score;
-            document.getElementById("score").innerHTML = "Score: " + score;
         }
 
         set totalSongNotes(totalSongNotes) {
@@ -19892,27 +19885,10 @@
 
         set tempo(tempo) {
             this._tempo = tempo;
-            Transport.bpm.value = tempo;
         }
 
         set delay(delay) {
-            document.getElementById('liveDelay').innerHTML = delay;
-            document.getElementById('delay').value = delay;
             this._delay = delay;
-        }
-
-        togglePlay() {
-            if (this._isPlaying) {
-                this._isPlaying = false;
-            } else {
-                this._isPlaying = true;
-            }
-        }
-
-        measureToMillis() {
-            let measureInMillis = (60000 / this._tempo) * 4;
-
-            return measureInMillis;
         }
 
         set answerTrack(track) {
@@ -19964,16 +19940,6 @@
             this._notesInMeasure = notes;
         }
 
-        set inputWindowO(milliseconds) {
-            this._inputWindowO = milliseconds;
-        }
-
-        set inputWindowC(milliseconds) {
-            this._inputWindowC = milliseconds;
-        }
-
-        // create scoring window
-
         addNote(currentTime, normWindow, greatWindow, perfWindow, signature=1) {
             let measure = this.measureToMillis() * signature;
             let normalOpen = this._delay-normWindow + measure + currentTime;
@@ -20013,8 +19979,22 @@
             return noteKeys;
         }
 
-        set didScore(scored) {
-            this._scored = scored;
+        set didScore(didScore) {
+            this._didScore = didScore;
+        }
+
+        togglePlay() {
+            if (this._isPlaying) {
+                this._isPlaying = false;
+            } else {
+                this._isPlaying = true;
+            }
+        }
+
+        measureToMillis() {
+            let measureInMillis = (60000 / this._tempo) * 4;
+
+            return measureInMillis;
         }
     }
 
@@ -20590,6 +20570,7 @@
         game.totalSongNotes = 8;
         game.delay = 0;
         game.tempo = 120;
+        Transport.bpm.value = game.tempo;
 
         game.notesInMeasure = 5;
 
@@ -20623,9 +20604,13 @@
             <h2>Try calibration again, or go back to settings to set manually.</h2>
             `;
                 game.delay = 150;
+                document.getElementById('liveDelay').innerHTML = game.delay;
+                document.getElementById('delay').value = game.delay;
             } else {
                 document.getElementById("found-delay").innerHTML = newDelay+" milliseconds";
                 game.delay = newDelay;
+                document.getElementById('liveDelay').innerHTML = game.delay;
+                document.getElementById('delay').value = game.delay;
             }
             
             document.getElementById("after-calibration").style.display = "block";
@@ -20634,6 +20619,7 @@
             game.clearNotes();
             game.playerNotes = [];
             game.tempo = tempTempo;
+            Transport.bpm.value = game.tempo;
             game.totalSongNotes = 0;
             Transport.stop();
             Transport.cancel();
@@ -20660,6 +20646,7 @@
         // setup delay slider
         delaySlider.addEventListener('change', function() { 
             game.delay = Number(delaySlider.value);
+            document.getElementById('liveDelay').innerHTML = game.delay;
             console.log("delay set to: ", game.delay);
         });
 
@@ -20697,6 +20684,7 @@
         // setup tempo slider
         tempoSlider.addEventListener('change', function() { 
             game.tempo = Number(tempoSlider.value);
+            Transport.bpm.value = game.tempo;
             document.getElementById('liveTempo').innerHTML = game.tempo;
         });
 
@@ -20768,9 +20756,12 @@
         // set to default
         document.getElementById("default-settings").addEventListener("click", event => {
             game.tempo = 120;
+            Transport.bpm.value = game.tempo;
             game.delay = 150;
             document.getElementById('liveTempo').innerHTML = game.tempo;
             document.getElementById('tempo').value = game.tempo;
+            document.getElementById('liveDelay').innerHTML = game.delay;
+            document.getElementById('delay').value = game.delay;
         });
     }
 
@@ -20826,6 +20817,7 @@
     // Starts or stops all songs / gameplay
     function startGame(game) {
         game.score = 0;
+        document.getElementById("score").innerHTML = "Score: " + game.score;
         game.togglePlay();
 
         Transport.bpm.value = game.tempo;
@@ -20870,6 +20862,7 @@
         game.instrument.dispose();
         Transport.stop();
         game.score = 0;
+        document.getElementById("score").innerHTML = "Score: " + game.score;
         console.log(Transport.state + " after stopping game");
     }
 

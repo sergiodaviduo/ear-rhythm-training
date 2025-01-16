@@ -9,8 +9,8 @@
   },
   "scripts": {
     "start": "python mysite/manage.py runserver 127.0.0.1:80",
-    "test": "vitest run --coverage",
-    "testW": "vitest",
+    "test": "vitest run --coverage --environment jsdom",
+    "testW": "vitest --environment jsdom",
     "js": "rollup -c -w"
   },
   "devDependencies": {

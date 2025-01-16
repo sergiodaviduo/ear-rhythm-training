@@ -2,92 +2,84 @@ import { assert, expect, test, vi } from 'vitest'
 import { Game } from '../src/components/game.js';
 
 const Spy = vi.fn(() => (new Game));
-new Spy();
 
 // Object has correct defaults when constructed
 test('Game constructor returns expected defaults', () => {
+    new Spy();
     const Construction = Spy.mock.results[0].value;
 
     expect(Construction).toEqual({
         _score: 0,
+        _totalSongNotes: 0,
+        _notesInMeasure: 0,
+        _tempo: 120,
+        _delay: 150,
         _isPlaying: false,
-        _inputWindowO: 0,
-        _inputWindowC: 0,
-        _tempo: 100,
-        _delay: 100
+        _firstRun: true,
+        _didScore: false,
+
+        _instrument: null,
+        _clickTrack: null,
+        _answerTrack: null,
+        _windowKeys: [],
+        _playerNotes: []
     });
 });
 
-// Can set score, tempo, and delay, and retrieve their set value
-test('Changing score, tempo, delay', () => {
-    const Mock = Spy.mock.results[0].value;
-
-    Mock.score = 1;
-    Mock.tempo = 2;
-    Mock.delay = 3;
-
-    expect(Mock).toEqual({
-        _score: 1,
-        _isPlaying: false,
-        _inputWindowO: 0,
-        _inputWindowC: 0,
-        _tempo: 2,
-        _delay: 3
-    });
-
-    expect(Mock.score).to.equal(1);
-    expect(Mock.tempo).to.equal(2);
-    expect(Mock.delay).to.equal(3);
-});
-
-// Can set answerTrack, clickTrack, and instrument, and retrieve their set value
-test('Changing answerTrack, clickTrack, instrument', () => {
+// Class getters work as expected
+test('Class getters work as expected', () => {
     new Spy();
     const Mock = Spy.mock.results[1].value;
 
-    Mock.answerTrack = 1;
-    Mock.clickTrack = 2;
-    Mock.instrument = 3;
-
-    expect(Mock).toEqual({
-        _score: 0,
-        _isPlaying: false,
-        _inputWindowO: 0,
-        _inputWindowC: 0,
-        _tempo: 100,
-        _delay: 100,
-        _answerTrack: 1,
-        _clickTrack: 2,
-        _instrument: 3
-    });
-
-    expect(Mock.answerTrack).to.equal(1);
-    expect(Mock.clickTrack).to.equal(2);
-    expect(Mock.instrument).to.equal(3);
+    expect(Mock.score).to.equal(0);
+    expect(Mock.totalSongNotes).to.equal(0);
+    expect(Mock.notesInMeasure).to.equal(0);
+    expect(Mock.tempo).to.equal(120);
+    expect(Mock.delay).to.equal(150);
+    expect(Mock.firstRun).to.equal(true);
+    expect(Mock.didScore).to.equal(false);
+    expect(Mock.instrument).toBeNull();
+    expect(Mock.clickTrack).toBeNull();
+    expect(Mock.answerTrack).toBeNull();
+    expect(Mock.playerNotes).toHaveLength(0);
+    expect(Mock.playerNotes).toBeTypeOf('object');
+    expect(Mock.windowKeys).toHaveLength(0);
+    expect(Mock.windowKeys).toBeTypeOf('object');
 });
 
-// Can set notesInMeasure, inputWindowO, and inputWindowC, and retrieve their set value
-test('Changing notesInMeasure, inputWindowO, inputWindowC', () => {
+// Class setters work as expected
+test('Class setters work as expected', () => {
     new Spy();
     const Mock = Spy.mock.results[2].value;
 
-    Mock.notesInMeasure = 1;
-    Mock.inputWindowO = 2;
-    Mock.inputWindowC = 3;
+    Mock.score += 100;
+    Mock.totalSongNotes = 80;
+    Mock.notesInMeasure = 5;
+    Mock.tempo += 20;
+    Mock.delay = 200;
+    Mock.firstRun = false,
+    Mock.didScore = true,
+    Mock.instrument = {test1:"test1"};
+    Mock.clickTrack = {test2:"test2"};
+    Mock.answerTrack = {test3:"test3"};
+    Mock.playerNotes = [5,6,7,8];
 
     expect(Mock).toEqual({
-        _score: 0,
+        _score: 100,
+        _totalSongNotes: 80,
+        _notesInMeasure: 5,
+        _tempo: 140,
+        _delay: 200,
         _isPlaying: false,
-        _inputWindowO: 2,
-        _inputWindowC: 3,
-        _notesInMeasure: 1,
-        _tempo: 100,
-        _delay: 100
-    });
+        _firstRun: false,
+        _didScore: true,
 
-    expect(Mock.notesInMeasure).to.equal(1);
-    expect(Mock.inputWindowO).to.equal(2);
-    expect(Mock.inputWindowC).to.equal(3);
+        _instrument: {test1:"test1"},
+        _clickTrack: {test2:"test2"},
+        _answerTrack: {test3:"test3"},
+        _windowKeys: [],
+        _playerNotes: [5,6,7,8]
+    });
 });
 
 // togglePlay() changes play state of Game object
@@ -98,11 +90,19 @@ test('togglePlay()', () => {
 
     expect(Mock).toEqual({
         _score: 0,
+        _totalSongNotes: 0,
+        _notesInMeasure: 0,
+        _tempo: 120,
+        _delay: 150,
         _isPlaying: true,
-        _inputWindowO: 0,
-        _inputWindowC: 0,
-        _tempo: 100,
-        _delay: 100
+        _firstRun: true,
+        _didScore: false,
+
+        _instrument: null,
+        _clickTrack: null,
+        _answerTrack: null,
+        _windowKeys: [],
+        _playerNotes: []
     });
 
     expect(Mock.isPlaying).to.equal(true);
@@ -111,12 +111,62 @@ test('togglePlay()', () => {
 
     expect(Mock).toEqual({
         _score: 0,
+        _totalSongNotes: 0,
+        _notesInMeasure: 0,
+        _tempo: 120,
+        _delay: 150,
         _isPlaying: false,
-        _inputWindowO: 0,
-        _inputWindowC: 0,
-        _tempo: 100,
-        _delay: 100
+        _firstRun: true,
+        _didScore: false,
+
+        _instrument: null,
+        _clickTrack: null,
+        _answerTrack: null,
+        _windowKeys: [],
+        _playerNotes: []
     });
 
     expect(Mock.isPlaying).to.equal(false);
+});
+
+// addNote() adds the expected note to windowKeys
+test('addNote() adds the expected note to windowKeys', () => {
+    new Spy();
+    const Mock1 = Spy.mock.results[4].value;
+
+    Mock1.addNote(1000000, 80, 60, 40);
+
+    expect(Mock1.windowKeys).toHaveLength(1);
+    expect(Mock1.windowKeys[0]).toContain(
+        {
+            nOpen: 1002070,
+            gOpen: 1002090,
+            pOpen: 1002110,
+            note: 1002150,
+            pClose: 1002190,
+            gClose: 1002210,
+            nClose: 1002230,
+            scored: 0
+        }
+    );
+
+    new Spy();
+
+    const currentTime = +new Date();
+    const Mock2 = Spy.mock.results[5].value;
+
+    Mock2.addNote(currentTime, 80, 60, 40);
+
+    expect(Mock2.windowKeys[0]).toContain(
+        {
+            nOpen: currentTime + 2070,
+            gOpen: currentTime + 2090,
+            pOpen: currentTime + 2110,
+            note: currentTime + 2150,
+            pClose: currentTime + 2190,
+            gClose: currentTime + 2210,
+            nClose: currentTime + 2230,
+            scored: 0
+        }
+    );
 });

@@ -99,6 +99,7 @@ function calibrateOnly(game) {
     game.totalSongNotes = 8;
     game.delay = 0;
     game.tempo = 120;
+    Tone.Transport.bpm.value = game.tempo;
 
     game.notesInMeasure = 5;
 
@@ -132,9 +133,13 @@ function calibrateOnly(game) {
             <h2>Try calibration again, or go back to settings to set manually.</h2>
             `;
             game.delay = 150;
+            document.getElementById('liveDelay').innerHTML = game.delay;
+            document.getElementById('delay').value = game.delay;
         } else {
             document.getElementById("found-delay").innerHTML = newDelay+" milliseconds";
             game.delay = newDelay;
+            document.getElementById('liveDelay').innerHTML = game.delay;
+            document.getElementById('delay').value = game.delay;
         }
         
         document.getElementById("after-calibration").style.display = "block";
@@ -143,6 +148,7 @@ function calibrateOnly(game) {
         game.clearNotes();
         game.playerNotes = [];
         game.tempo = tempTempo;
+        Tone.Transport.bpm.value = game.tempo;
         game.totalSongNotes = 0;
         Tone.Transport.stop();
         Tone.Transport.cancel();
@@ -169,6 +175,7 @@ export function gameRoom(game) {
     // setup delay slider
     delaySlider.addEventListener('change', function() { 
         game.delay = Number(delaySlider.value);
+        document.getElementById('liveDelay').innerHTML = game.delay;
         console.log("delay set to: ", game.delay);
     });
 
@@ -206,6 +213,7 @@ export function gameRoom(game) {
     // setup tempo slider
     tempoSlider.addEventListener('change', function() { 
         game.tempo = Number(tempoSlider.value);
+        Tone.Transport.bpm.value = game.tempo;
         document.getElementById('liveTempo').innerHTML = game.tempo;
     });
 
@@ -277,9 +285,12 @@ export function gameRoom(game) {
     // set to default
     document.getElementById("default-settings").addEventListener("click", event => {
         game.tempo = 120;
+        Tone.Transport.bpm.value = game.tempo;
         game.delay = 150;
         document.getElementById('liveTempo').innerHTML = game.tempo;
         document.getElementById('tempo').value = game.tempo;
+        document.getElementById('liveDelay').innerHTML = game.delay;
+        document.getElementById('delay').value = game.delay;
     });
 }
 
@@ -339,6 +350,7 @@ function gameCountDown(game, i=0) {
 // Starts or stops all songs / gameplay
 function startGame(game) {
     game.score = 0;
+    document.getElementById("score").innerHTML = "Score: " + game.score;
     game.togglePlay();
 
     Tone.Transport.bpm.value = game.tempo;
@@ -383,5 +395,6 @@ function stopGame(game) {
     game.instrument.dispose();
     Tone.Transport.stop();
     game.score = 0;
+    document.getElementById("score").innerHTML = "Score: " + game.score;
     console.log(Tone.Transport.state + " after stopping game");
 }
