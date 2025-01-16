@@ -10,11 +10,15 @@ test('Game constructor returns expected defaults', () => {
 
     expect(Construction).toEqual({
         _score: 0,
+        _totalSongNotes: 0,
         _isPlaying: false,
-        _inputWindowO: 0,
-        _inputWindowC: 0,
         _tempo: 100,
-        _delay: 100
+        _delay: 100,
+        _firstRun: true,
+        _scored: false,
+        
+        _windowKeys: [],
+        _playerNotes: []
     });
 });
 

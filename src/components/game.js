@@ -5,8 +5,6 @@ export class Game {
         this._score = 0;
         this._totalSongNotes = 0;
         this._isPlaying = false;
-        this._inputWindowO = 0;
-        this._inputWindowC = 0;
         this._tempo = tempo;
         this._delay = delay;
         this._firstRun = true;
@@ -50,14 +48,6 @@ export class Game {
 
     get playerNotes() {
         return this._playerNotes;
-    }
-
-    get inputWindowO() {
-        return this._inputWindowO;
-    }
-
-    get inputWindowC() {
-        return this._inputWindowC;
     }
 
     get windowKeys() {
@@ -161,14 +151,6 @@ export class Game {
 
     set notesInMeasure(notes) {
         this._notesInMeasure = notes;
-    }
-
-    set inputWindowO(milliseconds) {
-        this._inputWindowO = milliseconds;
-    }
-
-    set inputWindowC(milliseconds) {
-        this._inputWindowC = milliseconds;
     }
 
     // create scoring window
