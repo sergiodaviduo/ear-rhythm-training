@@ -241,6 +241,7 @@ export function gameRoom(game) {
         game.answerTrack = answerTrack(game);
         startGame(game);
         document.getElementById("play-again").style.display = "none";
+        document.getElementById("high-score-submission").style.display = "none";
     });
 
     // Play from tutorial

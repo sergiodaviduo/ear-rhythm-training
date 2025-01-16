@@ -942,8 +942,8 @@
         };
     };
 
-    const MOST_NEGATIVE_SINGLE_FLOAT = -3.4028234663852886e38;
-    const MOST_POSITIVE_SINGLE_FLOAT = -MOST_NEGATIVE_SINGLE_FLOAT;
+    const MOST_NEGATIVE_SINGLE_FLOAT = -34028234663852886e22;
+    const MOST_POSITIVE_SINGLE_FLOAT = 34028234663852886e22;
 
     const isActiveAudioNode = (audioNode) => ACTIVE_AUDIO_NODE_STORE.has(audioNode);
 
@@ -2374,11 +2374,11 @@
                 // Bug #191: Safari doesn't throw an error if the options aren't clonable.
                 testAudioWorkletNodeOptionsClonability(mergedOptions);
                 const nodeNameToProcessorConstructorMap = NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.get(nativeContext);
-                const processorConstructor = nodeNameToProcessorConstructorMap === null || nodeNameToProcessorConstructorMap === void 0 ? void 0 : nodeNameToProcessorConstructorMap.get(name);
+                const processorConstructor = nodeNameToProcessorConstructorMap === null || nodeNameToProcessorConstructorMap === undefined ? undefined : nodeNameToProcessorConstructorMap.get(name);
                 // Bug #186: Chrome and Edge do not allow to create an AudioWorkletNode on a closed AudioContext.
                 const nativeContextOrBackupOfflineAudioContext = isOffline || nativeContext.state !== 'closed'
                     ? nativeContext
-                    : (_a = getBackupOfflineAudioContext(nativeContext)) !== null && _a !== void 0 ? _a : nativeContext;
+                    : (_a = getBackupOfflineAudioContext(nativeContext)) !== null && _a !== undefined ? _a : nativeContext;
                 const nativeAudioWorkletNode = createNativeAudioWorkletNode(nativeContextOrBackupOfflineAudioContext, isOffline ? null : context.baseLatency, nativeAudioWorkletNodeConstructor, name, processorConstructor, mergedOptions);
                 const audioWorkletNodeRenderer = ((isOffline ? createAudioWorkletNodeRenderer(name, mergedOptions, processorConstructor) : null));
                 /*
@@ -3920,7 +3920,7 @@
     };
 
     const createGetAudioNodeTailTime = (audioNodeTailTimeStore) => {
-        return (audioNode) => { var _a; return (_a = audioNodeTailTimeStore.get(audioNode)) !== null && _a !== void 0 ? _a : 0; };
+        return (audioNode) => { var _a; return (_a = audioNodeTailTimeStore.get(audioNode)) !== null && _a !== undefined ? _a : 0; };
     };
 
     const createGetAudioParamRenderer = (getAudioParamConnections) => {
@@ -9119,7 +9119,7 @@
          * @param name The name of the module
          */
         addAudioWorkletModule(url, name) {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 assert(isDefined(this.rawContext.audioWorklet), "AudioWorkletNode is only available in a secure context (https or localhost)");
                 if (!this._workletModules.has(name)) {
                     this._workletModules.set(name, this.rawContext.audioWorklet.addModule(url));
@@ -9131,7 +9131,7 @@
          * Returns a promise which resolves when all of the worklets have been loaded on this context
          */
         workletsAreReady() {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 const promises = [];
                 this._workletModules.forEach((promise) => promises.push(promise));
                 yield Promise.all(promises);
@@ -9241,7 +9241,7 @@
          * any AudioNodes created from the context will be silent.
          */
         close() {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 if (isAudioContext(this._context)) {
                     yield this._context.close();
                 }
@@ -9444,7 +9444,7 @@
             return {};
         }
         addAudioWorkletModule(_url, _name) {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 return Promise.resolve();
             });
         }
@@ -9614,7 +9614,7 @@
          * @returns A Promise which resolves with this ToneAudioBuffer
          */
         load(url) {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 const doneLoading = ToneAudioBuffer.load(url).then(audioBuffer => {
                     this.set(audioBuffer);
                     // invoke the onload method
@@ -9809,7 +9809,7 @@
          * @return A promise which resolves to a ToneAudioBuffer
          */
         static fromUrl(url) {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 const buffer = new ToneAudioBuffer();
                 return yield buffer.load(url);
             });
@@ -9818,7 +9818,7 @@
          * Loads a url using fetch and returns the AudioBuffer.
          */
         static load(url) {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 // test if the url contains multiple extensions
                 const matches = url.match(/\[([^\]\[]+\|.+)\]$/);
                 if (matches) {
@@ -9862,7 +9862,7 @@
          * Returns a Promise which resolves when all of the buffers have loaded
          */
         static loaded() {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 // this makes sure that the function is always async
                 yield Promise.resolve();
                 while (ToneAudioBuffer.downloads.length) {
@@ -9929,7 +9929,7 @@
          * Render just the clock portion of the audio context.
          */
         _renderClock(asynchronous) {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 let index = 0;
                 while (this._duration - this._currentTime >= 0) {
                     // invoke all the callbacks on that time
@@ -9950,7 +9950,7 @@
          * @param asynchronous If the clock should be rendered asynchronously, which will not block the main thread, but be slightly slower.
          */
         render(asynchronous = true) {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 yield this.workletsAreReady();
                 yield this._renderClock(asynchronous);
                 const buffer = yield this._context.startRendering();
@@ -15156,7 +15156,7 @@
      * Render a segment of the oscillator to an offline context and return the results as an array
      */
     function generateWaveform(instance, length) {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter(this, undefined, undefined, function* () {
             const duration = length / instance.context.sampleRate;
             const context = new OfflineContext(1, duration, instance.context.sampleRate);
             const clone = new instance.constructor(Object.assign(instance.get(), {
@@ -15606,7 +15606,7 @@
             this.type = this._type;
         }
         asArray(length = 1024) {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 return generateWaveform(this, length);
             });
         }
@@ -15944,7 +15944,7 @@
             this._carrier.partials = partials;
         }
         asArray(length = 1024) {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 return generateWaveform(this, length);
             });
         }
@@ -16108,7 +16108,7 @@
             this._carrier.partials = partials;
         }
         asArray(length = 1024) {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 return generateWaveform(this, length);
             });
         }
@@ -16276,7 +16276,7 @@
             this._triangle.type = type;
         }
         asArray(length = 1024) {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 return generateWaveform(this, length);
             });
         }
@@ -16464,7 +16464,7 @@
             this._type = this._oscillators[0].type;
         }
         asArray(length = 1024) {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 return generateWaveform(this, length);
             });
         }
@@ -16592,7 +16592,7 @@
             this._modulator.phase = phase;
         }
         asArray(length = 1024) {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 return generateWaveform(this, length);
             });
         }
@@ -16930,7 +16930,7 @@
             }
         }
         asArray(length = 1024) {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 return generateWaveform(this, length);
             });
         }
@@ -17038,7 +17038,7 @@
          * @param url The url of the buffer to load. Filetype support depends on the browser.
          */
         load(url) {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 yield this._buffer.load(url);
                 this._onload();
                 return this;
@@ -17321,10 +17321,10 @@
     }
     __decorate([
         timeRange(0)
-    ], Player.prototype, "fadeIn", void 0);
+    ], Player.prototype, "fadeIn", undefined);
     __decorate([
         timeRange(0)
-    ], Player.prototype, "fadeOut", void 0);
+    ], Player.prototype, "fadeOut", undefined);
 
     /**
      * Envelope is an [ADSR](https://en.wikipedia.org/wiki/Synthesizer#ADSR_envelope)
@@ -17663,7 +17663,7 @@
          * envelope to fit the length.
          */
         asArray(length = 1024) {
-            return __awaiter(this, void 0, void 0, function* () {
+            return __awaiter(this, undefined, undefined, function* () {
                 const duration = length / this.context.sampleRate;
                 const context = new OfflineContext(1, duration, this.context.sampleRate);
                 // normalize the ADSR for the given duration with 20% sustain time
@@ -17692,16 +17692,16 @@
     }
     __decorate([
         timeRange(0)
-    ], Envelope.prototype, "attack", void 0);
+    ], Envelope.prototype, "attack", undefined);
     __decorate([
         timeRange(0)
-    ], Envelope.prototype, "decay", void 0);
+    ], Envelope.prototype, "decay", undefined);
     __decorate([
         range(0, 1)
-    ], Envelope.prototype, "sustain", void 0);
+    ], Envelope.prototype, "sustain", undefined);
     __decorate([
         timeRange(0)
-    ], Envelope.prototype, "release", void 0);
+    ], Envelope.prototype, "release", undefined);
     /**
      * Generate some complex envelope curves.
      */
@@ -17986,7 +17986,7 @@
     }
     __decorate([
         timeRange(0)
-    ], Monophonic.prototype, "portamento", void 0);
+    ], Monophonic.prototype, "portamento", undefined);
 
     /**
      * AmplitudeEnvelope is a Tone.Envelope connected to a gain node.
@@ -18174,10 +18174,10 @@
     }
     __decorate([
         range(0)
-    ], MembraneSynth.prototype, "octaves", void 0);
+    ], MembraneSynth.prototype, "octaves", undefined);
     __decorate([
         timeRange(0)
-    ], MembraneSynth.prototype, "pitchDecay", void 0);
+    ], MembraneSynth.prototype, "pitchDecay", undefined);
 
     /**
      * All of the classes or functions which are loaded into the AudioWorkletGlobalScope
@@ -18624,10 +18624,10 @@
     }
     __decorate([
         timeRange(0)
-    ], Sampler.prototype, "attack", void 0);
+    ], Sampler.prototype, "attack", undefined);
     __decorate([
         timeRange(0)
-    ], Sampler.prototype, "release", void 0);
+    ], Sampler.prototype, "release", undefined);
 
     /**
      * ToneEvent abstracts away this.context.transport.schedule and provides a schedulable
@@ -20177,7 +20177,6 @@
             all_elements_nl[i].style.display = "block";
         }
 
-
         document.getElementById("calibration").style.display = "none";
         document.getElementById("play-button").style.display = "none";
         document.getElementById("settings").style.display = "none";
@@ -20712,6 +20711,7 @@
             game.answerTrack = answerTrack(game);
             startGame(game);
             document.getElementById("play-again").style.display = "none";
+            document.getElementById("high-score-submission").style.display = "none";
         });
 
         // Play from tutorial

@@ -78,7 +78,6 @@ export function playGame() {
         all_elements_nl[i].style.display = "block";
     }
 
-
     document.getElementById("calibration").style.display = "none";
     document.getElementById("play-button").style.display = "none";
     document.getElementById("settings").style.display = "none";
