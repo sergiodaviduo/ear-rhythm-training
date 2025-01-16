@@ -7,9 +7,11 @@ Requires at least Django 4.2.0, psycopg2 2.9, Node.js 19, and python 3.12. Teste
 
 ## Launch instructions:
 
-Install with "npm install". Start web server with "npm start"
+Install with "npm install".
 
-To edit JS live, run "npm run js" to make live changes to JS app, and to package JS changes made in /src
+Then, run "npm run js" to package JS changes made in /src, and to bundle JS make live changes to JS app.
+
+Finally, start web server with "npm start".
 
 ## Testing
 
