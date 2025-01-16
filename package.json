@@ -9,15 +9,16 @@
   },
   "scripts": {
     "start": "python mysite/manage.py runserver 127.0.0.1:80",
-    "test": "vitest run --coverage",
-    "testW": "vitest",
+    "test": "vitest run --coverage --environment jsdom",
+    "testW": "vitest --environment jsdom",
     "js": "rollup -c -w"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@vitest/coverage-v8": "^0.33.0",
     "rollup-plugin-css-only": "^4.5.2",
-    "vitest": "^0.33.0"
+    "vitest": "^0.33.0",
+    "tone": "^14.7.77"
   },
   "name": "ear-rhythm-training",
   "version": "0.8.0",

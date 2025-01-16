@@ -4,12 +4,16 @@ export class Game {
     constructor(tempo=120, delay=150) {
         this._score = 0;
         this._totalSongNotes = 0;
-        this._isPlaying = false;
+        this._notesInMeasure = 0;
         this._tempo = tempo;
         this._delay = delay;
+        this._isPlaying = false;
+        this._didScore = false;
         this._firstRun = true;
-        this._scored = false;
-        
+
+        this._instrument = null;
+        this._clickTrack = null;
+        this._answerTrack = null;
         this._windowKeys = [];
         this._playerNotes = [];
     }
@@ -63,7 +67,7 @@ export class Game {
     }
 
     get didScore() {
-        return this._scored;
+        return this._didScore;
     }
 
     set firstRun(firstRun) {
@@ -72,7 +76,6 @@ export class Game {
 
     set score(score) {
         this._score = score;
-        document.getElementById("score").innerHTML = "Score: " + score;
     }
 
     set totalSongNotes(totalSongNotes) {
@@ -81,27 +84,10 @@ export class Game {
 
     set tempo(tempo) {
         this._tempo = tempo;
-        Tone.Transport.bpm.value = tempo;
     }
 
     set delay(delay) {
-        document.getElementById('liveDelay').innerHTML = delay;
-        document.getElementById('delay').value = delay;
         this._delay = delay;
-    }
-
-    togglePlay() {
-        if (this._isPlaying) {
-            this._isPlaying = false;
-        } else {
-            this._isPlaying = true;
-        }
-    }
-
-    measureToMillis() {
-        let measureInMillis = (60000 / this._tempo) * 4;
-
-        return measureInMillis;
     }
 
     set answerTrack(track) {
@@ -194,7 +180,21 @@ export class Game {
         return noteKeys;
     }
 
-    set didScore(scored) {
-        this._scored = scored;
+    set didScore(didScore) {
+        this._didScore = didScore;
+    }
+
+    togglePlay() {
+        if (this._isPlaying) {
+            this._isPlaying = false;
+        } else {
+            this._isPlaying = true;
+        }
+    }
+
+    measureToMillis() {
+        let measureInMillis = (60000 / this._tempo) * 4;
+
+        return measureInMillis;
     }
 }
