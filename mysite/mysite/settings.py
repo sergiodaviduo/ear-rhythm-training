@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-()d!i7xpf#0m#gdco7uz4%(o(cyq+xr7c@8@^5&%d8i=if38n#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['glacial-inlet-80835-b1c4e66777d8.herokuapp.com'
 
 
 # Application definition
