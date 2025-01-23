@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "python mysite/manage.py runserver 127.0.0.1:80",
+    "live": "python mysite/wsgi.py",
     "test": "vitest run --coverage",
     "testW": "vitest",
     "js": "rollup -c -w"
