@@ -1,1 +1,1 @@
-web: gunicorn --config gunicorn.conf.py mysite.wsgi
+web: cd mysite && gunicorn --config gunicorn.conf.py mysite.wsgi
