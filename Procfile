@@ -1,1 +1,1 @@
-web: python mysite/mysite/wsgi.py
+web: gunicorn mysite/mysite/wsgi.py
