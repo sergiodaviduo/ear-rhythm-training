@@ -123,8 +123,15 @@ export function showScoreSubmitMenu(game) {
 
     let all_elements_nl = document.querySelectorAll('*[id]');
 
+    const submitFieldHeaders = document.querySelectorAll("label[for]");
+    const br = document.createElement("br");
+
     for (let i = 0; i < all_elements_nl.length - 2; i++) {
         all_elements_nl[i].style.display = "none";
+    }
+
+    for (let i = 0; i < submitFieldHeaders.length; i++) {
+        submitFieldHeaders[i].appendChild(br.cloneNode(true));
     }
 
     document.getElementById("submit-score").style.display = "block";
