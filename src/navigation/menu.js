@@ -123,15 +123,8 @@ export function showScoreSubmitMenu(game) {
 
     let all_elements_nl = document.querySelectorAll('*[id]');
 
-    const submitFieldHeaders = document.querySelectorAll("label[for]");
-    const br = document.createElement("br");
-
     for (let i = 0; i < all_elements_nl.length - 2; i++) {
         all_elements_nl[i].style.display = "none";
-    }
-
-    for (let i = 0; i < submitFieldHeaders.length; i++) {
-        submitFieldHeaders[i].appendChild(br.cloneNode(true));
     }
 
     document.getElementById("submit-score").style.display = "block";
@@ -140,8 +133,8 @@ export function showScoreSubmitMenu(game) {
     document.getElementById("id_name").style.display = "block";
 
     document.getElementById("id_final_score").value = game.score;
-    document.getElementById('id_final_score').readOnly = true;
-    document.getElementById('submit-score').classList.add("centered");
+    document.getElementById("id_final_score").readOnly = true;
+    document.getElementById("submit-score").classList.add("centered");
 }
 
 export function endOfSong() {
