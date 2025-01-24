@@ -23,7 +23,7 @@ def index(request):
 
             print(form)
 
-        return HttpResponseRedirect("/admin/")
+        return HttpResponseRedirect("/show-highscores.html")
     else:
         form = ScoreForm()
 

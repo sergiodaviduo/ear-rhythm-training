@@ -13,11 +13,20 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import os
 from django.contrib import admin
 from django.urls import include, path
 
-urlpatterns = [
-    # path('polls/', include('polls.urls')),
-    path('', include('music_training.urls')),
-    path('admin/', admin.site.urls),
-]
+IS_HEROKU_APP = "DYNO" in os.environ and "CI" not in os.environ
+
+if IS_HEROKU_APP:
+    urlpatterns = [
+        # path('polls/', include('polls.urls')),
+        path('', include('music_training.urls'))
+    ]
+else:
+    urlpatterns = [
+        # path('polls/', include('polls.urls')),
+        path('', include('music_training.urls')),
+        path('admin/', admin.site.urls),
+    ]
