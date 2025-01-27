@@ -14,9 +14,13 @@
   overflow-x:hidden;
   margin:0
  }
- h1, h2, h3, div {
+ h1, h2, h3, div, label {
   color: white;
  }
+.field {
+  text-align: center;
+}
+
  body {
   height:100%;
   width:100%;
@@ -36,11 +40,7 @@
   padding:10px;
   z-index:500
  }
- header a,
- footer a {
-  color:#000;
-  text-decoration:none
- }
+
  footer {
   bottom:0
  }
@@ -214,4 +214,8 @@ label[for], input[type="text"] {
 .count-down-end {
   animation: zoomOut;
   animation-duration: 0.5s;
+}
+
+#id_final_score {
+  display: none
 }

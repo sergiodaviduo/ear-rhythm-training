@@ -26,10 +26,8 @@ def index(request):
         return HttpResponseRedirect("/show-highscores.html")
     else:
         form = ScoreForm()
-        rendered_form = form.render("form-render.html")
-        context = {"form": rendered_form}
 
-    return render(request, "music_training/index.html", context)
+    return render(request, "music_training/index.html", {"form": form})
 
 def show_highscores(request):
     all_highscores = HighScores.objects.all()

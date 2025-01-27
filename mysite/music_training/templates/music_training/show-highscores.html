@@ -9,11 +9,13 @@
 <h1>Highscores:</h1>
 <br/>
 <br/>
+<div style="font-size: 22px">
 {% for score in all_highscores %}
-    {{ score.name }} -- {{score.finalScore}}
+    <strong>{{ score.name }}</strong> | {{score.finalScore}}
     <br/>
     <br/> 
 {% endfor %}
+</div>
 <br/>
 <br/>
 <a href="/"><button id="back-to-menu"> 

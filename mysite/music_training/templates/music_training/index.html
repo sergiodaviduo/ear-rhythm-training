@@ -44,7 +44,39 @@
   <form action="/" method="post" id="submit-score" style="display: none;" class="centered">
     <p>Submit your score:</p>
     {% csrf_token %}
-    {{ form }}
+    
+    {{ form.final_score.errors }}
+    <label for="{{ form.final_score.id_for_label }}">Final Score:</label>
+    <br>
+    <br>
+    {{ form.final_score }}
+    <h1 id="score-display"></h1>
+    <br>
+    <br>
+    {{ form.name.errors }}
+    <label for="{{ form.name.id_for_label }}">Your name/tag:</label>
+    <br>
+    <br>
+    {{ form.name }}
+    <br>
+    <br>
+    
+    {% if form.final_score.errors %}
+      <ol class="centered">
+        {% for error in form.final_score.errors %}
+          <li><strong>{{ error|escape }}</strong></li>
+        {% endfor %}
+      </ol>
+    {% endif %}
+    <br>
+    {% if form.name.errors %}
+      <ol class="centered">
+        {% for error in form.name.errors %}
+          <li><strong>{{ error|escape }}</strong></li>
+        {% endfor %}
+      </ol>
+    {% endif %}
+    <br>
     <br>
     <input type="submit" value="Upload Score">
   </form>
