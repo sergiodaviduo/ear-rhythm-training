@@ -11,6 +11,9 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
+IS_HEROKU_APP = "DYNO" in os.environ and "CI" not in os.environ
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
 
-application = get_wsgi_application()
+if IS_HEROKU_APP:
+    application = get_wsgi_application()

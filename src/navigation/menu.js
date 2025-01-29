@@ -129,12 +129,13 @@ export function showScoreSubmitMenu(game) {
 
     document.getElementById("submit-score").style.display = "block";
     document.getElementById("back-to-menu").style.display = "block";
-    document.getElementById("id_final_score").style.display = "block";
+    document.getElementById("score-display").style.display = "block";
     document.getElementById("id_name").style.display = "block";
 
     document.getElementById("id_final_score").value = game.score;
-    document.getElementById('id_final_score').readOnly = true;
-    document.getElementById('submit-score').classList.add("centered");
+    document.getElementById("score-display").innerHTML = game.score;
+    document.getElementById("id_final_score").readOnly = true;
+    document.getElementById("id_final_score").style.display = "none";
 }
 
 export function endOfSong() {

@@ -14,9 +14,13 @@
   overflow-x:hidden;
   margin:0
  }
- h1, h2, h3, div {
+ h1, h2, h3, div, label {
   color: white;
  }
+.field {
+  text-align: center;
+}
+
  body {
   height:100%;
   width:100%;
@@ -36,11 +40,7 @@
   padding:10px;
   z-index:500
  }
- header a,
- footer a {
-  color:#000;
-  text-decoration:none
- }
+
  footer {
   bottom:0
  }
@@ -98,7 +98,7 @@
   text-align: center;
 }
 
-button {
+button, input[type="submit"] {
   position: relative;
   background-color: rgb(230, 34, 77);
   border-radius: 5px;
@@ -116,7 +116,7 @@ button {
   overflow: hidden;
 }
 
-button::before {
+button::before, input[type="submit"]::before {
   content: "";
   background-color: rgb(248, 50, 93);
   width: 0;
@@ -129,8 +129,15 @@ button::before {
   display: inline-block;
 }
 
-button:hover::before {
+button:hover::before, input[type="submit"]:hover::before {
   width: 100%;
+}
+
+label[for], input[type="text"] {
+  margin: auto;
+  width: 50%;
+  text-align: center;
+  font-size: 250%;
 }
 
 .player {
@@ -207,4 +214,8 @@ button:hover::before {
 .count-down-end {
   animation: zoomOut;
   animation-duration: 0.5s;
+}
+
+#id_final_score {
+  display: none
 }
