@@ -68,7 +68,7 @@ export function setupControls(game) {
                     scoreFlash.style.color = scoreFlashColor;
                     scoreFlash.innerHTML = scoreFlashText;
                     scoreFlash.style.transform = "rotate(-"+angle+"deg)";
-                    document.body.insertBefore(scoreFlash, score);
+                    score.parentNode.insertBefore(scoreFlash, score);
 
                     setTimeout(() => {
                         scoreFlash.remove();

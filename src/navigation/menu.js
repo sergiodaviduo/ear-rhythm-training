@@ -1,55 +1,6 @@
 export function menu() {
 
     in_menu();
-
-    /*const menu_items = ["play-button", "settings", "high-scores"];
-
-    const selected = "blue";
-    const unselected =  "black";
-
-    let menu_choice = -1;
-
-    document.addEventListener('keydown', (event) => {
-        //let accuracy = 0;
-
-        if (document.getElementById("play-button").style.display != "none") {
-            if (event.key === 'ArrowDown') {
-                menu_choice++;
-            }
-
-            if (event.key === 'ArrowUp') {
-                menu_choice--;
-            }
-        }
-
-        if (menu_choice < 0) {
-            menu_choice = 2;
-        }
-    
-        if (menu_choice > 2) {
-            menu_choice = 0;
-        }
-    
-        switch (menu_items[menu_choice]) {
-            case "play-button":
-                document.getElementById("play-button").style.backgroundColor = selected;
-                document.getElementById("settings").style.backgroundColor = unselected;
-                document.getElementById("high-scores").style.backgroundColor = unselected;
-                break;
-            case "Settings":
-                document.getElementById("play-button").style.backgroundColor = unselected;
-                document.getElementById("settings").style.backgroundColor = selected;
-                document.getElementById("high-scores").style.backgroundColor = unselected;
-                break;
-            case "high-scores":
-                document.getElementById("play-button").style.backgroundColor = unselected;
-                document.getElementById("settings").style.backgroundColor = unselected;
-                document.getElementById("high-scores").style.backgroundColor = selected;
-                break;
-        }
-    
-    });*/
-    
 }
 
 // hide everything except menu objects
@@ -70,15 +21,22 @@ function in_menu(){
 
 }
 
+// when "Start Game" is clicked
 export function playGame() {
 
     let all_elements_nl = document.querySelectorAll('*[id]');
 
     for (let i = 0; i < all_elements_nl.length - 2; i++) {
-        all_elements_nl[i].style.display = "block";
+        all_elements_nl[i].style.display = "none";
     }
 
-    document.getElementById("calibration").style.display = "none";
+    // mark as block
+    markAsBlock(document.getElementById("launch-game"));
+    markAsBlock(document.getElementById("back-to-menu"));
+    
+    ////////////////
+
+    /*document.getElementById("calibration").style.display = "none";
     document.getElementById("play-button").style.display = "none";
     document.getElementById("settings").style.display = "none";
     document.getElementById("high-scores").style.display = "none";
@@ -93,7 +51,7 @@ export function playGame() {
 
     document.getElementById("purpleSquare").style.display = "none";
     document.getElementById("tutorial").style.display = "none";
-    document.getElementById("start-game-from-tutorial").style.display = "none";
+    document.getElementById("start-game-from-tutorial").style.display = "none";*/
 }
 
 export function settings(game) {
@@ -196,4 +154,23 @@ export function tutorial() {
 
     document.getElementById("tutorial").style.display = "block";
     document.getElementById("start-game-from-tutorial").style.display = "block";
+}
+
+// This will change the style of all input node & all child nodes as "block"
+function markAsBlock (node) {
+    const children = node.getElementsByTagName("*");
+
+    console.log("current node: "+node.id);
+    node.style.display = "block";
+    console.log("before if statement 1");
+    if (!node.childNodes.length) {
+        console.log("reached last child");
+        return;
+    }
+    console.log("before for loop");
+    console.log(children);
+    for (let child of children) {
+        console.log("entering function child: "+child.id, children[0].id);
+        markAsBlock(child);
+    }
 }

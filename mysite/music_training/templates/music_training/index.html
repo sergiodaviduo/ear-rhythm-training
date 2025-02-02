@@ -15,6 +15,34 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/sliders.css' %}?{% now "U" %}">
   </head>
   <body>
+    
+  <!-- Game -->
+  <div id="launch-game">
+    <h1 id="score">Score: 0</h1>
+    <h1 id="count" style="display: none; font-size: 4em;"></h1>
+    <div id="countdown"></div>
+    <h1 id="scoreResult"></h1> 
+    <div id="props">
+      <!-- Scoreboard-->
+      <div class="duck player">
+        <div id="player-duck"></div>
+        <div class="keyboard-rainbow"></div>
+      </div>
+
+      <div class="duck cpu">
+        <div id="cpu-duck"></div>
+        <div class="keyboard-rainbow-cpu"></div>
+      </div>
+
+      <div class="instruments">
+        <div class="keyboard" style="visibility: visible;"></div>
+      </div>
+      <div>
+        
+      </div>
+    
+    </div>
+  </div>
 
   <!-- Debug input indicators -->
   <div id="blueSquare" style="background-color: blue; width: 100px; height: 100px;"></div>
@@ -22,11 +50,7 @@
   <div id="purpleSquare" style="background-color: purple; width: 100px; height: 100px;"></div>
   <br><br><br><br>
 
-   <!-- Scoreboard-->
-  <h1 id="score">Score: 0</h1>
-  <h1 id="count" style="display: none; font-size: 4em;"></h1>
-  <div id="countdown"></div>
-  <h1 id="scoreResult"></h1>
+ 
 
    <!-- Repeat play buttons -->
   <button id="play-again" style="display: none;"> 
@@ -118,27 +142,6 @@
     </div>
   </div>
   <br><br><br>
-
-  <!-- Game -->
-  <div id="container">
-    <div class="duck player">
-      <div id="player-duck"></div>
-      <div class="keyboard-rainbow"></div>
-    </div>
-
-    <div class="duck cpu">
-      <div id="cpu-duck"></div>
-      <div class="keyboard-rainbow-cpu"></div>
-    </div>
-
-    <div class="instruments">
-      <div class="keyboard" style="visibility: visible;"></div>
-    </div>
-    <div>
-      
-    </div>
-   
-  </div>
 
   <!-- Mini Tutorial -->
   <div id="tutorial" class="centered">

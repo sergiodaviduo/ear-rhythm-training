@@ -58,17 +58,7 @@ function answerTrack(game, songLength=4, song=randomizerExtender(songLength, 5))
         triggerNum++;
     }), song).start("2m");
 
-    //callback functions in-between every other measure
-    /*Tone.Transport.scheduleRepeat((time) => {
-        if ( score > game.notesInMeasure * 7 ) {
-            party.confetti(document.getElementById("score"), {
-                count: party.variation.range(20, 40),
-            });
-            scoreResult.innerHTML = "You got " + score + " out of " + (game.notesInMeasure * 8) +"!!";
-            score = 0;
-        }
-        
-    }, String(songLength+3)+"m", "0m");*/
+    
 
     // at end of song
     Tone.Transport.schedule(function(time){
