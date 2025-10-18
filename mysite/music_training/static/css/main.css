@@ -219,3 +219,7 @@ label[for], input[type="text"] {
 #id_final_score {
   display: none
 }
+
+#launch-game {
+  padding-top: 12.5%;
+}
