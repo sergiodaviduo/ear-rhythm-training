@@ -30,28 +30,9 @@ export function playGame() {
         all_elements_nl[i].style.display = "none";
     }
 
-    // mark as block
+    // display all elements under the following IDs
     markAsBlock(document.getElementById("launch-game"));
     markAsBlock(document.getElementById("back-to-menu"));
-    
-    ////////////////
-
-    /*document.getElementById("calibration").style.display = "none";
-    document.getElementById("play-button").style.display = "none";
-    document.getElementById("settings").style.display = "none";
-    document.getElementById("high-scores").style.display = "none";
-    document.getElementById("main-menu").style.display = "none";
-    document.getElementById("play-again").style.display = "none";
-    document.getElementById("high-score-submission").style.display = "none";
-    document.getElementById("submit-score").style.display = "none";
-    document.getElementById("title").style.display = "none";
-
-    document.getElementById("settings-values").style.display = "none";
-    document.getElementById("blueSquare").style.display = "none";
-
-    document.getElementById("purpleSquare").style.display = "none";
-    document.getElementById("tutorial").style.display = "none";
-    document.getElementById("start-game-from-tutorial").style.display = "none";*/
 }
 
 export function settings(game) {
