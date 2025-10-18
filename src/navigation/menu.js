@@ -54,21 +54,11 @@ export function settings(game) {
         all_elements_nl[i].style.display = "none";
     }
 
-    back_to_menu();
-
     document.getElementById('liveTempo').innerHTML = game.tempo; //
     document.getElementById('liveTempo').value = game.tempo;
 
+    back_to_menu();
     markAsBlock(document.getElementById("settings-values"));
-
-    /*
-    document.getElementById("settings-values").style.display = "block";
-    document.getElementById("delay").style.display = "block";
-    document.getElementById("tempo").style.display = "block";
-    document.getElementById("liveTempo").style.display = "block";
-    document.getElementById("liveDelay").style.display = "block";
-    document.getElementById("calibrate-delay").style.display = "block";
-    document.getElementById("default-settings").style.display = "block";*/
 }
 
 export function showScoreSubmitMenu(game) {
