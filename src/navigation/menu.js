@@ -21,6 +21,15 @@ function in_menu(){
 
 }
 
+// used often enough, could use its own function
+function back_to_menu(show=1){
+    if(show == 1) {
+        markAsBlock(document.getElementById("back-to-menu"));
+    } else {
+        document.getElementById("back-to-menu").style.display = "none";
+    }
+}
+
 // when "Start Game" is clicked
 export function playGame() {
 
@@ -32,7 +41,7 @@ export function playGame() {
 
     // display all elements under the following IDs
     markAsBlock(document.getElementById("launch-game"));
-    markAsBlock(document.getElementById("back-to-menu"));
+    back_to_menu();
 }
 
 export function settings(game) {
