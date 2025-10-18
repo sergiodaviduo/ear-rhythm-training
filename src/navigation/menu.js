@@ -69,15 +69,12 @@ export function showScoreSubmitMenu(game) {
         all_elements_nl[i].style.display = "none";
     }
 
-    document.getElementById("submit-score").style.display = "block";
-    document.getElementById("back-to-menu").style.display = "block";
-    document.getElementById("score-display").style.display = "block";
-    document.getElementById("id_name").style.display = "block";
-
     document.getElementById("id_final_score").value = game.score;
     document.getElementById("score-display").innerHTML = game.score;
     document.getElementById("id_final_score").readOnly = true;
-    document.getElementById("id_final_score").style.display = "none";
+
+    markAsBlock(document.getElementById("submit-score"));
+    back_to_menu();
 }
 
 export function endOfSong() {
